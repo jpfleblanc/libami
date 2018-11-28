@@ -226,6 +226,7 @@ g_prod_t reduce_gprod(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole);
 public:
 
   ///setup of parameters
+  AmiCalc();
   AmiCalc(ami_parms &parms);
   ///define parameter defaults
 //  static void define_parameters(alps::params &p);  // this is needed for the evaluate stage

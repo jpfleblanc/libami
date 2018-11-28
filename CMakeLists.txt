@@ -24,6 +24,7 @@ set(LIB_FILES
   ./src/ami_construct.cpp
   ./src/ami_evaluate.cpp
   ./src/ami_helper.cpp
+  ./src/ami_example.cpp
   )
 
 ADD_LIBRARY(ami SHARED ${LIB_FILES})

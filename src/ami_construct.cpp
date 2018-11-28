@@ -14,6 +14,13 @@ std::cout<<"Ami Constructor Called"<<std::endl;
 
 }
 
+AmiCalc::AmiCalc()
+{
+ 
+std::cout<<"Ami Constructor Called"<<std::endl;
+
+}
+
 // TODO do this actually need alps::params?
 
 void AmiCalc::construct(ami_parms &parms, int dim, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
