@@ -28,6 +28,7 @@ public:
  
 typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
 typedef std::vector<int> alpha_t;
+enum stat_type {Bose,Fermi};
 
 // AMI Parameter structure
 
@@ -49,9 +50,18 @@ double E_REG_;
 
 // Green's function structure which has a symbolic epsilon and set of alpha values
 struct g_struct{
+g_struct(std::vector<int> eps, std::vector<int> alpha, stat_type stat){
+eps_=eps;
+alpha_=alpha;
+stat_=stat;
+
+}
+
+// Assume fermi statistics if not specified for partially initialized structure
 g_struct(std::vector<int> eps, std::vector<int> alpha){
 eps_=eps;
 alpha_=alpha;
+stat_=Fermi;
 
 }
 
@@ -59,6 +69,7 @@ g_struct(){} // uninitialized variant
 
 epsilon_t eps_;
 alpha_t alpha_;
+stat_type stat_;
 
 };
 
