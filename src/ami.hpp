@@ -1,7 +1,8 @@
-//=======================================================================
-// Copyright 2018 James PF LeBlanc
-//=======================================================================
-
+/*
+ * Copyright (C) 2018 JPF LeBlanc jleblanc@mun.ca  See COPYRIGHT.TXT
+ * All rights reserved. Use is subject to license terms. See LICENSE.TXT
+ * For use in publications, see ACKNOWLEDGE.TXT
+ */
 
 #pragma once
 
