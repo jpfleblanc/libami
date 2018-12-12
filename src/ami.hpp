@@ -29,7 +29,8 @@ public:
  
 typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
 typedef std::vector<int> alpha_t;
-enum stat_type {Bose,Fermi};
+typedef enum {Bose,Fermi} stat_type ;
+typedef enum {Sigma,Pi} graph_type ;
 
 // AMI Parameter structure
 
@@ -38,6 +39,14 @@ ami_parms(int N_INT, double BETA, double E_REG){
 N_INT_=N_INT;
 BETA_=BETA;
 E_REG_=E_REG;
+TYPE_=static_cast<AmiCalc::graph_type>(0); /// by default sigma
+}
+
+ami_parms(int N_INT, double BETA, double E_REG, graph_type TYPE){
+N_INT_=N_INT;
+BETA_=BETA;
+E_REG_=E_REG;
+TYPE_=TYPE;
 }
 
 ami_parms(){}
@@ -45,6 +54,7 @@ ami_parms(){}
 int N_INT_;
 double BETA_;
 double E_REG_;
+graph_type TYPE_;
 
 };
 
