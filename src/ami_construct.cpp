@@ -23,9 +23,11 @@ std::cout<<"Ami Constructor Called"<<std::endl;
 
 // TODO do this actually need alps::params?
 
-void AmiCalc::construct(ami_parms &parms, int dim, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
+void AmiCalc::construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
 
 std::cout<<"Here the code constructs the analytic solution and stores it in the R, P and S arrays"<<std::endl;
+
+int dim=parms["N_int"];
 
 g_prod_array_t R0_array;
 R0_array.push_back(R0);

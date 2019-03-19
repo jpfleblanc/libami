@@ -257,7 +257,7 @@ public:
   /// The construction
 
   void construct(ami_parms &parms);  // needs to know how many integrals to do
-  void construct(ami_parms &parms, int dim, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
+  void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
 
   /// The evaluation 
   void evaluate(ami_parms &parms);
