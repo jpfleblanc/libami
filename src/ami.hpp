@@ -30,9 +30,10 @@ public:
 typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
 typedef std::vector<int> alpha_t;
 typedef enum {Bose,Fermi} stat_type ;
-typedef enum {Sigma,Pi} graph_type ;
+typedef enum {Sigma,Pi,Hartree} graph_type ;
 
 // AMI Parameter structure
+// This is a little weird.  The ami_parms structure is defined here. But there is no internal variable set for this... meaning it has to be passed to all of the functions... probably this should be changed. Explicit passing is 'ok'.
 
 struct ami_parms{
 ami_parms(int N_INT, double BETA, double E_REG){
