@@ -62,7 +62,7 @@ graph_type TYPE_;
 
 // Green's function structure which has a symbolic epsilon and set of alpha values
 struct g_struct{
-g_struct(std::vector<int> eps, std::vector<int> alpha, stat_type stat){
+g_struct(epsilon_t eps, alpha_t alpha, stat_type stat){
 eps_=eps;
 alpha_=alpha;
 stat_=stat;
@@ -70,7 +70,7 @@ stat_=stat;
 }
 
 // Assume fermi statistics if not specified for partially initialized structure
-g_struct(std::vector<int> eps, std::vector<int> alpha){
+g_struct(epsilon_t eps, alpha_t alpha){
 eps_=eps;
 alpha_=alpha;
 stat_=Fermi;
