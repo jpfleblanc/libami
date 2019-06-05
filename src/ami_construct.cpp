@@ -25,7 +25,7 @@ std::cout<<"Ami Constructor Called"<<std::endl;
 
 void AmiCalc::construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
 
-std::cout<<"Here the code constructs the analytic solution and stores it in the R, P and S arrays"<<std::endl;
+// std::cout<<"Here the code constructs the analytic solution and stores it in the R, P and S arrays"<<std::endl;
 
 int dim=parms.N_INT_;
 
@@ -43,7 +43,7 @@ pole_array_t poles;
 
 
 for (int index=0; index<dim; index++){
-std::cout<<"Working on integration number "<< index <<std::endl;
+// std::cout<<"Working on integration number "<< index <<std::endl;
 
 //update_gprod_general(index, R_array, P_array,S_array);
 update_gprod_simple(index, R_array, P_array,S_array);
@@ -64,7 +64,7 @@ update_gprod_simple(index, R_array, P_array,S_array);
 void AmiCalc::evaluate(ami_parms& parms){
   
 
-  std::cout<<"Here the code will evaluate a given solution"<<std::endl;
+  // std::cout<<"Here the code will evaluate a given solution"<<std::endl;
 
 
 }
@@ -112,7 +112,7 @@ duplicate=true;
 
 pole_array[ploop].multiplicity_+=1;
 pole_array[ploop].which_g_.push_back(pole.which_g_[0]);
-std::cout<<"Duplicate pole detected!"<<std::endl;
+std::cerr<<"Duplicate pole detected!"<<std::endl;
 break;
 }
 
@@ -199,7 +199,7 @@ AmiCalc::g_prod_t AmiCalc::simple_residue(AmiCalc::g_prod_t G_in, AmiCalc::pole_
 
 g_prod_t residue;
 
-if (pole.multiplicity_!=1){std::cout<<"Simple residue called for pole with M!=1"<<std::endl;}
+if (pole.multiplicity_!=1){std::cerr<<"Simple residue called for pole with M!=1"<<std::endl;}
 for (int i=0; i< G_in.size(); i++){
 
 
@@ -249,7 +249,7 @@ g_new.eps_.push_back( g_in.eps_[i] + g_in.alpha_[pole.index_]*pole.eps_[i]   );
 }
 
 
-if ( g_new.alpha_.size() != g_in.alpha_.size()){std::cout<<"Maybe something wrong? Alphas not the same size" <<std::endl; }
+if ( g_new.alpha_.size() != g_in.alpha_.size()){std::cerr<<"Maybe something wrong? Alphas not the same size" <<std::endl; }
 
 
 return g_new;
@@ -275,8 +275,8 @@ if(add){ reduced.push_back(G_in[i]);}
 
 }
 
-std::cout<<"Lengths in reduction are "<< reduced.size()<<" "<< G_in.size()<<std::endl;
-std::cout<<"For pole with "<< pole.which_g_.size()<<std::endl;
+// std::cout<<"Lengths in reduction are "<< reduced.size()<<" "<< G_in.size()<<std::endl;
+// std::cout<<"For pole with "<< pole.which_g_.size()<<std::endl;
 
 return reduced;
 }
@@ -308,7 +308,7 @@ print_g_prod_array(Wi);
   g_prod_t temp_gprod;
 
   int alpha=Wi[i][dindex].alpha_[pole.index_];
-  std::cout<<"Alpha was "<< alpha<<std::endl;
+  // std::cout<<"Alpha was "<< alpha<<std::endl;
    if(alpha !=0 ){
 // populate signs and poles
 	temp_signs.push_back(-(double)alpha*signs[i]);
@@ -326,7 +326,7 @@ print_g_prod_array(Wi);
 
 	}//close for
     temp_g_array.push_back(temp_gprod);
-    std::cout<<"temp array has length "<< temp_g_array.size()<<std::endl;
+    // std::cout<<"temp array has length "<< temp_g_array.size()<<std::endl;
     
     
 
@@ -368,10 +368,10 @@ Wi.push_back(W_array);
 // take M-1 derivatives
 
 for(int i=0; i< pole.multiplicity_-1; i++){
-std::cout<<"Evaluating multipole for M= "<< pole.multiplicity_ <<std::endl;
-std::cout<<"Length before is "<<Wi.size()<<std::endl;
+// std::cout<<"Evaluating multipole for M= "<< pole.multiplicity_ <<std::endl;
+// std::cout<<"Length before is "<<Wi.size()<<std::endl;
 take_derivatives( Wi, pole, poles, signs); 
-std::cout<<"Length after is "<<Wi.size()<<std::endl;
+// std::cout<<"Length after is "<<Wi.size()<<std::endl;
 }
 
 // update each term in Ri with the pole value
@@ -395,7 +395,7 @@ void AmiCalc::update_gprod_general(int index, AmiCalc::R_t &R_array, AmiCalc::P_
 
 int next=index+1;
 
-std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
+// std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
 
 
 Ri_t g_in;
@@ -467,7 +467,7 @@ P_array.push_back(temp_pole_array);
 S_array.push_back(temp_sign_array);
 
 
-std::cout<<"Size of R["<< next<<"]="<< R_array[next].size() <<std::endl;
+// std::cout<<"Size of R["<< next<<"]="<< R_array[next].size() <<std::endl;
 
 }
 
@@ -478,7 +478,7 @@ void AmiCalc::update_gprod_simple(int index, AmiCalc::R_t &R_array, AmiCalc::P_t
 
 int next=index+1;
 
-std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
+// std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
 
 
 g_prod_array_t temp_g_array;
@@ -521,6 +521,6 @@ P_array.push_back(temp_pole_array);
 S_array.push_back(temp_sign_array);
 
 
-std::cout<<"Size of R["<< next<<"]="<< R_array[next].size() <<std::endl;
+// std::cout<<"Size of R["<< next<<"]="<< R_array[next].size() <<std::endl;
 
 }

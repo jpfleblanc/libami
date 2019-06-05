@@ -183,6 +183,15 @@ KDIM_=dim;
 external_k_vector_.assign(dim,0.0);	
 	
 }
+ext_vars(int dim, double beta, std::complex<double> mu){
+	
+KDIM_=dim;
+external_k_vector_.assign(dim,0.0);	
+
+BETA_=beta;
+MU_=mu;
+	
+}
 
 ext_vars(){}
 
@@ -191,7 +200,7 @@ k_vector_t external_k_vector_;
 int KDIM_;
 frequency_t external_freq_;
 double BETA_;
-double MU_;
+std::complex<double> MU_;
 };
 
 typedef std::vector< ext_vars> external_variable_list;

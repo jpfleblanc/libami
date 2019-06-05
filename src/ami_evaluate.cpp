@@ -11,7 +11,7 @@
 
 std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
-std::cout<<"Evaluating Result for construction: ";
+// std::cout<<"Evaluating Result for construction: ";
 
 int dim=parms.N_INT_;
 SorF_t SorF_result;
@@ -28,7 +28,7 @@ SorF_t S_double_left, S_double_right;
 if(i==0){
 // do dot operation
 SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
-std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+// std::cout<<"S["<<i<<"].f(P["<<i<<"])";
 }
 else {SF_left=SorF_result;}
 
@@ -38,13 +38,13 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
 
 SorF_result=cross(SF_left,SF_right);
-std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+// std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
 
 
-//std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
-//for( int x=0; x< SorF_result[0].size(); x++){
-//std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
-//}
+// std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
+// for( int x=0; x< SorF_result[0].size(); x++){
+// std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
+// }
 
 
 
@@ -53,7 +53,7 @@ std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
 
 std::complex<double> final_result;
 
-std::cout<<"*R"<< std::endl;
+//std::cout<<"*R"<< std::endl;
 final_result=star(parms, SorF_result, R_array[dim], external);
 
 
@@ -82,8 +82,6 @@ line.push_back(Si[i][j]*fermi[i][j]);
 output.push_back(line);
 
 }
-
-
 
 
 return output;
@@ -150,16 +148,16 @@ return output;
 
 std::complex<double> AmiCalc::star(ami_parms &parms, SorF_t K, Ri_t R, ami_vars external){
 
-std::cout<<"Size of left is "<< K.size() <<std::endl;
-std::cout<<"Size of left array is "<< K[0].size() <<std::endl;
-std::cout<<"Size of right is "<< R.size() <<std::endl;
+// std::cout<<"Size of left is "<< K.size() <<std::endl;
+// std::cout<<"Size of left array is "<< K[0].size() <<std::endl;
+// std::cout<<"Size of right is "<< R.size() <<std::endl;
 
 std::complex<double> output=0;
 std::complex<double> term;
 std::complex<double> gprod;
 
-std::ofstream file;
-file.open("outfile.dat");
+// std::ofstream file;
+// file.open("outfile.dat");
 
 
 for( int i=0; i< K[0].size(); i++)
@@ -178,11 +176,11 @@ if( true ){output+= term;
 
 
 
-file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
 
-file.close();
+// file.close();
 
 
 
