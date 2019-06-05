@@ -26,7 +26,9 @@ std::cout<<"Ami Constructor Called"<<std::endl;
 void AmiCalc::construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
 
 // std::cout<<"Here the code constructs the analytic solution and stores it in the R, P and S arrays"<<std::endl;
-
+R_array.clear();
+P_array.clear();
+S_array.clear();
 int dim=parms.N_INT_;
 
 g_prod_array_t R0_array;
