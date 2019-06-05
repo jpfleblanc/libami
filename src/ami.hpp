@@ -36,16 +36,14 @@ typedef enum {Sigma,Pi,Hartree} graph_type ;
 // This is a little weird.  The ami_parms structure is defined here. But there is no internal variable set for this... meaning it has to be passed to all of the functions... probably this should be changed. Explicit passing is 'ok'.
 
 struct ami_parms{
-ami_parms(int N_INT, double BETA, double E_REG){
+ami_parms(int N_INT,  double E_REG){
 N_INT_=N_INT;
-BETA_=BETA;
 E_REG_=E_REG;
 TYPE_=static_cast<AmiCalc::graph_type>(0); /// by default sigma
 }
 
-ami_parms(int N_INT, double BETA, double E_REG, graph_type TYPE){
+ami_parms(int N_INT, double E_REG, graph_type TYPE){
 N_INT_=N_INT;
-BETA_=BETA;
 E_REG_=E_REG;
 TYPE_=TYPE;
 }
@@ -53,7 +51,6 @@ TYPE_=TYPE;
 ami_parms(){}
 
 int N_INT_;
-double BETA_;
 double E_REG_;
 graph_type TYPE_;
 
@@ -102,26 +99,14 @@ std::vector<int> which_g_;
 
 /// external list of energies used with epsilon_t to construct energies
 
-typedef std::vector<double> energy_t;
+typedef std::vector<std::complex<double>> energy_t;
 typedef std::vector< std::complex<double>  > frequency_t;
 
-struct external_vars{
+typedef std::vector< double> k_vector_t;
+typedef std::vector< k_vector_t> k_vect_list_t;
 
 
-external_vars(energy_t eps, frequency_t freq){
-energy_= eps;
-frequency_= freq;
-prefactor=1.0;
 
-}
-
-external_vars(){prefactor=1.0;}
-
-energy_t energy_;
-frequency_t frequency_;
-double prefactor;
-
-};
 
 
 typedef std::vector<double> sign_t;
@@ -146,7 +131,7 @@ typedef std::vector<Si_t> S_t;
 
 // typedefs for evaluation
 
-typedef std::vector< std::vector<double> > SorF_t;
+typedef std::vector< std::vector<std::complex<double> > > SorF_t;
 
 //-----------
 //std::vector<std::vector<int>> intvec;
@@ -157,6 +142,89 @@ typedef std::vector< std::vector<double> > SorF_t;
 //for (auto&& v : intvec) doublevec.emplace_back(std::begin(v), std::end(v));
 //-----------
 
+// various structures
+
+// internal state - list of internal k'sb_type
+// ext_vars and external_variable_list : loaded from a file and populated with external parameters to be evaluated
+// ami_vars - actual input to ami routines for constructing solutions
+
+struct internal_state{
+
+internal_state(int k_length, int dim){
+internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));	
+dim_=dim;
+order_=k_length;
+}
+
+internal_state(){}
+
+void initialize(int k_length, int dim){
+internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));	
+dim_=dim;
+order_=k_length;
+	
+}
+
+k_vect_list_t internal_k_list_;
+int order_;
+int dim_;
+// R_t R_array_;
+// P_t P_array_;
+// S_t S_array_;
+
+};
+
+
+struct ext_vars{
+
+ext_vars(int dim){
+	
+KDIM_=dim;
+external_k_vector_.assign(dim,0.0);	
+	
+}
+
+ext_vars(){}
+
+
+k_vector_t external_k_vector_;	
+int KDIM_;
+frequency_t external_freq_;
+double BETA_;
+double MU_;
+};
+
+typedef std::vector< ext_vars> external_variable_list;
+
+
+
+// ami_vars should be constructed from ext_vars and internal_state
+
+struct ami_vars{
+
+ami_vars(energy_t eps, frequency_t freq){
+energy_= eps;
+frequency_= freq;
+prefactor=1.0;
+
+}
+
+ami_vars(){prefactor=1.0;}
+
+energy_t energy_;
+frequency_t frequency_;
+double prefactor;
+double BETA_;
+
+};
+
+
+
+
+
+
+// IO function for external variables
+void read_external(std::string filename, external_variable_list &extern_list);
 /// Various functions
 
 g_prod_t construct_multipole_example();
@@ -165,12 +233,13 @@ g_prod_t construct_example_Y();
 g_prod_t construct_example_J();
 
 
-external_vars construct_ext_example_Y();
-external_vars construct_ext_example_J();
-external_vars construct_ext_example_Sigma();
-external_vars construct_ext_multipole_example();
+// These are depricated
+ami_vars construct_ext_example_Y();
+ami_vars construct_ext_example_J();
+ami_vars construct_ext_example_Sigma();
+ami_vars construct_ext_multipole_example();
 
-external_vars construct_random_example_J(std::mt19937 &rng);
+ami_vars construct_random_example_J(std::mt19937 &rng);
 
 // helper functions - could move to helper.hpp
 void print_g_prod_info(g_prod_t g);
@@ -218,17 +287,17 @@ void update_gprod_general(int index, R_t &R_array, P_t &P_array, S_t &S_array);
 
 // Functions for Evaluation
 
-std::complex<double> star(ami_parms &parms, SorF_t H, Ri_t R, external_vars external);
+std::complex<double> star(ami_parms &parms, SorF_t H, Ri_t R, ami_vars external);
 std::complex<double> star(SorF_t H, Ri_t R);
-SorF_t fermi(ami_parms &parms, Pi_t pi, external_vars external);
-double fermi_pole(ami_parms &parms, pole_struct pole, external_vars external);
+SorF_t fermi(ami_parms &parms, Pi_t pi, ami_vars external);
+std::complex<double>  fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external);
 SorF_t cross(SorF_t left, SorF_t right);
 SorF_t dot(Si_t Si, SorF_t fermi);
 
-double get_energy_from_pole(pole_struct pole, external_vars external);
-double get_energy_from_g(g_struct g, external_vars external);
-//std::complex<double> eval_gprod(g_prod_t g_prod, external_vars external);
-std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, external_vars external);
+std::complex<double> get_energy_from_pole(pole_struct pole, ami_vars external);
+std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
+//std::complex<double> eval_gprod(g_prod_t g_prod, ami_vars external);
+std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
 
 
@@ -264,7 +333,7 @@ public:
   void evaluate(ami_parms &parms);
   //void evaluate(alps::params &parms, R_t &R_array, P_t &P_array, S_t &S_array);
 
-  std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, external_vars &external);
+  std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
   std::complex<double> evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng);
   
 

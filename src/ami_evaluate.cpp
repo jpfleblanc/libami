@@ -9,7 +9,7 @@
 
 
 
-std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, external_vars &external){
+std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
 std::cout<<"Evaluating Result for construction: ";
 
@@ -71,7 +71,7 @@ SorF_t output;
 
 for( int i=0; i< Si.size(); i++){
 
-std::vector<double> line;
+std::vector<std::complex<double> > line;
 
 for(int j=0; j< Si[i].size(); j++){
 
@@ -99,7 +99,7 @@ AmiCalc::SorF_t AmiCalc::cross(SorF_t left, SorF_t right){
 SorF_t output;
 
 
-std::vector<double> line;
+std::vector<std::complex<double> > line;
 
 for( int i=0; i< left[0].size(); i++){
 for( int rj=0; rj< right[i].size(); rj++){
@@ -120,14 +120,14 @@ return output;
 
 }
 
-AmiCalc::SorF_t AmiCalc::fermi(ami_parms &parms, Pi_t Pi, external_vars external){
+AmiCalc::SorF_t AmiCalc::fermi(ami_parms &parms, Pi_t Pi, ami_vars external){
 
 SorF_t output;
 
 
 for (int i=0; i< Pi.size(); i++){
 
-std::vector<double> group;
+std::vector<std::complex<double> > group;
 
   for (int j=0; j< Pi[i].size(); j++){
 
@@ -148,7 +148,7 @@ return output;
 
 // TODO: Remove filewriting, this is debugging info.
 
-std::complex<double> AmiCalc::star(ami_parms &parms, SorF_t K, Ri_t R, external_vars external){
+std::complex<double> AmiCalc::star(ami_parms &parms, SorF_t K, Ri_t R, ami_vars external){
 
 std::cout<<"Size of left is "<< K.size() <<std::endl;
 std::cout<<"Size of left array is "<< K[0].size() <<std::endl;
@@ -192,7 +192,7 @@ return output;
 
 }
 
-std::complex<double> AmiCalc::eval_gprod(ami_parms &parms, g_prod_t g_prod, external_vars external){
+std::complex<double> AmiCalc::eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external){
 std::complex<double> output=0;
 
 std::complex<double> denom_prod=1;
@@ -212,7 +212,7 @@ denom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
 
 for(int a=0; a< g_prod[i].eps_.size(); a++){
-denom+=g_prod[i].eps_[a]*external.energy_[a];
+denom+=double(g_prod[i].eps_[a])*external.energy_[a];
 }
 
 //denom+=get_energy_from_g(parms, g_prod[i], external);
@@ -289,12 +289,12 @@ return output;
 }
 
 
-double AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, external_vars external){
+std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
-double output;
+std::complex<double>  output;
 int eta=0;
 
-double beta=parms.BETA_;
+double beta=external.BETA_;
 double E_REG=parms.E_REG_;
 
 
@@ -304,7 +304,7 @@ for (int i=0; i< pole.alpha_.size(); i++){
 eta+= pole.alpha_[i];
 }
 
-double E= get_energy_from_pole(pole,external);
+std::complex<double>  E= get_energy_from_pole(pole,external);
 
 
 double sigma= pow(-1.0, double(eta));
@@ -321,14 +321,14 @@ return output;
 }
 
 
-double AmiCalc::get_energy_from_pole( pole_struct pole, external_vars external){
+std::complex<double> AmiCalc::get_energy_from_pole( pole_struct pole, ami_vars external){
 
-double output=0;
+std::complex<double> output=0;
 
 
 for (int i=0; i< pole.eps_.size(); i++){
 
-output+= pole.eps_[i]*external.energy_[i];
+output+= double(pole.eps_[i])*external.energy_[i];
 
 }
 
@@ -340,13 +340,13 @@ return output;
 }
 
 
-double AmiCalc::get_energy_from_g( g_struct g, external_vars external){
+std::complex<double>  AmiCalc::get_energy_from_g( g_struct g, ami_vars external){
 
-double output=0;
+std::complex<double>  output=0;
 
 for (int i=0; i< g.eps_.size(); i++){
 
-output+= g.eps_[i]*external.energy_[i];
+output+= double(g.eps_[i])*external.energy_[i];
 
 }
 
@@ -368,7 +368,7 @@ file.open(filename.str());
 
 for (int i=0; i< NDAT;i++){
 
-external_vars ext_f=construct_random_example_J(rng);
+ami_vars ext_f=construct_random_example_J(rng);
 std::complex<double> result=AmiCalc::evaluate(parms, R_array, P_array, S_array,  ext_f);
 
 file << i<<" "<<result.real()<< " "<< result.imag() << std::endl;

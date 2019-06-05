@@ -55,7 +55,7 @@ R0.push_back(g5);
 return R0;
 }
 
-AmiCalc::external_vars AmiCalc::construct_ext_multipole_example(){
+AmiCalc::ami_vars AmiCalc::construct_ext_multipole_example(){
 
 
 
@@ -68,7 +68,7 @@ frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,M_PI)};
 
 
-external_vars external(energy, frequency);
+ami_vars external(energy, frequency);
 return external;
 
 }
@@ -115,7 +115,7 @@ return R0;
 
 }
 
-AmiCalc::external_vars AmiCalc::construct_ext_example_Sigma(){
+AmiCalc::ami_vars AmiCalc::construct_ext_example_Sigma(){
 
 
 
@@ -127,7 +127,7 @@ for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 frequency.push_back(std::complex<double>(0,M_PI));
 
-external_vars external(energy, frequency);
+ami_vars external(energy, frequency);
 return external;
 
 }
@@ -136,7 +136,7 @@ return external;
 
 
 
-AmiCalc::external_vars AmiCalc::construct_ext_example_Y(){
+AmiCalc::ami_vars AmiCalc::construct_ext_example_Y(){
 
 
 
@@ -149,7 +149,7 @@ frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,M_PI)};
 
 
-external_vars external(energy, frequency);
+ami_vars external(energy, frequency);
 return external;
 
 }
@@ -209,7 +209,7 @@ return R0;
 }
 
 
-AmiCalc::external_vars AmiCalc::construct_ext_example_J(){
+AmiCalc::ami_vars AmiCalc::construct_ext_example_J(){
 
 energy_t energy={-4,1,1,1,1,1,1,1,1,1,-4,-4,1,1,1,1,1};
 		//{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -230,7 +230,7 @@ frequency_t frequency= {std::complex<double>(0,0),
 
 //frequency.push_back(std::complex<double>(0, M_PI));//(0,M_PI));
 
-external_vars external(energy, frequency);
+ami_vars external(energy, frequency);
 return external;
 
 }
@@ -352,7 +352,7 @@ return R0;
 
 
 
-AmiCalc::external_vars AmiCalc::construct_random_example_J(std::mt19937 &rng){
+AmiCalc::ami_vars AmiCalc::construct_random_example_J(std::mt19937 &rng){
 
 energy_t energy=random_energy(17, rng);
 
@@ -375,7 +375,7 @@ frequency_t frequency= {std::complex<double>(0,0),
 
 //frequency.push_back(std::complex<double>(0, M_PI));//(0,M_PI));
 
-external_vars external(energy, frequency);
+ami_vars external(energy, frequency);
 return external;
 
 }
