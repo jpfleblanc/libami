@@ -28,7 +28,7 @@ SorF_t S_double_left, S_double_right;
 if(i==0){
 // do dot operation
 SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
-// std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+ // std::cout<<"S["<<i<<"].f(P["<<i<<"])";
 }
 else {SF_left=SorF_result;}
 
@@ -38,7 +38,7 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
 
 SorF_result=cross(SF_left,SF_right);
-// std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+ // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
 
 
 // std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
@@ -53,7 +53,7 @@ SorF_result=cross(SF_left,SF_right);
 
 std::complex<double> final_result;
 
-//std::cout<<"*R"<< std::endl;
+// std::cout<<"*R"<< std::endl;
 final_result=star(parms, SorF_result, R_array[dim], external);
 
 
@@ -91,8 +91,8 @@ AmiCalc::SorF_t AmiCalc::cross(SorF_t left, SorF_t right){
 // should check that size() of left==1 or else this won't work. Throw an error.
 // also, left[0].size()==right.size()
 
-//std::cout<<"Size of left is "<< left.size() <<std::endl;
-//std::cout<<"left[0] and right is "<< left[0].size()<< " "<< right.size() <<std::endl;
+// std::cout<<"Size of left is "<< left.size() <<std::endl;
+// std::cout<<"left[0] and right is "<< left[0].size()<< " "<< right.size() <<std::endl;
 
 SorF_t output;
 
@@ -156,8 +156,8 @@ std::complex<double> output=0;
 std::complex<double> term;
 std::complex<double> gprod;
 
-// std::ofstream file;
-// file.open("outfile.dat");
+std::ofstream file;
+file.open("outfile.dat");
 
 
 for( int i=0; i< K[0].size(); i++)
@@ -168,7 +168,7 @@ term=K[0][i]*gprod;
 //std::isnan(std::real(term))
 if( true ){output+= term;
 
-//std::cout<<"Term apparently is finite? "<< term << std::endl;
+// std::cout<<"Term apparently is finite? "<< term << std::endl;
 }
 
 //print_g_prod_info(R[i]);
@@ -176,15 +176,15 @@ if( true ){output+= term;
 
 
 
-// file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
 
-// file.close();
+file.close();
 
 
 
-//std::cout<<"Returning value of "<< output <<std::endl;
+// std::cout<<"Returning value of "<< output <<std::endl;
 
 return output;
 
@@ -208,9 +208,10 @@ denom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
 }
 
-
+// Unsure. should this be -=? given that my epsilon is the positive quantity?
 for(int a=0; a< g_prod[i].eps_.size(); a++){
 denom+=double(g_prod[i].eps_[a])*external.energy_[a];
+//denom-=double(g_prod[i].eps_[a])*external.energy_[a];
 }
 
 //denom+=get_energy_from_g(parms, g_prod[i], external);
@@ -312,8 +313,8 @@ double sigma= pow(-1.0, double(eta));
 
 output=1.0/(sigma*exp(beta*E-E_REG)+1.0);
 
-//std::cout<< "Fermi output is "<< output << " for beta E and sigma eta "<< beta <<" "<< E<<" "<< sigma <<" "<< eta << std::endl;
-//print_pole_struct_info(pole);
+// std::cout<< "Fermi output is "<< output << " for beta E and sigma eta "<< beta <<" "<< E<<" "<< sigma <<" "<< eta << std::endl;
+// print_pole_struct_info(pole);
 
 return output;
 }
