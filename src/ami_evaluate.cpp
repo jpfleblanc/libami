@@ -157,7 +157,7 @@ std::complex<double> term;
 std::complex<double> gprod;
 
 std::ofstream file;
-file.open("outfile.dat");
+// file.open("outfile.dat");
 
 
 for( int i=0; i< K[0].size(); i++)
@@ -176,11 +176,11 @@ if( true ){output+= term;
 
 
 
-file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
 
-file.close();
+// file.close();
 
 
 
@@ -194,7 +194,7 @@ std::complex<double> AmiCalc::eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_
 std::complex<double> output=0;
 
 std::complex<double> denom_prod=1;
-double prefactor=1.0;
+double prefactor=external.prefactor;
 
 double E_REG=parms.E_REG_;
 

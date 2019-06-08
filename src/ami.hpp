@@ -168,6 +168,7 @@ order_=k_length;
 k_vect_list_t internal_k_list_;
 int order_;
 int dim_;
+double prefactor_;
 // R_t R_array_;
 // P_t P_array_;
 // S_t S_array_;
