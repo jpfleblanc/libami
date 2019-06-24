@@ -8,22 +8,22 @@
 
 
 
-void AmiCalc::write_S(S_t &S_array){
+void AmiCalc::write_S(S_t &s_array){
 
-for (int i=0; i< S_array.size(); i++){
-
+for (int i=0; i< s_array.size(); i++){
+std::cout<<"Writing to file line 1"<<std::endl;
 std::ofstream file;
 std::stringstream filename;
 filename<<"S_"<< i <<".dat";
 
 file.open(filename.str());
 
-for (int j=0; j< S_array[i].size(); j++){
+for (int j=0; j< s_array[i].size(); j++){
 
 file<<"[ ";
-for (int k=0; k<S_array[i][j].size();k++){
+for (int k=0; k<s_array[i][j].size();k++){
 
-file<<S_array[i][j][k]<<" ";
+file<<s_array[i][j][k]<<" ";
 }
 file <<"]"<<std::endl;
 
@@ -37,10 +37,195 @@ file.close();
 
 }
 
+void AmiCalc::write_S_readable(S_t &s_array){
 
-void AmiCalc::write_P(P_t &P_array){
+std::ofstream file;
+std::stringstream filename;
+filename<<"S_cpp.dat";
 
-for (int i=0; i< P_array.size(); i++){
+std::cout<<"Write_S has size "<< s_array.size()<<std::endl;
+file.open(filename.str());
+for (int i=0; i< s_array.size(); i++){
+
+
+
+
+for (int j=0; j< s_array[i].size(); j++){
+
+file<<"[ ";
+for (int k=0; k<s_array[i][j].size();k++){
+//std::cout<<i<<" "<< j<<" "<<k<<std::endl;
+file<<s_array[i][j][k]<<" ";
+}
+file <<"] ";
+
+}
+
+file << std::endl;
+
+
+
+}
+
+file.close();
+
+}
+
+void AmiCalc::write_R_readable(R_t &r_array){
+
+std::ofstream file;
+std::stringstream filename;
+std::stringstream alphafile;
+filename<<"R_mnta_cpp.dat";
+alphafile<<"R_alpha_cpp.dat";	
+
+file.open(filename.str());
+
+std::cout<<"Write_R has size "<<r_array.size()<<std::endl;
+std::cout<<"Write_Ri has size "<<r_array[r_array.size()-1].size()<<std::endl;
+std::cout<<"Write_Rprod has size "<<r_array[r_array.size()-1][0].size()<<std::endl;
+
+for( int i =0; i< r_array[r_array.size()-1].size(); i++){
+
+
+for( int j=0; j< r_array[r_array.size()-1][i].size(); j++){
+	
+file<<"[ ";	
+for( int k=0; k< r_array[r_array.size()-1][i][j].eps_.size(); k++){	
+
+file<<r_array[r_array.size()-1][i][j].eps_[k]<<" ";
+
+}
+file<<"] ";
+}
+
+	
+file<<std::endl;
+
+}	
+file.close();
+
+// for alphas
+
+file.open(alphafile.str());
+
+std::cout<<"Write_R has size "<<r_array.size()<<std::endl;
+std::cout<<"Write_Ri has size "<<r_array[r_array.size()-1].size()<<std::endl;
+std::cout<<"Write_Rprod has size "<<r_array[r_array.size()-1][0].size()<<std::endl;
+
+for( int i =0; i< r_array[r_array.size()-1].size(); i++){
+
+
+for( int j=0; j< r_array[r_array.size()-1][i].size(); j++){
+	
+file<<"[ ";	
+for( int k=0; k< r_array[r_array.size()-1][i][j].alpha_.size(); k++){	
+
+file<<r_array[r_array.size()-1][i][j].alpha_[k]<<" ";
+
+}
+file<<"] ";
+}
+
+	
+file<<std::endl;
+
+}	
+file.close();
+
+
+
+	
+	
+}	
+
+void AmiCalc::write_P_readable(P_t &p_array){
+
+std::ofstream file;
+std::stringstream filename;
+std::stringstream alphafile;
+filename<<"P_mnta_cpp.dat";
+alphafile<<"P_alpha_cpp.dat";
+file.open(filename.str());
+std::cout<<"Write_P has size "<< p_array.size()<<std::endl;
+
+for (int i=0; i< p_array.size(); i++){
+
+
+
+
+
+for (int j=0; j< p_array[i].size(); j++){
+
+file<<"[ ";
+for (int k=0; k<p_array[i][j].size();k++){
+std::stringstream  pole_string;
+file<<"[ ";
+for (int r=0; r<p_array[i][j][k].eps_.size(); r++){
+pole_string<<p_array[i][j][k].eps_[r]<<" ";
+
+}
+
+file<< pole_string.str();
+
+file<<"] ";
+}
+file <<"] ";
+
+}
+
+file<<std::endl;
+
+
+
+}
+file.close();
+
+
+file.open(alphafile.str());
+
+for (int i=0; i< p_array.size(); i++){
+
+
+
+
+
+for (int j=0; j< p_array[i].size(); j++){
+
+file<<"[ ";
+for (int k=0; k<p_array[i][j].size();k++){
+std::stringstream  pole_string;
+file<<"[ ";
+for (int r=0; r<p_array[i][j][k].alpha_.size(); r++){
+pole_string<<p_array[i][j][k].alpha_[r]<<" ";
+
+}
+
+file<< pole_string.str();
+
+file<<"] ";
+}
+file <<"] ";
+
+}
+
+file<<std::endl;
+
+
+
+}
+file.close();
+
+
+
+
+}
+
+
+
+void AmiCalc::write_P(P_t &p_array){
+
+for (int i=0; i< p_array.size(); i++){
 
 std::ofstream file;
 std::stringstream filename;
@@ -48,14 +233,14 @@ filename<<"P_"<<i<<".dat";
 
 file.open(filename.str());
 
-for (int j=0; j< P_array[i].size(); j++){
+for (int j=0; j< p_array[i].size(); j++){
 
 file<<"[ ";
-for (int k=0; k<P_array[i][j].size();k++){
+for (int k=0; k<p_array[i][j].size();k++){
 std::stringstream  pole_string;
 file<<" ( ";
-for (int r=0; r<P_array[i][j][k].alpha_.size(); r++){
-pole_string<<P_array[i][j][k].alpha_[r]<<" ";
+for (int r=0; r<p_array[i][j][k].alpha_.size(); r++){
+pole_string<<p_array[i][j][k].alpha_[r]<<" ";
 
 }
 

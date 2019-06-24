@@ -112,6 +112,7 @@ typedef std::vector< k_vector_t> k_vect_list_t;
 typedef std::vector<double> sign_t;
 typedef std::vector<g_struct> g_prod_t;
 typedef std::vector<pole_struct> pole_array_t;
+
 typedef std::vector<sign_t> sign_array_t;
 typedef std::vector<g_prod_t> g_prod_array_t;
 
@@ -125,7 +126,7 @@ typedef std::vector<sign_t> Si_t;
 
 // final output arrays
 
-typedef std::vector<g_prod_array_t> R_t;
+typedef std::vector<g_prod_array_t> R_t;  // TODO: is there a reason this is not a vector of Ri_t ???
 typedef std::vector<Pi_t> P_t;
 typedef std::vector<Si_t> S_t;
 
@@ -235,6 +236,15 @@ double BETA_;
 
 // IO function for external variables
 void read_external(std::string filename, external_variable_list &extern_list);
+void read_text_S_solutions(std::string filename, S_t &s_array);
+void read_text_P_solutions(std::string eps_filename,std::string alpha_filename, P_t &p_array);
+void read_text_R_solutions(std::string eps_filename,std::string alpha_filename, R_t &r_array, int size);
+double load_prefactor(std::string filename, int order);
+void write_S_readable(S_t &s_array);
+void write_P_readable(P_t &p_array);
+void write_R_readable(R_t &r_array);
+
+
 /// Various functions
 
 g_prod_t construct_multipole_example();
@@ -265,15 +275,15 @@ void print_signs(sign_t signs);
 void print_g_prod_array(g_prod_array_t g_array);
 void print_pole_array(pole_array_t g);
 
-void print_S(int dim, S_t &S_array);
-void print_P( int dim, P_t &P_array);
-void print_R( int dim, R_t &R_array);
-void print_final( int dim, R_t &R_array, P_t &P_array, S_t &S_array);
+void print_S(int dim, S_t &s_array);
+void print_P( int dim, P_t &p_array);
+void print_R( int dim, R_t &r_array);
+void print_final( int dim, R_t &r_array, P_t &p_array, S_t &s_array);
 
 void print_Pi( int dim, Pi_t &Pi_array);
 
-void write_P(P_t &P_array);
-void write_S(S_t &S_array);
+void write_P(P_t &p_array);
+void write_S(S_t &s_array);
 
 
 
