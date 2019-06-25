@@ -11,7 +11,7 @@
 
 std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
-// std::cout<<"Evaluating Result for construction: ";
+ //std::cout<<"Evaluating Result for construction: ";
 
 int dim=parms.N_INT_;
 SorF_t SorF_result;
@@ -28,7 +28,7 @@ SorF_t S_double_left, S_double_right;
 if(i==0){
 // do dot operation
 SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
- // std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+//  std::cout<<"S["<<i<<"].f(P["<<i<<"])";
 }
 else {SF_left=SorF_result;}
 
@@ -38,7 +38,7 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
 
 SorF_result=cross(SF_left,SF_right);
- // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+//  std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
 
 
 // std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
@@ -53,7 +53,7 @@ SorF_result=cross(SF_left,SF_right);
 
 std::complex<double> final_result;
 
-// std::cout<<"*R"<< std::endl;
+//std::cout<<"*R"<< std::endl;
 final_result=star(parms, SorF_result, R_array[dim], external);
 
 

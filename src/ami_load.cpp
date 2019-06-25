@@ -12,6 +12,7 @@ ext_vars line_variables;
 
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	std::cout<<filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	
@@ -84,6 +85,7 @@ ext_vars line_variables;
 
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	std::cout<<filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	
@@ -157,6 +159,7 @@ pole_struct collect_eps;
 
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	std::cout<<eps_filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	
@@ -236,6 +239,7 @@ infile_stream.open(alpha_filename);
 
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	std::cout<<alpha_filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	
@@ -310,6 +314,7 @@ infile_stream.open(filename);
 	
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	std::cout<<filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	
@@ -335,6 +340,81 @@ double output=pow(-1, fermi_loops + double(order));
 return output;	
 }
 
+void AmiCalc::read_text_R0(std::string alpha_filename, g_prod_t &R0){
+
+g_struct collect_g;
+
+std::ifstream infile_stream;
+infile_stream.open(alpha_filename);
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<alpha_filename<<std::endl;
+      throw std::runtime_error("Could not open input file");
+    } 	
+	
+std::string line;
+
+std::getline(infile_stream, line);
+std::stringstream ss(line);
+
+std::string current, next;	
+ss >> current;
+
+
+while( ! ss.eof()){
+
+ss >> next;
+
+//std::cout<<"Current and next: "<< current<<" "<<next<<std::endl;
+if(current!="[" && current !="]"){ 
+
+collect_g.alpha_.push_back( std::stoi(current));
+
+}
+
+if(current=="]" && next=="["){
+	if(collect_g.alpha_.size()!=0){
+R0.push_back(collect_g);
+	collect_g.alpha_.clear();}	
+}
+
+if(current=="]" && next=="]"){
+	if(collect_g.alpha_.size()!=0){
+R0.push_back(collect_g);
+	collect_g.alpha_.clear();	}
+}
+
+current=next;
+
+}
+
+std::cout<<"R0 has "<< R0.size()<<" Green's functions"<<std::endl;
+
+for(int i=0; i< R0.size(); i++){
+
+R0[i].eps_.resize(R0.size(),0);
+R0[i].eps_[i]=1;	
+	
+}
+
+for(int i=0; i<R0.size(); i++){
+for(int j=i; j< R0.size(); j++){
+
+if(i!=j){
+
+if(R0[j].alpha_==R0[i].alpha_){
+
+R0[j].eps_=R0[i].eps_;
+}	
+	
+}	
+
+}	
+}
+
+
+}
 
 void AmiCalc::read_text_R_solutions(std::string eps_filename,std::string alpha_filename, R_t &r_array, int size){
 
@@ -345,7 +425,7 @@ g_struct collect_g;
 // fill dummy R elements that don't  get evaluated 
 
 
-for(int i=0; i<size-1; i++){
+for(int i=0; i<size; i++){
 	
 r_array.push_back(collect_ri); // this is just pushing back empty structures that don't get looked at 
 	
@@ -360,6 +440,7 @@ infile_stream.open(eps_filename);
 
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	  std::cout<<eps_filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	
@@ -439,12 +520,13 @@ ln=0;
 bn=0;
 an=0;
 
-int last=size-1;
+int last=size;
 
 infile_stream.open(alpha_filename);
 
 if(infile_stream.fail()) // checks to see if file opended 
     { 
+	  std::cout<<alpha_filename<<std::endl;
       throw std::runtime_error("Could not open input file");
     } 	
 	

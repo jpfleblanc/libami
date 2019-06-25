@@ -6,6 +6,9 @@
 
 #pragma once
 
+ 
+#include <string> 
+#include <sstream> 
 #include <fstream>
 #include <iostream>
 #include <complex>
@@ -239,6 +242,7 @@ void read_external(std::string filename, external_variable_list &extern_list);
 void read_text_S_solutions(std::string filename, S_t &s_array);
 void read_text_P_solutions(std::string eps_filename,std::string alpha_filename, P_t &p_array);
 void read_text_R_solutions(std::string eps_filename,std::string alpha_filename, R_t &r_array, int size);
+void read_text_R0(std::string alpha_filename, g_prod_t &R0);
 double load_prefactor(std::string filename, int order);
 void write_S_readable(S_t &s_array);
 void write_P_readable(P_t &p_array);
