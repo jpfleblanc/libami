@@ -16,6 +16,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <random>
+#include <filesystem>
+//namespace std::filesystem = std::experimental::filesystem;
 
 int factorial(int n);
 
@@ -232,7 +234,36 @@ double BETA_;
 
 };
 
+typedef std::vector<ami_vars> ami_vars_list;
 
+
+
+struct solution_set{
+	
+solution_set(g_prod_t test_R0,S_t  test_S, P_t test_P, R_t test_R,ami_parms test_amiparms, double prefactor){
+
+R0_=test_R0;
+S_=test_S;
+P_=test_P;
+R_=test_R;
+ami_parms_=test_amiparms;
+prefactor_=prefactor;
+
+
+};
+	
+g_prod_t R0_;
+S_t S_;
+P_t P_;
+R_t R_;
+ami_parms ami_parms_;
+double prefactor_;
+
+
+	
+};
+
+typedef std::vector< std::vector<solution_set> > solution_set_matrix_t;
 
 
 
@@ -247,6 +278,17 @@ double load_prefactor(std::string filename, int order);
 void write_S_readable(S_t &s_array);
 void write_P_readable(P_t &p_array);
 void write_R_readable(R_t &r_array);
+
+// solution functions
+void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX, int MAX_ORDER, double EREG);
+void evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars_list);
+
+void construct_ami_vars_list(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
+ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
+energy_t construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
+std::complex<double> eval_epsilon(AmiCalc::k_vector_t k, std::complex<double> mu );
+k_vector_t construct_k(AmiCalc::alpha_t alpha, AmiCalc::k_vect_list_t &k);
+
 
 
 /// Various functions

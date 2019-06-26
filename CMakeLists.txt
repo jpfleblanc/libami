@@ -14,7 +14,7 @@ link_directories("/usr/lib")
 #  include_directories(${Boost_INCLUDE_DIRS})
 #endif()
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -std=c++11")# -ffast-math")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -std=c++17 -lstdc++fs")# -ffast-math")
 
 #include_directories(/home/jpfleblanc/software/boost_1_55_0)
 
@@ -32,7 +32,7 @@ ADD_LIBRARY(ami SHARED ${LIB_FILES})
 
 
 #target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} m)
-target_link_libraries(${PROJECT_NAME}  m)
+target_link_libraries(${PROJECT_NAME}  m stdc++fs)
 
 
 INSTALL(TARGETS ami 

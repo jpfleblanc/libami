@@ -7,6 +7,18 @@
 #include <iomanip>
 
 
+// TODO does this need to be the full AMI_MATRIX?
+void AmiCalc::evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars){
+
+for(int i=0; i<ami_eval_vars.size(); i++){	
+
+std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);	
+
+results.push_back(calc_result);	
+}	
+	
+	
+}	
 
 
 std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
@@ -382,7 +394,96 @@ file.close();
 
 
 
+AmiCalc::energy_t AmiCalc::construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external){
 
+AmiCalc::energy_t result;	
+AmiCalc::k_vect_list_t k_list;
+
+k_list=state.internal_k_list_;
+k_list.push_back(external.external_k_vector_);
+
+int count=0;
+
+result.resize(R0[0].eps_.size(),0);
+for(int i=0; i< R0.size(); i++){
+	for(int j=0; j<R0[i].eps_.size();j++){
+		if(R0[i].eps_[j]==1){
+result[j]=eval_epsilon( construct_k(R0[i].alpha_ , k_list) , external.MU_);
+//std::cout<<count<<" "<< result[j].real()<<std::endl;
+count++; 
+		}
+	}
+}	
+
+if(count != R0[0].eps_.size()){
+	std::cout<<count<<" "<< R0[0].eps_.size();
+	throw std::runtime_error("Something wrong with epsilon");}
+	
+return result;
+	
+}
+
+void AmiCalc::construct_ami_vars_list(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list){
+
+for(int i=0; i<external.size(); i++){
+
+vars_list.push_back(construct_ami_vars(R0, state, external[i]));
+}	
+	
+}
+
+std::complex<double> AmiCalc::eval_epsilon(AmiCalc::k_vector_t k, std::complex<double> mu ){
+	
+	std::complex<double> output(0,0);
+	// print_kvector(k);
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=-2.0*cos(k[i]);	
+		
+	}
+	
+	output -= mu;
+	
+	
+	return -output;
+}
+
+AmiCalc::k_vector_t AmiCalc::construct_k(AmiCalc::alpha_t alpha, AmiCalc::k_vect_list_t &k){
+	
+AmiCalc::k_vector_t kout(k[0].size(),0);	
+
+for(int j=0; j<kout.size(); j++){
+for(int i=0;i<k.size(); i++){
+	
+kout[j]+= alpha[i]*k[i][j];	
+	
+}
+}
+
+return kout;	
+	
+}
+
+AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external){
+	
+//energy_t energy={-4,1,-1};
+// std::cout<<"Beta value is "<<external.BETA_<<std::endl;
+
+AmiCalc::energy_t energy=construct_energy(R0, state, external);
+
+AmiCalc::frequency_t frequency;
+
+for(int i=0;i<state.order_;i++){ frequency.push_back(std::complex<double>(0,0));}
+
+frequency.push_back(external.external_freq_[0]); // some number of external frequencies
+
+AmiCalc::ami_vars final_out(energy, frequency);
+final_out.BETA_=external.BETA_;
+final_out.prefactor=state.prefactor_;
+return final_out;
+
+	
+}
 
 
 

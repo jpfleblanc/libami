@@ -2,6 +2,93 @@
 
 
 
+void AmiCalc::load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX, int MAX_ORDER, double EREG){
+	
+for(int ord=0; ord< MAX_ORDER; ord++){	
+	
+std::string path=top_directory+"/"+std::to_string(ord+1)+"_order/";
+std::vector<std::string> files;
+
+std::string S_folder, P_epsfolder, P_alphafolder, R_epsfolder, R_alphafolder, R0_folder, f_folder;
+std::string S_file, P_epsfile, P_alphafile, R_epsfile, R_alphafile, R0_file, f_file;
+S_folder=path+"S_m_"+std::to_string(ord+1)+"_txt_files/";
+P_epsfolder=path+"P_mnta_m_"+std::to_string(ord+1)+"_txt_files/";
+P_alphafolder=path+"P_freq_m_"+std::to_string(ord+1)+"_txt_files/";
+R_epsfolder=path+"R_mnta_m_"+std::to_string(ord+1)+"_txt_files/";
+R_alphafolder=path+"R_freq_m_"+std::to_string(ord+1)+"_txt_files/";
+R0_folder=path+"alpha_m_"+std::to_string(ord+1)+"_txt_files/";
+f_folder=path+"f_m_"+std::to_string(ord+1)+"_txt_files/";
+
+files.clear();
+for (const auto & entry : std::filesystem::directory_iterator(S_folder)){
+std::cout << entry.path() << std::endl;	
+files.push_back(entry.path());
+}
+//std::cout<<files.size()<<std::endl;
+
+
+
+
+for(int num=0; num<files.size(); num++){
+
+// file names
+S_file=S_folder+"S_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+P_epsfile=P_epsfolder+"P_mnta_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+P_alphafile=P_alphafolder+"P_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+R_epsfile=R_epsfolder+"R_mnta_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+R_alphafile=R_alphafolder+"R_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+R0_file=R0_folder+"alpha_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+f_file=f_folder+"f_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+
+// actual variables 
+AmiCalc::S_t test_S;
+AmiCalc::P_t test_P;
+AmiCalc::R_t test_R;
+AmiCalc::g_prod_t test_R0;
+double test_prefactor;
+double test_ereg;
+int test_graph_order;
+AmiCalc::external_variable_list test_ext;
+
+test_ereg=EREG; // TODO: This needs to already be somewhere rather than hard-coded
+test_graph_order=ord+1;
+
+read_text_S_solutions(S_file, test_S);
+//std::cout<<"Test_S has size "<< test_S.size()<<std::endl;
+//g.ami.write_S_readable(test_S);
+
+
+read_text_P_solutions(P_epsfile, P_alphafile, test_P);
+//write_P_readable(test_P);
+//g.ami.print_P(4,test_P);
+
+
+read_text_R_solutions(R_epsfile, R_alphafile, test_R, test_graph_order);
+//write_R_readable(test_R);
+
+
+read_text_R0(R0_file, test_R0);
+
+test_prefactor=load_prefactor(f_file, test_graph_order);
+
+// at this point everything is constructed?
+
+AmiCalc::ami_parms test_amiparms(test_graph_order, test_ereg);
+//
+// me being lazy
+AmiCalc::solution_set solution(test_R0, test_S, test_P, test_R, test_amiparms,  test_prefactor);
+
+AMI_MATRIX[ord].push_back(solution);
+
+
+}	
+	
+	
+}
+}
+
+
+
 void AmiCalc::read_external(std::string filename, external_variable_list &extern_list){
 	
 std::ifstream infile_stream;
@@ -29,11 +116,13 @@ while (std::getline(infile_stream, line))
 	int kdim;
 	double realW, imagW;
 	double kx, ky;
+	std::string laststring;
+	bool read = bool(ss >> laststring);
+	if(read){
+	beta=std::stod(laststring);
+	ss >>  mu >> kdim;// >> kx >> ky >> realW>> imagW;
 	
-	
-	ss >> beta >> mu >> kdim;// >> kx >> ky >> realW>> imagW;
-	
-//	std::cout<<beta<<" "<<mu<<" "<<kdim<<std::endl;//<<" "<<kx<<" "<<ky<<" "<<realW<<" "<<imagW<<" "<<std::endl;
+	std::cout<<beta<<" "<<mu<<" "<<kdim<<std::endl;//<<" "<<kx<<" "<<ky<<" "<<realW<<" "<<imagW<<" "<<std::endl;
 	
     // if (ss >> beta >> mu >> kdim)
     // {
@@ -46,28 +135,16 @@ while (std::getline(infile_stream, line))
 	 for (int i=0; i<kdim;i++){
 		 
 		 ss >> line_variables.external_k_vector_[i];
+		 std::cout<<line_variables.external_k_vector_[i]<<std::endl;;
 	 }
 	 
 	 ss >> realW>>imagW;
 	 line_variables.external_freq_.push_back(std::complex<double>(realW,imagW));
 	 
 	 
-//	 std::cout<<line_variables.BETA_<<" "<<line_variables.MU_<<" "<<line_variables.KDIM_<<" "<<line_variables.external_k_vector_[0]<<" "<<line_variables.external_k_vector_[1]<<" "<<line_variables.external_freq_[0].real()<<" "<<line_variables.external_freq_[0].imag()<<" "<<std::endl;
-	
-	 // if (ss >>	line_variables.external_k_vector_[i]){
-		
-	 // }
-	 // }
-	 
-	 // if ( ss>> realW >> imagW){
-		 
-		 // line_variables.external_freq_.push_back(std::complex<double>(realW,imagW));
-		 
-		 
-	 // }
-	
+	//std::cout<<"Push back"<<std::endl;
 	extern_list.push_back(line_variables);
-	
+	}
 }
 	
 }
@@ -247,7 +324,7 @@ while (std::getline(infile_stream, line))
 {
 	
 	
-std::cout<<line<<std::endl;
+//std::cout<<line<<std::endl;
 
 std::stringstream ss(line);
 std::string left="[";
@@ -389,7 +466,7 @@ current=next;
 
 }
 
-std::cout<<"R0 has "<< R0.size()<<" Green's functions"<<std::endl;
+//std::cout<<"R0 has "<< R0.size()<<" Green's functions"<<std::endl;
 
 for(int i=0; i< R0.size(); i++){
 
