@@ -10,6 +10,7 @@
 // TODO does this need to be the full AMI_MATRIX?
 void AmiCalc::evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars){
 
+results.clear();
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
 std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);	
