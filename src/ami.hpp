@@ -37,6 +37,8 @@ typedef std::vector<int> alpha_t;
 typedef enum {Bose,Fermi} stat_type ;
 typedef enum {Sigma,Pi,Hartree} graph_type ;
 
+bool flatten_warning=true;
+
 // AMI Parameter structure
 // This is a little weird.  The ami_parms structure is defined here. But there is no internal variable set for this... meaning it has to be passed to all of the functions... probably this should be changed. Explicit passing is 'ok'.
 
@@ -188,24 +190,30 @@ ext_vars(int dim){
 	
 KDIM_=dim;
 external_k_vector_.assign(dim,0.0);	
+external_freq_.resize(1);
 	
 }
 ext_vars(int dim, double beta, std::complex<double> mu){
 	
 KDIM_=dim;
 external_k_vector_.assign(dim,0.0);	
+external_freq_.resize(1);
 
 BETA_=beta;
 MU_=mu;
 	
 }
 
-ext_vars(){}
+ext_vars(){
+	external_freq_.resize(1);
+	
+}
 
 
 k_vector_t external_k_vector_;	
 int KDIM_;
 frequency_t external_freq_;
+
 double BETA_;
 std::complex<double> MU_;
 };
@@ -273,7 +281,7 @@ void read_external(std::string filename, external_variable_list &extern_list);
 void read_text_S_solutions(std::string filename, S_t &s_array);
 void read_text_P_solutions(std::string eps_filename,std::string alpha_filename, P_t &p_array);
 void read_text_R_solutions(std::string eps_filename,std::string alpha_filename, R_t &r_array, int size);
-void read_text_R0(std::string alpha_filename, g_prod_t &R0);
+void read_text_R0(std::string alpha_filename, std::string eps_filename, g_prod_t &R0);
 double load_prefactor(std::string filename, int order);
 void write_S_readable(S_t &s_array);
 void write_P_readable(P_t &p_array);
@@ -282,6 +290,7 @@ void write_R_readable(R_t &r_array);
 // solution functions
 void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX, int MAX_ORDER, double EREG);
 void evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars_list);
+void evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars);
 
 void construct_ami_vars_list(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
 ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
@@ -312,6 +321,9 @@ void print_g_prod_info(g_prod_t g);
 void print_g_struct_info(g_struct g);
 void print_epsilon_info(epsilon_t eps);
 void print_alpha_info(alpha_t alpha);
+void print_complex_array(std::vector<std::complex<double>> &array);
+void print_array(std::vector<std::vector<double>> &array);
+void print_int_vector(std::vector<int> &array);
 
 void print_pole_struct_info(pole_struct g);
 

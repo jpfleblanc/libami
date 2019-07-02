@@ -458,3 +458,37 @@ std::cout<< *it << ' ';
 
 
 }
+
+void AmiCalc::print_complex_array(std::vector<std::complex<double>> &array){
+	
+for(int i=0; i< array.size();i++	){
+std::cout<<array[i];	
+
+
+}
+	std::cout<<std::endl;
+}
+
+void AmiCalc::print_array(std::vector<std::vector<double>> &array){
+	
+for(int i=0; i<array.size();i++){
+	std::cout<<"( ";
+	for( int j=0; j< array[i].size(); j++){
+	std::cout<<array[i][j]<<" ";
+}
+std::cout<<") ";
+}
+std::cout<<std::endl;
+}
+
+void AmiCalc::print_int_vector(std::vector<int> &array){
+	
+for(int i=0; i<array.size();i++){
+	std::cout<<"( ";
+	
+	std::cout<<array[i]<<" ";
+
+std::cout<<") ";
+}
+std::cout<<std::endl;
+}

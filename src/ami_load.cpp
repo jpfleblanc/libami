@@ -9,8 +9,8 @@ for(int ord=0; ord< MAX_ORDER; ord++){
 std::string path=top_directory+"/"+std::to_string(ord+1)+"_order/";
 std::vector<std::string> files;
 
-std::string S_folder, P_epsfolder, P_alphafolder, R_epsfolder, R_alphafolder, R0_folder, f_folder;
-std::string S_file, P_epsfile, P_alphafile, R_epsfile, R_alphafile, R0_file, f_file;
+std::string S_folder, P_epsfolder, P_alphafolder, R_epsfolder, R_alphafolder, R0_folder, f_folder, eps_folder;
+std::string S_file, P_epsfile, P_alphafile, R_epsfile, R_alphafile, R0_file, f_file, eps_file;
 S_folder=path+"S_m_"+std::to_string(ord+1)+"_txt_files/";
 P_epsfolder=path+"P_mnta_m_"+std::to_string(ord+1)+"_txt_files/";
 P_alphafolder=path+"P_freq_m_"+std::to_string(ord+1)+"_txt_files/";
@@ -18,6 +18,7 @@ R_epsfolder=path+"R_mnta_m_"+std::to_string(ord+1)+"_txt_files/";
 R_alphafolder=path+"R_freq_m_"+std::to_string(ord+1)+"_txt_files/";
 R0_folder=path+"alpha_m_"+std::to_string(ord+1)+"_txt_files/";
 f_folder=path+"f_m_"+std::to_string(ord+1)+"_txt_files/";
+eps_folder=path+"epsilon_m_"+std::to_string(ord+1)+"_txt_files/";
 
 files.clear();
 for (const auto & entry : std::experimental::filesystem::directory_iterator(S_folder)){
@@ -32,13 +33,14 @@ files.push_back(entry.path());
 for(int num=0; num<files.size(); num++){
 
 // file names
-S_file=S_folder+"S_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
-P_epsfile=P_epsfolder+"P_mnta_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
-P_alphafile=P_alphafolder+"P_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
-R_epsfile=R_epsfolder+"R_mnta_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
-R_alphafile=R_alphafolder+"R_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
-R0_file=R0_folder+"alpha_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
-f_file=f_folder+"f_m_"+std::to_string(ord+1)+"_num_"+std::to_string(files.size())+".txt";
+S_file=S_folder+"S_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+P_epsfile=P_epsfolder+"P_mnta_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+P_alphafile=P_alphafolder+"P_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+R_epsfile=R_epsfolder+"R_mnta_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+R_alphafile=R_alphafolder+"R_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+R0_file=R0_folder+"alpha_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+f_file=f_folder+"f_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+eps_file=eps_folder+"epsilon_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
 
 // actual variables 
 AmiCalc::S_t test_S;
@@ -67,7 +69,7 @@ read_text_R_solutions(R_epsfile, R_alphafile, test_R, test_graph_order);
 //write_R_readable(test_R);
 
 
-read_text_R0(R0_file, test_R0);
+read_text_R0(R0_file, eps_file, test_R0);
 
 test_prefactor=load_prefactor(f_file, test_graph_order);
 
@@ -113,7 +115,7 @@ while (std::getline(infile_stream, line))
 
 	std::stringstream ss(line);
     double beta, mu;
-	int kdim;
+	double kdim;
 	double realW, imagW;
 	double kx, ky;
 	std::string laststring;
@@ -129,7 +131,7 @@ while (std::getline(infile_stream, line))
 		
 		line_variables.BETA_=beta;
 		line_variables.MU_=mu;
-		line_variables.KDIM_=kdim;
+		line_variables.KDIM_=int(kdim);
 		line_variables.external_k_vector_.assign(kdim,0.0);
     // }
 	 for (int i=0; i<kdim;i++){
@@ -139,7 +141,8 @@ while (std::getline(infile_stream, line))
 	 }
 	 
 	 ss >> realW>>imagW;
-	 line_variables.external_freq_.push_back(std::complex<double>(realW,imagW));
+	 std::complex<double> freq(realW,imagW);
+	 line_variables.external_freq_[0]=freq;
 	 
 	 
 	//std::cout<<"Push back"<<std::endl;
@@ -417,7 +420,7 @@ double output=pow(-1, fermi_loops + double(order));
 return output;	
 }
 
-void AmiCalc::read_text_R0(std::string alpha_filename, g_prod_t &R0){
+void AmiCalc::read_text_R0(std::string alpha_filename,std::string eps_filename, g_prod_t &R0){
 
 g_struct collect_g;
 
@@ -466,29 +469,73 @@ current=next;
 
 }
 
+infile_stream.close();
+
+std::cout<<"Actual"<<std::endl;
+std::cout<<eps_filename<<std::endl;
+
 //std::cout<<"R0 has "<< R0.size()<<" Green's functions"<<std::endl;
 
-for(int i=0; i< R0.size(); i++){
+// for(int i=0; i< R0.size(); i++){
 
-R0[i].eps_.resize(R0.size(),0);
-R0[i].eps_[i]=1;	
+// R0[i].eps_.resize(R0.size(),0);
+// R0[i].eps_[i]=1;	
 	
+// }
+
+// for(int i=0; i<R0.size(); i++){
+// for(int j=i; j< R0.size(); j++){
+
+// if(i!=j){
+
+// if(R0[j].alpha_==R0[i].alpha_){
+// std::cout<<"This triggered"<<std::endl;
+// R0[j].eps_=R0[i].eps_;
+// }	
+	
+// }	
+
+// }	
+// }
+
+// epsilon loading
+
+
+infile_stream.open(eps_filename);
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<eps_filename<<std::endl;
+      throw std::runtime_error("Could not open input file");
+    } 	
+
+
+std::getline(infile_stream, line);
+std::stringstream ss2(line);
+
+
+ss2 >> current;
+
+int ind=0;
+while( ! ss2.eof()){
+
+ss2 >> next;
+
+//std::cout<<"Current and next: "<< current<<" "<<next<<std::endl;
+if(current!="[" && current !="]"){ 
+
+R0[ind].eps_.push_back( std::stoi(current));
+
 }
 
-for(int i=0; i<R0.size(); i++){
-for(int j=i; j< R0.size(); j++){
-
-if(i!=j){
-
-if(R0[j].alpha_==R0[i].alpha_){
-
-R0[j].eps_=R0[i].eps_;
-}	
-	
-}	
-
-}	
+if(current=="]" && next=="["){
+	ind++;
 }
+
+current=next;
+
+}
+
 
 
 }

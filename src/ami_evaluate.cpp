@@ -7,26 +7,71 @@
 #include <iomanip>
 
 
+// energy_t energy_;
+// frequency_t frequency_;
+// double prefactor;
+// double BETA_;
+
+void AmiCalc::evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars){
+
+Re_results.clear(); 
+Im_results.clear();
+for(int i=0; i<ami_eval_vars.size(); i++){	
+
+// std::cout<<"Evaluating with ami_vars "<<std::endl;
+// std::cout<<ami_eval_vars[i].BETA_<<" "<<ami_eval_vars[i].prefactor<<std::endl;
+// print_complex_array(ami_eval_vars[i].energy_);
+// print_complex_array(ami_eval_vars[i].frequency_);
+
+std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+
+// TODO: this seems really dangerous...
+if(calc_result.imag()==0 && std::abs(calc_result.real())>1 ){
+	if(flatten_warning){std::cerr<<"WARNING: Calculation returning large values - Flattening "<< calc_result <<std::endl; flatten_warning=false;}
+calc_result=0.0;
+}		
+
+Re_results.push_back(calc_result.real());
+Im_results.push_back(calc_result.imag());	
+}	
+	
+// std::cout<<"Eval complete"<<std::endl;	
+}	
+
+
 // TODO does this need to be the full AMI_MATRIX?
+
+
 void AmiCalc::evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars){
 
 results.clear();
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
-std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);	
+// std::cout<<"Evaluating with ami_vars "<<std::endl;
+// std::cout<<ami_eval_vars[i].BETA_<<" "<<ami_eval_vars[i].prefactor<<std::endl;
+// print_complex_array(ami_eval_vars[i].energy_);
+// print_complex_array(ami_eval_vars[i].frequency_);
+
+std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+
+//if(std::abs(calc_result.real())>1){
+//	std::cout<<"Calculation returning large values - Flattening "<< calc_result <<std::endl;//}	
 
 results.push_back(calc_result);	
 }	
 	
-	
+// std::cout<<"Eval complete"<<std::endl;	
 }	
 
 
 std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
+
  //std::cout<<"Evaluating Result for construction: ";
 
 int dim=parms.N_INT_;
+
+//std::cout<<"dim="<<dim<< std::endl;
 SorF_t SorF_result;
 
 for (int i=0; i< dim-1; i++){
@@ -46,13 +91,14 @@ SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
 else {SF_left=SorF_result;}
 
 // do dot
+//std::cout<<"Before i="<<i<<std::endl;
 SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
+// std::cout<<i<<std::endl;
 
-
-SorF_result=cross(SF_left,SF_right);
-//  std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
-
+ SorF_result=cross(SF_left,SF_right);
+ // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+ 
 
 // std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
 // for( int x=0; x< SorF_result[0].size(); x++){
@@ -66,7 +112,7 @@ SorF_result=cross(SF_left,SF_right);
 
 std::complex<double> final_result;
 
-//std::cout<<"*R"<< std::endl;
+//std::cout<<"*R for dim="<<dim<< std::endl;
 final_result=star(parms, SorF_result, R_array[dim], external);
 
 
@@ -88,6 +134,7 @@ std::vector<std::complex<double> > line;
 
 for(int j=0; j< Si[i].size(); j++){
 
+//std::cout<<"Dot term 
 line.push_back(Si[i][j]*fermi[i][j]);
 
 }
@@ -114,14 +161,14 @@ std::vector<std::complex<double> > line;
 
 for( int i=0; i< left[0].size(); i++){
 for( int rj=0; rj< right[i].size(); rj++){
-
+//std::cout<<"i and rj are "<<i<<" "<<rj<<std::endl ;
 line.push_back(left[0][i]*right[i][rj]);
 
 }
 }
 
 
-//std::cout<<"Lengths are "<< line.size()<<std::endl;
+// std::cout<<"Lengths are "<< line.size()<<std::endl;
 
 output.push_back(line);
 
@@ -403,6 +450,9 @@ AmiCalc::k_vect_list_t k_list;
 k_list=state.internal_k_list_;
 k_list.push_back(external.external_k_vector_);
 
+// std::cout<<"Momentum list is "<<std::endl;
+// print_array(k_list);
+
 int count=0;
 
 result.resize(R0[0].eps_.size(),0);
@@ -476,7 +526,9 @@ AmiCalc::frequency_t frequency;
 
 for(int i=0;i<state.order_;i++){ frequency.push_back(std::complex<double>(0,0));}
 
+// TODO : this doesn't work with multiple external frequencies 
 frequency.push_back(external.external_freq_[0]); // some number of external frequencies
+
 
 AmiCalc::ami_vars final_out(energy, frequency);
 final_out.BETA_=external.BETA_;
