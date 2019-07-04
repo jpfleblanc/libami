@@ -9,8 +9,8 @@ for(int ord=0; ord< MAX_ORDER; ord++){
 std::string path=top_directory+"/"+std::to_string(ord+1)+"_order/";
 std::vector<std::string> files;
 
-std::string S_folder, P_epsfolder, P_alphafolder, R_epsfolder, R_alphafolder, R0_folder, f_folder, eps_folder;
-std::string S_file, P_epsfile, P_alphafile, R_epsfile, R_alphafile, R0_file, f_file, eps_file;
+std::string S_folder, P_epsfolder, P_alphafolder, R_epsfolder, R_alphafolder, R0_folder, f_folder, eps_folder, mul_folder;
+std::string S_file, P_epsfile, P_alphafile, R_epsfile, R_alphafile, R0_file, f_file, eps_file, mul_file;
 S_folder=path+"S_m_"+std::to_string(ord+1)+"_txt_files/";
 P_epsfolder=path+"P_mnta_m_"+std::to_string(ord+1)+"_txt_files/";
 P_alphafolder=path+"P_freq_m_"+std::to_string(ord+1)+"_txt_files/";
@@ -19,6 +19,7 @@ R_alphafolder=path+"R_freq_m_"+std::to_string(ord+1)+"_txt_files/";
 R0_folder=path+"alpha_m_"+std::to_string(ord+1)+"_txt_files/";
 f_folder=path+"f_m_"+std::to_string(ord+1)+"_txt_files/";
 eps_folder=path+"epsilon_m_"+std::to_string(ord+1)+"_txt_files/";
+mul_folder=path+"mul_m_"+std::to_string(ord+1)+"_txt_files/";
 
 files.clear();
 for (const auto & entry : std::experimental::filesystem::directory_iterator(S_folder)){
@@ -41,6 +42,7 @@ R_alphafile=R_alphafolder+"R_freq_m_"+std::to_string(ord+1)+"_num_"+std::to_stri
 R0_file=R0_folder+"alpha_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
 f_file=f_folder+"f_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
 eps_file=eps_folder+"epsilon_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
+mul_file=mul_folder+"mul_m_"+std::to_string(ord+1)+"_num_"+std::to_string(num+1)+".txt";
 
 // actual variables 
 AmiCalc::S_t test_S;
@@ -71,7 +73,7 @@ read_text_R_solutions(R_epsfile, R_alphafile, test_R, test_graph_order);
 
 read_text_R0(R0_file, eps_file, test_R0);
 
-test_prefactor=load_prefactor(f_file, test_graph_order);
+test_prefactor=load_prefactor(f_file,mul_file, test_graph_order);
 
 // at this point everything is constructed?
 
@@ -386,7 +388,7 @@ bn=0;
 	
 }
 
-double AmiCalc::load_prefactor(std::string filename, int order){
+double AmiCalc::load_prefactor(std::string filename, std::string mul_file, int order){
 	
 std::ifstream infile_stream;
 
@@ -414,10 +416,50 @@ ss >> 	fermi_loops;
 	
 }
 
+double mult=load_mul(mul_file);
 
-double output=pow(-1, fermi_loops + double(order));
+
+double output=pow(-1, fermi_loops + double(order))*mult;
 
 return output;	
+}
+
+double AmiCalc::load_mul(std::string filename){
+	
+double output;
+
+std::ifstream infile_stream;
+
+//std::cout<<"Opening mul file "<<filename<<std::endl;
+
+infile_stream.open(filename);	
+	
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	output=1.0;
+//	std::cout<<"Didn't open mul_file"<<std::endl;
+    } else{	
+
+//std::cout<<"Opened mul_file"<<std::endl;	
+std::string line;
+//std::getline(infile_stream,line);
+
+
+while (std::getline(infile_stream, line))
+{
+	
+//std::cout<<line<<std::endl;
+
+std::stringstream ss(line);	
+	
+ss >> 	output;
+	
+}
+	}	
+	
+	
+std::cout<<"Returning mul="<<output<<std::endl;	
+	return output;
 }
 
 void AmiCalc::read_text_R0(std::string alpha_filename,std::string eps_filename, g_prod_t &R0){
