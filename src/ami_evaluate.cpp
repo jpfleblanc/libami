@@ -417,7 +417,7 @@ return output;
 }
 
 
-std::complex<double> AmiCalc::evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng){
+void AmiCalc::evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng){
 
 std::ofstream file;
 std::stringstream filename;

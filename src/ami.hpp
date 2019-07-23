@@ -413,7 +413,7 @@ public:
   //void evaluate(alps::params &parms, R_t &R_array, P_t &P_array, S_t &S_array);
 
   std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
-  std::complex<double> evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng);
+  void evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng);
   
 
 private:
