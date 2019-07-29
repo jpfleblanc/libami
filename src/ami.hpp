@@ -35,7 +35,7 @@ public:
 typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
 typedef std::vector<int> alpha_t;
 typedef enum {Bose,Fermi} stat_type ;
-typedef enum {Sigma,Pi,Hartree} graph_type ;
+typedef enum {Sigma,Pi,Hartree, Bare} graph_type ;
 
 bool flatten_warning=true;
 
