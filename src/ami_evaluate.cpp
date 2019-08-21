@@ -7,6 +7,7 @@
 #include <iomanip>
 
 
+
 // energy_t energy_;
 // frequency_t frequency_;
 // double prefactor;
@@ -268,6 +269,14 @@ denom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
 }
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
+
+std::complex<double> zero(0,0);
+std::complex<double> im(0,1);
+
+if(denom==zero){
+denom+=E_REG*im;	
+}
+
 
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
 for(int a=0; a< g_prod[i].eps_.size(); a++){

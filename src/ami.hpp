@@ -358,6 +358,7 @@ g_struct update_G_pole(g_struct g_in,pole_struct pole);
 
 // Functions for signs
 sign_t find_signs(int index, g_prod_t &R);
+double get_simple_sign(int index,g_prod_t &R,pole_struct pole);
 
 // Functions for R's P's and S's
 
