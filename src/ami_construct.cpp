@@ -267,6 +267,8 @@ AmiCalc::g_prod_t AmiCalc::reduce_gprod(AmiCalc::g_prod_t G_in, AmiCalc::pole_st
 
 g_prod_t reduced;
 
+std::cout<<"Reduction starts with size "<< G_in.size()<<std::endl;
+
 for (int i=0; i< G_in.size(); i++){
 
 bool add=true;
@@ -283,7 +285,7 @@ if(add){ reduced.push_back(G_in[i]);}
 
 // std::cout<<"Lengths in reduction are "<< reduced.size()<<" "<< G_in.size()<<std::endl;
 // std::cout<<"For pole with "<< pole.which_g_.size()<<std::endl;
-
+std::cout<<"Reduction ends with size "<< reduced.size()<<std::endl;
 return reduced;
 }
 
@@ -306,18 +308,59 @@ std::cout<<result<<std::endl;
 return result;
 }
 
+void AmiCalc::take_derivative_gprod(AmiCalc::g_prod_t &g_prod, AmiCalc::pole_struct pole, double start_sign, AmiCalc::Ri_t &r_out, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
+poles.clear();
+signs.clear();
+r_out.clear();	
+
+g_prod_t temp_gprod;
+
+for(int term=0; term< g_prod.size(); term++){
+int alpha=g_prod[term].alpha_[pole.index_];
+if(alpha!=0){
+
+signs.push_back(-(double)alpha*start_sign);
+	for(int m=0; m< g_prod.size(); m++){
+	if(term==m){
+	temp_gprod.push_back(g_prod[term]);
+	temp_gprod.push_back(g_prod[term]);
+	}
+	else{
+	temp_gprod.push_back(g_prod[term]);
+	}	
+		
+		
+	}
+r_out.push_back(temp_gprod);
+temp_gprod.clear();
+
+	
+}
+
+
+}	
+
+for(int m=0; m<signs.size(); m++){
+poles.push_back(pole);	
+}
+
+	
+std::cout<<"Sizes of r_out and poles and signs must match "<< r_out.size()<<" "<< poles.size()<<" "<<signs.size()	<<std::endl;
+	
+}
+
 
 void AmiCalc::take_derivatives(AmiCalc::Ri_t &Wi, AmiCalc::pole_struct pole, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
 
+std::cout<<"Before derivatives, sign list is of size "<<signs.size()<<std::endl;
 
-
-
+std::cout<<"Wi has "<< Wi.size()<<std::endl;
 g_prod_array_t temp_g_array;
 sign_t temp_signs;
 pole_array_t temp_poles;
 for(int i=0; i< Wi.size(); i++){
-
-print_g_prod_array(Wi);
+std::cout<<"On i loop "<< i<<std::endl;
+// print_g_prod_array(Wi);
 
   for(int dindex=0; dindex< Wi[i].size(); dindex++){
   g_prod_t temp_gprod;
@@ -327,6 +370,7 @@ print_g_prod_array(Wi);
    if(alpha !=0 ){
 // populate signs and poles
 std::cout<<"Adding sign into temp "<<-(double)alpha*signs[i]<<std::endl;
+std::cout<<(double)alpha<<" "<< signs[i]<<std::endl;
 	temp_signs.push_back(-(double)alpha*signs[i]);
         temp_poles.push_back(pole);
 //
@@ -351,7 +395,7 @@ std::cout<<"Adding sign into temp "<<-(double)alpha*signs[i]<<std::endl;
 
   }// close dindex
 
-
+signs=temp_signs;
 
 } // close i
 
@@ -363,19 +407,64 @@ for(int m=0; m< temp_signs.size(); m++){
 Wi=temp_g_array;
 std::cout<<"Signs and temp are "<< signs.size()<<" "<< temp_signs.size()<<std::endl;
 std::cout<<"Poles and temp are "<< poles.size()<<" "<< temp_poles.size()<<std::endl;
-signs=temp_signs;
+
 poles=temp_poles;
 print_pole_array(poles);
+std::cout<<"Signs and temp are "<< signs.size()<<" "<< temp_signs.size()<<std::endl;
 std::cout<<"Poles and temp are "<< poles.size()<<" "<< temp_poles.size()<<std::endl;
 
 }
 
-// in the end, Ri will hold the array of updated G's
+void AmiCalc::evaluate_general_residue(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole, AmiCalc::Ri_t &Ri_out, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
+
+double starting_sign;
+starting_sign=get_starting_sign(G_in,pole);
+
+g_prod_t W_array;
+W_array=reduce_gprod(G_in,pole);
+
+Ri_t temp_ri, temp_ri_out;
+pole_array_t temp_poles;
+sign_t temp_signs_out;
+
+temp_ri.push_back(W_array);
+sign_t temp_signs;
+temp_signs.push_back(starting_sign);
+// take derivatives
+for (int m=0; m< pole.multiplicity_-1; m++){
+
+for(int i=0; i< temp_ri.size(); i++){
+// temp_ri and temp_signs have same length
+take_derivative_gprod(temp_ri[i], pole, temp_signs[i], temp_ri_out, temp_poles,temp_signs_out);	
+
+}
+
+temp_ri=temp_ri_out;
+temp_signs=temp_signs_out;
+
+}
+
+signs=temp_signs_out;
+poles=temp_poles;
+Ri_out=temp_ri_out;
+
+// sub in pole at the end 
+for(int i=0; i< Ri_out.size();i++){
+for(int j=0; j<Ri_out[i].size();j++){
+//std::cout<<i<<" "<<j<<std::endl;
+Ri_out[i][j]=update_G_pole(Ri_out[i][j],pole);
+}
+}
+	
+}
+
+/* // in the end, Ri will hold the array of updated G's
 void AmiCalc::evaluate_general_residue(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole, AmiCalc::Ri_t &Wi, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
 
 double starting_sign;
 starting_sign=get_starting_sign(G_in,pole);
-signs.push_back(starting_sign);
+AmiCalc::sign_t temp_signs;
+temp_signs.push_back(starting_sign);
 
 g_prod_t W_array;
 
@@ -385,7 +474,7 @@ W_array=reduce_gprod(G_in, pole);
 
 std::cout<<"Lengths are "<< W_array.size()<<" "<< G_in.size()<<std::endl;
 std::cout<<"Working with pole mult="<<pole.multiplicity_<<std::endl;
-std::cout<<"With starting sign="<<signs[0]<<std::endl;
+std::cout<<"With starting sign="<<temp_signs[0]<<std::endl;
 
 
 
@@ -398,7 +487,7 @@ Wi.push_back(W_array);
 for(int i=0; i< pole.multiplicity_-1; i++){
 // std::cout<<"Evaluating multipole for M= "<< pole.multiplicity_ <<std::endl;
 // std::cout<<"Length before is "<<Wi.size()<<std::endl;
-take_derivatives( Wi, pole, poles, signs); 
+take_derivatives( Wi, pole, poles, temp_signs); 
 
  std::cout<<"Number of signs after derivative is "<<signs.size()<<std::endl;
 }
@@ -413,9 +502,9 @@ Wi[i][j]=update_G_pole(Wi[i][j],pole);
 }
 }
 
+signs=temp_signs;
 
-
-}
+} */
 
 
 void AmiCalc::update_gprod_general(int index, AmiCalc::R_t &R_array, AmiCalc::P_t &P_array, AmiCalc::S_t &S_array){
@@ -438,21 +527,9 @@ Si_t temp_sign_array;
 for (int j=0; j<R_array[index].size(); j++)
 {
 
-/*
 
-
-pole_array_t poles;
-poles=find_poles(index, R_array[index][j]);  
-
-sign_t signs;
-signs=find_signs(index,R_array[index][j]);
-
-temp_pole_array.push_back(poles);
-temp_sign_array.push_back(signs);
-*/
-
-sign_t s_out;
-pole_array_t p_out;
+sign_t s_out, temp_s;
+pole_array_t p_out, temp_p;
 
 pole_array_t poles;
 poles=find_poles(index, R_array[index][j]);  
@@ -475,26 +552,19 @@ s_out.push_back(get_simple_sign(index,R_array[index][j], poles[i]));
 //s_out=find_signs(index,R_array[index][j]);
 p_out.push_back(poles[i]);
 
-// for(int m=0; m< p_out.size();m++){
-	// std::cout<<"P out for simple  is "<<p_out[m]<<std::endl;
-	// cor_poles.push_back(p_out[m]);
-// }
-// for(int m=0; m< s_out.size();m++){
-	// std::cout<<"S out for simple  is "<<s_out[m]<<std::endl;
-	// col_signs.push_back(s_out[m]);
-// }
 }else
 {
+Ri_t temp_g;
 
-evaluate_general_residue(R_array[index][j], poles[i], g_in, p_out, s_out);
-// for(int m=0; m< p_out.size();m++){
-	// std::cout<<"P out for simple  is "<<p_out[m]<<std::endl;
-	// cor_poles.push_back(p_out[m]);
-// }
-// for(int m=0; m< s_out.size();m++){
-	// std::cout<<"S out for multi is "<<s_out[m]<<std::endl;
-	// col_signs.push_back(s_out[m]);
-// }
+evaluate_general_residue(R_array[index][j], poles[i], temp_g, temp_p, temp_s);
+
+std::cout<<"Lengths of these should be the same "<< temp_g.size()<<" "<< temp_p.size()<<" "<< temp_s.size()<<std::endl;
+//a.insert(std::end(a), std::begin(b), std::end(b));
+g_in.insert(std::end(g_in), std::begin(temp_g), std::end(temp_g));
+s_out.insert(std::end(s_out),std::begin(temp_s), std::end(temp_s));
+p_out.insert(std::end(p_out),std::begin(temp_p), std::end(temp_p));
+
+
 std::cout<<"Finished general residue "<<std::endl;
 print_pole_array(p_out);
 
@@ -516,8 +586,8 @@ print_pole_array(p_out);
 print_pole_array(p_out);
 temp_pole_array.push_back(p_out);
 temp_sign_array.push_back(s_out);
-
-
+p_out.clear();
+s_out.clear();
 // p_out.clear();
 // cor_poles.clear();
 // s_out.clear();
