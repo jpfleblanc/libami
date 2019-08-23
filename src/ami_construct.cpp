@@ -114,7 +114,7 @@ duplicate=true;
 
 pole_array[ploop].multiplicity_+=1;
 pole_array[ploop].which_g_.push_back(pole.which_g_[0]);
-std::cerr<<"Duplicate pole detected!"<<std::endl;
+// std::cerr<<"Duplicate pole detected!"<<std::endl;
 break;
 }
 
