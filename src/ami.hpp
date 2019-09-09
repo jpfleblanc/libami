@@ -258,7 +258,9 @@ ami_parms_=test_amiparms;
 prefactor_=prefactor;
 
 
-};
+}
+
+solution_set(){}
 	
 g_prod_t R0_;
 S_t S_;
