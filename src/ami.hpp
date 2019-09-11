@@ -395,6 +395,9 @@ bool pole_equiv(pole_struct pole1, pole_struct pole2);
 void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pole_array_t &poles, sign_t &signs);
 void take_derivatives(AmiCalc::Ri_t &Wi, AmiCalc::pole_struct pole, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs);
 void take_derivative_gprod(AmiCalc::g_prod_t &g_prod, AmiCalc::pole_struct pole, double start_sign, AmiCalc::Ri_t &r_out, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs);
+
+g_struct der_fix(g_struct &g_in, double alpha);
+
 double get_starting_sign(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole);
 g_prod_t reduce_gprod(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole);
 

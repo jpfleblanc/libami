@@ -20,19 +20,19 @@ AmiCalc::g_prod_t g;
 // Setting up G array
 // defining alpha's
 
-AmiCalc::alpha_t alpha_1={1,1};
-AmiCalc::alpha_t alpha_2={1,1};
-AmiCalc::alpha_t alpha_3={1,0};
-AmiCalc::alpha_t alpha_4={1,0};
-AmiCalc::alpha_t alpha_5={1,1};
+AmiCalc::alpha_t alpha_1={1,0,0,0};
+AmiCalc::alpha_t alpha_2={1,-1,1,0};
+AmiCalc::alpha_t alpha_3={1,0,0,0};
+AmiCalc::alpha_t alpha_4={0,1,0,0};
+AmiCalc::alpha_t alpha_5={0,0,1,0};
 
 
 //defining epsilon's
-AmiCalc::epsilon_t epsilon_1={1,0,0,1,0};
-AmiCalc::epsilon_t epsilon_2={1,0,0,1,0};
-AmiCalc::epsilon_t epsilon_3={1,1,0,0,0};
-AmiCalc::epsilon_t epsilon_4={1,1,0,0,0};
-AmiCalc::epsilon_t epsilon_5={1,0,0,1,0};
+AmiCalc::epsilon_t epsilon_1={1,0,0,0,0};
+AmiCalc::epsilon_t epsilon_2={0,1,0,0,0};
+AmiCalc::epsilon_t epsilon_3={1,0,0,0,0};
+AmiCalc::epsilon_t epsilon_4={0,0,0,1,0};
+AmiCalc::epsilon_t epsilon_5={0,0,0,0,1};
 
 
 AmiCalc::g_struct g1(epsilon_1,alpha_1);
