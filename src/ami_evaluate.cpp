@@ -217,7 +217,7 @@ std::complex<double> output=0;
 std::complex<double> term;
 std::complex<double> gprod;
 
-std::ofstream file;
+// std::ofstream file;
 // file.open("outfile.dat");
 
 
@@ -270,12 +270,12 @@ denom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 }
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
 
-std::complex<double> zero(0,0);
-std::complex<double> im(0,1);
+// std::complex<double> zero(0,0);
+// std::complex<double> im(0,1);
 
-if(denom==zero){
-denom+=E_REG*im;	
-}
+// if(denom==zero){
+// denom+=E_REG*im;	
+// }
 
 
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
@@ -370,20 +370,32 @@ double E_REG=parms.E_REG_;
 
 
 for (int i=0; i< pole.alpha_.size(); i++){
-eta+= pole.alpha_[i];
+//eta+= pole.alpha_[i];
+if(pole.alpha_[i]!=0){
+	eta++;
+}
 }
 
 std::complex<double>  E= get_energy_from_pole(pole,external);
 
 
 double sigma= pow(-1.0, double(eta));
+// if(eta==0){sigma=-1;}
+
+std::complex<double> zero(0,0);
+
+if(eta%2==1 && E==zero){
+return 0.0;
+}	
+
+//if(eta==0){sigma=-1;}
 
 //val = 1.0/(sigma*exp(B*z[0]-gamma)+1.0)
 //double gamma=0.01;
 
 output=1.0/(sigma*exp(beta*E-E_REG)+1.0);
 
-// std::cout<< "Fermi output is "<< output << " for beta E and sigma eta "<< beta <<" "<< E<<" "<< sigma <<" "<< eta << std::endl;
+// std::cout<< "Fermi output is "<< output << " for ereg beta E and sigma eta "<<E_REG<<" "<< beta <<" "<< E<<" "<< sigma <<" "<< eta << std::endl;
 // print_pole_struct_info(pole);
 
 return output;

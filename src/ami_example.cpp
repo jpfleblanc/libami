@@ -20,17 +20,17 @@ AmiCalc::g_prod_t g;
 // Setting up G array
 // defining alpha's
 
-AmiCalc::alpha_t alpha_1={1,0,0,0};
-AmiCalc::alpha_t alpha_2={1,-1,1,0};
-AmiCalc::alpha_t alpha_3={1,0,0,0};
+AmiCalc::alpha_t alpha_1={0,0,1,0};
+AmiCalc::alpha_t alpha_2={0,1,-1,1};
+AmiCalc::alpha_t alpha_3={-1,1,0,1};
 AmiCalc::alpha_t alpha_4={0,1,0,0};
-AmiCalc::alpha_t alpha_5={0,0,1,0};
+AmiCalc::alpha_t alpha_5={1,0,0,0};
 
 
 //defining epsilon's
 AmiCalc::epsilon_t epsilon_1={1,0,0,0,0};
 AmiCalc::epsilon_t epsilon_2={0,1,0,0,0};
-AmiCalc::epsilon_t epsilon_3={1,0,0,0,0};
+AmiCalc::epsilon_t epsilon_3={0,0,1,0,0};
 AmiCalc::epsilon_t epsilon_4={0,0,0,1,0};
 AmiCalc::epsilon_t epsilon_5={0,0,0,0,1};
 
@@ -59,7 +59,7 @@ AmiCalc::ami_vars AmiCalc::construct_ext_multipole_example(){
 
 
 
-energy_t energy={0,1,0,1,1};
+energy_t energy={0,1.01,0,1.02,1.03};
 
 frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
@@ -69,6 +69,9 @@ frequency_t frequency= {std::complex<double>(0,0),
 
 
 ami_vars external(energy, frequency);
+
+external.BETA_=1.0;
+
 return external;
 
 }

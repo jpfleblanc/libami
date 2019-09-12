@@ -628,7 +628,7 @@ g_in.push_back(simple_residue(R_array[index][j],poles[i]));
 
 s_out.push_back(get_simple_sign(index,R_array[index][j], poles[i]));
 // std::cout<<"Pushed back sign of "<< get_simple_sign(index,R_array[index][j], poles[i])<<std::endl;
-//s_out=find_signs(index,R_array[index][j]);
+// s_out=find_signs(index,R_array[index][j]);
 p_out.push_back(poles[i]);
 
 }else
