@@ -126,7 +126,7 @@ while (std::getline(infile_stream, line))
 	beta=std::stod(laststring);
 	ss >>  mu >> kdim;// >> kx >> ky >> realW>> imagW;
 	
-	std::cout<<beta<<" "<<mu<<" "<<kdim<<std::endl;//<<" "<<kx<<" "<<ky<<" "<<realW<<" "<<imagW<<" "<<std::endl;
+	// std::cout<<beta<<" "<<mu<<" "<<kdim<<std::endl;//<<" "<<kx<<" "<<ky<<" "<<realW<<" "<<imagW<<" "<<std::endl;
 	
     // if (ss >> beta >> mu >> kdim)
     // {
@@ -139,7 +139,7 @@ while (std::getline(infile_stream, line))
 	 for (int i=0; i<kdim;i++){
 		 
 		 ss >> line_variables.external_k_vector_[i];
-		 std::cout<<line_variables.external_k_vector_[i]<<std::endl;;
+		 // std::cout<<line_variables.external_k_vector_[i]<<std::endl;;
 	 }
 	 
 	 ss >> realW>>imagW;
