@@ -27,10 +27,10 @@ for(int i=0; i<ami_eval_vars.size(); i++){
 std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
 
 // TODO: this seems really dangerous...
-if(calc_result.imag()==0 && std::abs(calc_result.real())>1 ){
-	if(flatten_warning){std::cerr<<"WARNING: Calculation returning large values - Flattening "<< calc_result <<std::endl; flatten_warning=false;}
-calc_result=0.0;
-}		
+// if(calc_result.imag()==0 && std::abs(calc_result.real())>1 ){
+	// if(flatten_warning){std::cerr<<"WARNING: Calculation returning large values - Flattening "<< calc_result <<std::endl; flatten_warning=false;}
+// calc_result=0.0;
+// }		
 
 Re_results.push_back(calc_result.real());
 Im_results.push_back(calc_result.imag());	
@@ -218,7 +218,7 @@ std::complex<double> term;
 std::complex<double> gprod;
 
 // std::ofstream file;
-// file.open("outfile.dat");
+// file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
 
 
 for( int i=0; i< K[0].size(); i++)
@@ -227,17 +227,20 @@ for( int i=0; i< K[0].size(); i++)
 gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
 //std::isnan(std::real(term))
-if( true ){output+= term;
+
+output+= term;
+
+// if( true ){output+= term;
 
 // std::cout<<"Term apparently is finite? "<< term << std::endl;
-}
+// }
+// if(std::real(term)>10){
+// print_g_prod_info(R[i]);
+// }
 
-//print_g_prod_info(R[i]);
 
 
-
-
-// file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+ // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
 
@@ -252,100 +255,58 @@ return output;
 }
 
 std::complex<double> AmiCalc::eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external){
-std::complex<double> output=0;
+std::complex<double> output(0,0);
 
-std::complex<double> denom_prod=1;
+std::complex<double> denom_prod(1,0);
 double prefactor=external.prefactor;
 
 double E_REG=parms.E_REG_;
 
 for(int i=0; i< g_prod.size(); i++){
-std::complex<double> denom=0;
+std::complex<double> alphadenom(0,0);
+std::complex<double> epsdenom(0,0);
 
 for(int a=0; a< g_prod[i].alpha_.size(); a++){
-denom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
+alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
 //std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
 
 }
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
 
-// std::complex<double> zero(0,0);
-// std::complex<double> im(0,1);
+std::complex<double> zero(0,0);
+std::complex<double> im(0,1);
 
-// if(denom==zero){
-// denom+=E_REG*im;	
-// }
+if(alphadenom==zero){
+alphadenom+=E_REG*im;	
+}
 
 
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
 for(int a=0; a< g_prod[i].eps_.size(); a++){
-denom+=double(g_prod[i].eps_[a])*external.energy_[a];
+epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 //denom-=double(g_prod[i].eps_[a])*external.energy_[a];
 }
+
+// if(epsdenom==zero){
+	
+// }
 
 //denom+=get_energy_from_g(parms, g_prod[i], external);
 
 //if (denom==std::complex<double>((0,0))){denom=E_REG;}//  prefactor=1.0;}//0.0;}
 
 
-denom_prod=denom_prod*denom;
+denom_prod=denom_prod*(alphadenom+epsdenom);
+
+
 
 }
+
+// std::cout<<"Denominator product is "<< denom_prod<<std::endl;
 
 output=1.0/denom_prod*prefactor;
 
-
-
-
-/////////////////// Debugging stuff 
-/*
-if (std::isinf(std::real(output))){
-std::cout<<"GProd gave "<<output<<std::endl;
-
-for(int i=0; i< g_prod.size(); i++){
-std::complex<double> sum1=0;
-std::complex<double> sum2=0;
-std::complex<double> zero=(0,0);
-
-for(int a=0; a< g_prod[i].alpha_.size(); a++){
-sum1+=double(g_prod[i].alpha_[a])*external.frequency_[a];
-}
-
-
-//std::cout<<"Alpha's and frequencies " << sum1 << std::endl;
-
-for(int a=0; a< g_prod[i].eps_.size(); a++){
-sum2+=g_prod[i].eps_[a]*external.energy_[a];
-}
-//std::cout<<"epsilons "<< sum2 <<std::endl;
-
-if (sum1==zero && sum2==zero){
-
-std::cout<<"Both sums were zero "<<std::endl;
-
-
-for(int a=0; a< g_prod[i].alpha_.size(); a++){
-
-
-std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
-
-}
-
-for(int a=0; a< g_prod[i].eps_.size(); a++){
-std::cout<<"eps and frequencies " << g_prod[i].eps_[a] <<" " << external.energy_[a] << std::endl;
-}
-
-
-
-}
-
-}
-
-
-}
-//
-*/
 
 
 
@@ -383,20 +344,34 @@ double sigma= pow(-1.0, double(eta));
 // if(eta==0){sigma=-1;}
 
 std::complex<double> zero(0,0);
+std::complex<double> im(0,1);
 
-if(eta%2==1 && E==zero){
-return 0.0;
+// TODO: this might be an actual error. in practice hopefully very small
+if(eta%2==1 && abs(E)<abs(E_REG)){//E==zero){
+	// std::cout<<"E was "<< E<<std::endl;
+return zero;
 }	
+
 
 //if(eta==0){sigma=-1;}
 
 //val = 1.0/(sigma*exp(B*z[0]-gamma)+1.0)
 //double gamma=0.01;
 
-output=1.0/(sigma*exp(beta*E-E_REG)+1.0);
+output=1.0/(sigma*std::exp(beta*E-E_REG*im)+1.0);
+// output=1.0/(sigma*exp(beta*E)+1.0);
+
+// if(eta%2==1 && abs(E)<abs(E_REG)){
+	// std::cout<<"triggered catch  "<<std::endl;
+// return 0.0;
+// }	
+
+// std::cout<<"E was  "<< E<<" and output "<<output <<" for eta of "<<eta<<std::endl;
 
 // std::cout<< "Fermi output is "<< output << " for ereg beta E and sigma eta "<<E_REG<<" "<< beta <<" "<< E<<" "<< sigma <<" "<< eta << std::endl;
 // print_pole_struct_info(pole);
+
+// if(std::real(output)<0){return zero;}
 
 return output;
 }
@@ -404,17 +379,17 @@ return output;
 
 std::complex<double> AmiCalc::get_energy_from_pole( pole_struct pole, ami_vars external){
 
-std::complex<double> output=0;
+std::complex<double> output(0,0);
 
-
+// std::cout<<"Evaluating energies"<<std::endl;
 for (int i=0; i< pole.eps_.size(); i++){
-
+// std::cout<<"Pole "<<double(pole.eps_[i])<<" external e is "<< external.energy_[i]<<" mult is "<<double(pole.eps_[i])*external.energy_[i];
 output+= double(pole.eps_[i])*external.energy_[i];
 
 }
 
 
-
+// std::cout<<"Output is "<<output<<std::endl;
 
 return output;
 

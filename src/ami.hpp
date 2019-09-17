@@ -316,6 +316,7 @@ ami_vars construct_ext_example_Y();
 ami_vars construct_ext_example_J();
 ami_vars construct_ext_example_Sigma();
 ami_vars construct_ext_multipole_example();
+ami_vars construct_6ord_ext_multipole_example();
 
 ami_vars construct_random_example_J(std::mt19937 &rng);
 

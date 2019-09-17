@@ -76,6 +76,29 @@ return external;
 
 }
 
+AmiCalc::ami_vars AmiCalc::construct_6ord_ext_multipole_example(){
+
+
+
+energy_t energy={1,1.1,1.2,1.3,1.4,0, 0.1, 0.2, 0.3,0.4, 0.5};
+
+frequency_t frequency= {std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,M_PI)};
+
+
+ami_vars external(energy, frequency);
+
+external.BETA_=1.0;
+
+return external;
+
+}
+
 
 AmiCalc::g_prod_t AmiCalc::construct_example(){
 
