@@ -262,6 +262,8 @@ double prefactor=external.prefactor;
 
 double E_REG=parms.E_REG_;
 
+// std::cout<<"Eval Gprod"<<std::endl;
+
 for(int i=0; i< g_prod.size(); i++){
 std::complex<double> alphadenom(0,0);
 std::complex<double> epsdenom(0,0);
@@ -269,7 +271,7 @@ std::complex<double> epsdenom(0,0);
 for(int a=0; a< g_prod[i].alpha_.size(); a++){
 alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
-//std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
+// std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
 
 }
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
@@ -278,32 +280,36 @@ std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
 
 if(alphadenom==zero){
-alphadenom+=E_REG*im;	
+alphadenom+=E_REG*im+E_REG;	
 }
 
-
+// std::cout<<"Energies"<<std::endl;
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
 for(int a=0; a< g_prod[i].eps_.size(); a++){
 epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 //denom-=double(g_prod[i].eps_[a])*external.energy_[a];
+// std::cout<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
 }
+// std::cout<<"End"<<std::endl;
 
-// if(epsdenom==zero){
-	
+// if(std::abs(epsdenom)< E_REG){
+	// std::cout<<"Small epsilon denominator detected"<<std::endl;
 // }
 
 //denom+=get_energy_from_g(parms, g_prod[i], external);
 
 //if (denom==std::complex<double>((0,0))){denom=E_REG;}//  prefactor=1.0;}//0.0;}
+// std::cout<<"This denom gives term "<<alphadenom+epsdenom<<std::endl;
 
-
+// if(std::abs(epsdenom)>E_REG){
 denom_prod=denom_prod*(alphadenom+epsdenom);
-
+// }
 
 
 }
 
 // std::cout<<"Denominator product is "<< denom_prod<<std::endl;
+// std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
 
 output=1.0/denom_prod*prefactor;
 

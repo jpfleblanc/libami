@@ -47,7 +47,7 @@ pole_array_t poles;
 for (int index=0; index<dim; index++){
 // std::cout<<"Working on integration number "<< index <<std::endl;
 
-update_gprod_general(index, R_array, P_array,S_array);
+update_gprod_general(index, index, R_array, P_array,S_array);
 // update_gprod_simple(index, R_array, P_array,S_array);
 
 /* std::cout<<"------------------"<<std::endl;
@@ -71,6 +71,57 @@ std::cout<<"S total size is "<< count<<std::endl;
 
 
 }
+
+// attempt to get different construction (more stable) by skipping the multipole indexes 
+void AmiCalc::minimal_construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
+
+
+R_array.clear();
+P_array.clear();
+S_array.clear();
+int dim=parms.N_INT_;
+
+g_prod_array_t R0_array;
+R0_array.push_back(R0);
+R_array.push_back(R0_array);
+
+
+pole_array_t poles;
+
+// this will be iterated from 0 to dim exclusive
+
+
+//TODO: for each GProd in R, for each pole in that Gprod, find residue for each and collect those in an array.
+int array_index=0;
+
+std::vector<int> skipped;
+
+for (int int_index=0; int_index<dim; int_index++){
+
+update_gprod_general_minimal(int_index, array_index, R_array, P_array,S_array);
+
+if(R_array.size()==array_index+2){array_index++;}
+else{skipped.push_back(int_index);
+std::cout<<"Skipped integral "<< int_index<<" due to multiplicity "<<std::endl;
+}
+
+}
+
+// do the skipped indexes regardless of multiplicity 
+for(int index=0; index< skipped.size(); index++){
+	
+update_gprod_general(skipped[index], array_index, R_array, P_array,S_array);
+array_index++;	
+	
+}
+
+
+
+
+
+
+}
+
 
 
 
@@ -577,11 +628,11 @@ signs=temp_signs;
 } */
 
 
-void AmiCalc::update_gprod_general(int index, AmiCalc::R_t &R_array, AmiCalc::P_t &P_array, AmiCalc::S_t &S_array){
+void AmiCalc::update_gprod_general_minimal(int int_index, int array_index,  AmiCalc::R_t &R_array, AmiCalc::P_t &P_array, AmiCalc::S_t &S_array){
 
 //TODO: for each GProd in R, for each pole in that Gprod, find residue for each and collect those in an array.
 
-int next=index+1;
+//int next=index+1;
 
 // std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
 
@@ -594,7 +645,7 @@ Pi_t temp_pole_array;
 Si_t temp_sign_array;
 
 
-for (int j=0; j<R_array[index].size(); j++)
+for (int j=0; j<R_array[array_index].size(); j++)
 {
 
 
@@ -602,7 +653,97 @@ sign_t s_out, temp_s;
 pole_array_t p_out, temp_p;
 
 pole_array_t poles;
-poles=find_poles(index, R_array[index][j]);  
+poles=find_poles(int_index, R_array[array_index][j]);  
+//p_out=poles;
+
+pole_array_t cor_poles;
+sign_t col_signs;
+//std::cout<<"Testing pole equivalence "<< pole_equiv(poles[0],poles[0]) <<std::endl;
+
+
+
+for (int i=0; i < poles.size(); i++){
+
+if(poles[i].multiplicity_==1){ 
+
+g_in.push_back(simple_residue(R_array[array_index][j],poles[i]));
+
+s_out.push_back(get_simple_sign(int_index,R_array[array_index][j], poles[i]));
+
+p_out.push_back(poles[i]);
+
+}else
+{
+// if any multiplicity is found, then do nothing 
+return;
+
+}
+// append to the next R_array
+//temp_g_array.push_back(simple_residue(R_array[index][j],poles[i]));
+
+
+}
+//poles.clear();
+
+// for(int p=0; p< p_out.size(); p++){
+// for(int m=0; m< p_out[p].multiplicity_; m++){	
+// cor_poles.push_back(p_out[p]);	
+	
+// }	
+// }
+// print_pole_array(p_out);
+
+temp_pole_array.push_back(p_out);
+temp_sign_array.push_back(s_out);
+
+p_out.clear();
+s_out.clear();
+// p_out.clear();
+// cor_poles.clear();
+// s_out.clear();
+//temp_g_array.push_back(g_in);
+
+}
+
+
+
+
+R_array.push_back(g_in);
+P_array.push_back(temp_pole_array);
+S_array.push_back(temp_sign_array);
+
+
+// std::cout<<"Size of R["<< next<<"]="<< R_array[next].size() <<std::endl;
+
+}
+
+
+void AmiCalc::update_gprod_general(int int_index, int array_index, AmiCalc::R_t &R_array, AmiCalc::P_t &P_array, AmiCalc::S_t &S_array){
+
+//TODO: for each GProd in R, for each pole in that Gprod, find residue for each and collect those in an array.
+
+//int next=index+1;
+
+// std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
+
+
+Ri_t g_in;
+
+
+g_prod_array_t temp_g_array;
+Pi_t temp_pole_array;
+Si_t temp_sign_array;
+
+
+for (int j=0; j<R_array[array_index].size(); j++)
+{
+
+
+sign_t s_out, temp_s;
+pole_array_t p_out, temp_p;
+
+pole_array_t poles;
+poles=find_poles(int_index, R_array[array_index][j]);  
 //p_out=poles;
 
 pole_array_t cor_poles;
@@ -624,9 +765,9 @@ if(poles[i].multiplicity_==1){
 
 // print_g_prod_array(R_array[index]);
 
-g_in.push_back(simple_residue(R_array[index][j],poles[i]));
+g_in.push_back(simple_residue(R_array[array_index][j],poles[i]));
 
-s_out.push_back(get_simple_sign(index,R_array[index][j], poles[i]));
+s_out.push_back(get_simple_sign(int_index,R_array[array_index][j], poles[i]));
 // std::cout<<"Pushed back sign of "<< get_simple_sign(index,R_array[index][j], poles[i])<<std::endl;
 // s_out=find_signs(index,R_array[index][j]);
 p_out.push_back(poles[i]);
@@ -636,7 +777,7 @@ p_out.push_back(poles[i]);
 	// std::cout<<"Pole "<<i<<" has multiplicity "<< poles[i].multiplicity_<<std::endl;
 Ri_t temp_g;
 
-evaluate_general_residue(R_array[index][j], poles[i], temp_g, temp_p, temp_s);
+evaluate_general_residue(R_array[array_index][j], poles[i], temp_g, temp_p, temp_s);
 
 // std::cout<<"Lengths of these should be the same "<< temp_g.size()<<" "<< temp_p.size()<<" "<< temp_s.size()<<std::endl;
 //a.insert(std::end(a), std::begin(b), std::end(b));

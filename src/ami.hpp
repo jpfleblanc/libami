@@ -317,6 +317,7 @@ ami_vars construct_ext_example_J();
 ami_vars construct_ext_example_Sigma();
 ami_vars construct_ext_multipole_example();
 ami_vars construct_6ord_ext_multipole_example();
+ami_vars construct_4ord_ext_multipole_example();
 
 ami_vars construct_random_example_J(std::mt19937 &rng);
 
@@ -366,7 +367,8 @@ double get_simple_sign(int index,g_prod_t &R,pole_struct pole);
 // Functions for R's P's and S's
 
 void update_gprod_simple(int index, R_t &R_array, P_t &P_array, S_t &S_array);
-void update_gprod_general(int index, R_t &R_array, P_t &P_array, S_t &S_array);
+void update_gprod_general(int int_index, int array_index,  R_t &R_array, P_t &P_array, S_t &S_array);
+void update_gprod_general_minimal(int int_index, int array_index, R_t &R_array, P_t &P_array, S_t &S_array);
 
 // Functions for Evaluation
 
@@ -416,6 +418,8 @@ public:
 
   void construct(ami_parms &parms);  // needs to know how many integrals to do
   void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
+  // flip order of integration to try to reduce multipole issues
+  void minimal_construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
 
   /// The evaluation 
   void evaluate(ami_parms &parms);

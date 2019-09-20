@@ -11,6 +11,32 @@
 #include <chrono>
 #include <random>
 
+/* 
+----------Printing next----------
+Eps=(0 0 0 0 0 1 0 )
+Alpha=(1 0 0 1 -1 )
+----------Printing next----------
+Eps=(0 0 0 0 1 0 0 )
+Alpha=(0 0 0 1 0 )
+----------Printing next----------
+Eps=(1 0 0 0 0 0 0 )
+Alpha=(1 0 0 0 0 )
+----------Printing next----------
+Eps=(1 0 0 0 0 0 0 )
+Alpha=(1 0 0 0 0 )
+----------Printing next----------
+Eps=(0 1 0 0 0 0 0 )
+Alpha=(0 1 0 0 0 )
+----------Printing next----------
+Eps=(0 0 0 1 0 0 0 )
+Alpha=(-1 1 1 0 0 )
+----------Printing next----------
+Eps=(0 0 1 0 0 0 0 )
+Alpha=(0 0 1 0 0 )
+ */
+ 
+ 
+
 
 AmiCalc::g_prod_t AmiCalc::construct_multipole_example(){
 
@@ -20,19 +46,23 @@ AmiCalc::g_prod_t g;
 // Setting up G array
 // defining alpha's
 
-AmiCalc::alpha_t alpha_1={0,0,1,0};
-AmiCalc::alpha_t alpha_2={0,1,-1,1};
-AmiCalc::alpha_t alpha_3={-1,1,0,1};
-AmiCalc::alpha_t alpha_4={0,1,0,0};
-AmiCalc::alpha_t alpha_5={1,0,0,0};
+AmiCalc::alpha_t alpha_1={1,0,0,1,-1};
+AmiCalc::alpha_t alpha_2={0,0,0,1,0};
+AmiCalc::alpha_t alpha_3={1,0,0,0,0};
+AmiCalc::alpha_t alpha_4={1,0,0,0,0};
+AmiCalc::alpha_t alpha_5={0,1,0,0,0};
+AmiCalc::alpha_t alpha_6={-1,1,1,0,0};
+AmiCalc::alpha_t alpha_7={0,0,1,0,0};
 
 
 //defining epsilon's
-AmiCalc::epsilon_t epsilon_1={1,0,0,0,0};
-AmiCalc::epsilon_t epsilon_2={0,1,0,0,0};
-AmiCalc::epsilon_t epsilon_3={0,0,1,0,0};
-AmiCalc::epsilon_t epsilon_4={0,0,0,1,0};
-AmiCalc::epsilon_t epsilon_5={0,0,0,0,1};
+AmiCalc::epsilon_t epsilon_1={0,0,0,0,0,1,0};
+AmiCalc::epsilon_t epsilon_2={0,0,0,0,1,0,0};
+AmiCalc::epsilon_t epsilon_3={1,0,0,0,0,0,0};
+AmiCalc::epsilon_t epsilon_4={1,0,0,0,0,0,0};
+AmiCalc::epsilon_t epsilon_5={0,1,0,0,0,0,0};
+AmiCalc::epsilon_t epsilon_6={0,0,0,1,0,0,0};
+AmiCalc::epsilon_t epsilon_7={0,0,1,0,0,0,0};
 
 
 AmiCalc::g_struct g1(epsilon_1,alpha_1);
@@ -40,6 +70,8 @@ AmiCalc::g_struct g2(epsilon_2,alpha_2);
 AmiCalc::g_struct g3(epsilon_3,alpha_3);
 AmiCalc::g_struct g4(epsilon_4,alpha_4);
 AmiCalc::g_struct g5(epsilon_5,alpha_5);
+AmiCalc::g_struct g6(epsilon_6,alpha_6);
+AmiCalc::g_struct g7(epsilon_7,alpha_7);
 
 
 AmiCalc::g_prod_t R0;
@@ -49,6 +81,8 @@ R0.push_back(g2);
 R0.push_back(g3);
 R0.push_back(g4);
 R0.push_back(g5);
+R0.push_back(g6);
+R0.push_back(g7);
 
 
 
@@ -85,6 +119,29 @@ energy_t energy={1,1.1,1.2,1.3,1.4,0, 0.1, 0.2, 0.3,0.4, 0.5};
 frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,0),
+				std::complex<double>(0,M_PI)};
+
+
+ami_vars external(energy, frequency);
+
+external.BETA_=1.0;
+
+return external;
+
+}
+
+
+
+AmiCalc::ami_vars AmiCalc::construct_4ord_ext_multipole_example(){
+
+
+
+energy_t energy={1,1.1,1.2,1.31,1.4,0.01, 0.1}; //{1,1.1,1.2,1.3,1.4,0.01, 0.1};
+
+frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,0),
