@@ -246,6 +246,7 @@ typedef std::vector<ami_vars> ami_vars_list;
 
 
 
+
 struct solution_set{
 	
 solution_set(g_prod_t test_R0,S_t  test_S, P_t test_P, R_t test_R,ami_parms test_amiparms, double prefactor){
@@ -272,6 +273,23 @@ double prefactor_;
 
 	
 };
+
+
+struct evaluation_set{
+evaluation_set(){}
+
+evaluation_set(solution_set s,	ext_vars ext){
+ext_vars_=ext;
+sol_=s;	
+}
+	
+	
+ext_vars ext_vars_;
+solution_set sol_;
+	
+};
+
+
 
 typedef std::vector< std::vector<solution_set> > solution_set_matrix_t;
 
