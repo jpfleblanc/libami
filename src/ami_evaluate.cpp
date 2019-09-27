@@ -228,8 +228,9 @@ gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
 //std::isnan(std::real(term))
 
+// if(abs(term)<1){
 output+= term;
-
+// }
 // if( true ){output+= term;
 
 // std::cout<<"Term apparently is finite? "<< term << std::endl;

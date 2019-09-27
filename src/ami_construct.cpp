@@ -10,14 +10,14 @@
 AmiCalc::AmiCalc(ami_parms &parms)
 {
  
-std::cout<<"Ami Constructor Called"<<std::endl;
+// std::cout<<"Ami Constructor Called"<<std::endl;
 
 }
 
 AmiCalc::AmiCalc()
 {
  
-std::cout<<"Ami Constructor Called"<<std::endl;
+// std::cout<<"Ami Constructor Called"<<std::endl;
 
 }
 
