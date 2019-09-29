@@ -17,6 +17,8 @@ void AmiCalc::evaluate_solutions(std::vector<double> &Re_results, std::vector<do
 
 Re_results.clear(); 
 Im_results.clear();
+Re_results.reserve(ami_eval_vars.size());
+Im_results.reserve(ami_eval_vars.size());
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
 // std::cout<<"Evaluating with ami_vars "<<std::endl;
@@ -46,6 +48,7 @@ Im_results.push_back(calc_result.imag());
 void AmiCalc::evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars){
 
 results.clear();
+results.reserve(ami_eval_vars.size());
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
 // std::cout<<"Evaluating with ami_vars "<<std::endl;
@@ -128,11 +131,12 @@ return final_result;
 AmiCalc::SorF_t AmiCalc::dot(Si_t Si, SorF_t fermi){
 
 SorF_t output;
+output.reserve(Si.size());
 
 for( int i=0; i< Si.size(); i++){
 
 std::vector<std::complex<double> > line;
-
+line.reserve(Si[i].size());
 for(int j=0; j< Si[i].size(); j++){
 
 //std::cout<<"Dot term 
@@ -159,6 +163,7 @@ SorF_t output;
 
 
 std::vector<std::complex<double> > line;
+line.reserve(left[0].size()*right.back().size());// just guess that the last one is the biggest for reservation
 
 for( int i=0; i< left[0].size(); i++){
 for( int rj=0; rj< right[i].size(); rj++){
@@ -182,11 +187,13 @@ return output;
 AmiCalc::SorF_t AmiCalc::fermi(ami_parms &parms, Pi_t Pi, ami_vars external){
 
 SorF_t output;
+output.reserve(Pi.size());
 
 
 for (int i=0; i< Pi.size(); i++){
 
 std::vector<std::complex<double> > group;
+group.reserve(Pi[i].size());
 
   for (int j=0; j< Pi[i].size(); j++){
 
@@ -479,7 +486,8 @@ return result;
 }
 
 void AmiCalc::construct_ami_vars_list(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list){
-
+vars_list.clear();
+vars_list.reserve(external.size());
 for(int i=0; i<external.size(); i++){
 
 vars_list.push_back(construct_ami_vars(R0, state, external[i]));
@@ -527,6 +535,7 @@ AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, AmiCalc::in
 AmiCalc::energy_t energy=construct_energy(R0, state, external);
 
 AmiCalc::frequency_t frequency;
+frequency.reserve(state.order_+1);
 
 for(int i=0;i<state.order_;i++){ frequency.push_back(std::complex<double>(0,0));}
 

@@ -32,8 +32,15 @@ public:
 //Fundamental objects
 
  
-typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
-typedef std::vector<int> alpha_t;
+// typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
+// typedef std::vector<int> alpha_t;
+
+typedef std::vector<signed char> epsilon_t;  /// the symbolic epsilon
+typedef std::vector<signed char> alpha_t;
+
+// typedef std::vector<short int> epsilon_t;  /// the symbolic epsilon
+// typedef std::vector<short int> alpha_t;
+
 typedef enum {Bose,Fermi} stat_type ;
 typedef enum {Sigma,Pi,Hartree, Bare} graph_type ;
 
