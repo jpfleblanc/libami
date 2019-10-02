@@ -436,7 +436,8 @@ std::cout<<")";
 void AmiCalc::print_epsilon_info(AmiCalc::epsilon_t eps){
 
 
-for (std::vector<signed char>::iterator it= eps.begin(); it != eps.end(); ++it){
+//for (std::vector<signed char>::iterator it= eps.begin(); it != eps.end(); ++it){
+for (std::vector<int>::iterator it= eps.begin(); it != eps.end(); ++it){
 
 std::cout<< *it << ' ';
 
@@ -449,7 +450,7 @@ std::cout<< *it << ' ';
 
 void AmiCalc::print_alpha_info(AmiCalc::alpha_t alpha){
 
-for (std::vector<signed char>::iterator it= alpha.begin(); it != alpha.end(); ++it){
+for (std::vector<int>::iterator it= alpha.begin(); it != alpha.end(); ++it){
 
 std::cout<< *it << ' ';
 

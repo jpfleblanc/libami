@@ -485,12 +485,12 @@ return result;
 	
 }
 
-void AmiCalc::construct_ami_vars_list(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list){
+void AmiCalc::construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list){
 vars_list.clear();
 vars_list.reserve(external.size());
 for(int i=0; i<external.size(); i++){
 
-vars_list.push_back(construct_ami_vars(R0, state, external[i]));
+vars_list.push_back(construct_ami_vars(R0, prefactor, state, external[i]));
 }	
 	
 }
@@ -527,7 +527,7 @@ return kout;
 	
 }
 
-AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external){
+AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external){
 	
 //energy_t energy={-4,1,-1};
 // std::cout<<"Beta value is "<<external.BETA_<<std::endl;
@@ -545,7 +545,7 @@ frequency.push_back(external.external_freq_[0]); // some number of external freq
 
 AmiCalc::ami_vars final_out(energy, frequency);
 final_out.BETA_=external.BETA_;
-final_out.prefactor=state.prefactor_;
+final_out.prefactor=prefactor; //state.prefactor_;
 return final_out;
 
 	

@@ -31,12 +31,12 @@ public:
 
 //Fundamental objects
 
- 
-// typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
-// typedef std::vector<int> alpha_t;
+ //TODO: redefinition may be dangerous and does not provide speedup
+typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
+typedef std::vector<int> alpha_t;
 
-typedef std::vector<signed char> epsilon_t;  /// the symbolic epsilon
-typedef std::vector<signed char> alpha_t;
+// typedef std::vector<signed char> epsilon_t;  /// the symbolic epsilon
+// typedef std::vector<signed char> alpha_t;
 
 // typedef std::vector<short int> epsilon_t;  /// the symbolic epsilon
 // typedef std::vector<short int> alpha_t;
@@ -183,7 +183,7 @@ order_=k_length;
 k_vect_list_t internal_k_list_;
 int order_;
 int dim_;
-double prefactor_;
+//double prefactor_;
 // R_t R_array_;
 // P_t P_array_;
 // S_t S_array_;
@@ -299,6 +299,7 @@ solution_set sol_;
 
 
 typedef std::vector< std::vector<solution_set> > solution_set_matrix_t;
+typedef std::vector< solution_set_matrix_t > gg_solution_set_matrix_t;
 
 
 
@@ -320,8 +321,8 @@ void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX
 void evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars_list);
 void evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars);
 
-void construct_ami_vars_list(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
-ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
+void construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
+ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 energy_t construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 std::complex<double> eval_epsilon(AmiCalc::k_vector_t k, std::complex<double> mu );
 k_vector_t construct_k(AmiCalc::alpha_t alpha, AmiCalc::k_vect_list_t &k);
