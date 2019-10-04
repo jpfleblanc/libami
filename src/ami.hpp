@@ -301,7 +301,7 @@ solution_set sol_;
 };
 
 
-
+typedef std::vector<solution_set> solution_set_vec_t;
 typedef std::vector< std::vector<solution_set> > solution_set_matrix_t;
 typedef std::vector< solution_set_matrix_t > gg_solution_set_matrix_t;
 
