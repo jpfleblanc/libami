@@ -288,7 +288,8 @@ std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
 
 if(alphadenom==zero){
-alphadenom+=E_REG*im+E_REG;	
+//alphadenom+=E_REG*im+E_REG;
+alphadenom+=E_REG;	
 }
 
 // std::cout<<"Energies"<<std::endl;
@@ -361,9 +362,12 @@ std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
 
 // TODO: this might be an actual error. in practice hopefully very small
-if(eta%2==1 && abs(E)<abs(E_REG)){//E==zero){
+
+// oct 4: TODO: comment or not?
+if(eta%2==1 && abs(E.real())<abs(E_REG)){//E==zero){
 	// std::cout<<"E was "<< E<<std::endl;
-return zero;
+// return zero;
+E+=E_REG*sgn(E.real());
 }	
 
 
@@ -371,8 +375,8 @@ return zero;
 
 //val = 1.0/(sigma*exp(B*z[0]-gamma)+1.0)
 //double gamma=0.01;
-
-output=1.0/(sigma*std::exp(beta*E-E_REG*im)+1.0);
+//oct 4:  output=1.0/(sigma*std::exp(beta*E-E_REG*im)+1.0);
+output=1.0/(sigma*std::exp(beta*(E))+1.0);
 // output=1.0/(sigma*exp(beta*E)+1.0);
 
 // if(eta%2==1 && abs(E)<abs(E_REG)){

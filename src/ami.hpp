@@ -20,6 +20,10 @@
 //namespace std::filesystem = std::experimental::filesystem;
 
 int factorial(int n);
+// this is a template for the signum function to produce +1, -1 or 0 as the sign 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
 
 
 class AmiCalc 
