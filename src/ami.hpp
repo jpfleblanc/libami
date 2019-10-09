@@ -57,6 +57,7 @@ struct ami_parms{
 ami_parms(int N_INT,  double E_REG){
 N_INT_=N_INT;
 E_REG_=E_REG;
+N_EXT_=1;
 TYPE_=static_cast<AmiCalc::graph_type>(0); /// by default sigma
 }
 
@@ -64,11 +65,13 @@ ami_parms(int N_INT, double E_REG, graph_type TYPE){
 N_INT_=N_INT;
 E_REG_=E_REG;
 TYPE_=TYPE;
+N_EXT_=1;
 }
 
 ami_parms(){}
 
 int N_INT_;
+int N_EXT_;
 double E_REG_;
 graph_type TYPE_;
 
@@ -95,6 +98,7 @@ stat_=Fermi;
 g_struct(){} // uninitialized variant
 
 epsilon_t eps_;
+// std::vector<int> eps_indices_;
 alpha_t alpha_;
 stat_type stat_;
 

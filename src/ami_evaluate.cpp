@@ -269,6 +269,7 @@ std::complex<double> denom_prod(1,0);
 double prefactor=external.prefactor;
 
 double E_REG=parms.E_REG_;
+// int N_EXT=parms.N_EXT_;
 
 // std::cout<<"Eval Gprod"<<std::endl;
 
@@ -276,12 +277,21 @@ for(int i=0; i< g_prod.size(); i++){
 std::complex<double> alphadenom(0,0);
 std::complex<double> epsdenom(0,0);
 
-for(int a=0; a< g_prod[i].alpha_.size(); a++){
+
+// TODO: This should multiply from the back and stop when it hits the end of num_ext freq. 
+
+// precompute a list of non-zero alpha_ and eps_ vector indices, so these only loop over non-zero entries.
+// TODO: this change has almost no practical speedup
+/* for(int a=g_prod[i].alpha_.size()-1; a>g_prod[i].alpha_.size()-1-N_EXT; a--){
+alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];	
+} */
+
+ for(int a=0; a< g_prod[i].alpha_.size(); a++){
 alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
 // std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
 
-}
+} 
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
 
 std::complex<double> zero(0,0);
