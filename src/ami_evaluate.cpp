@@ -51,15 +51,9 @@ results.clear();
 results.reserve(ami_eval_vars.size());
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
-// std::cout<<"Evaluating with ami_vars "<<std::endl;
-// std::cout<<ami_eval_vars[i].BETA_<<" "<<ami_eval_vars[i].prefactor<<std::endl;
-// print_complex_array(ami_eval_vars[i].energy_);
-// print_complex_array(ami_eval_vars[i].frequency_);
 
 std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
 
-//if(std::abs(calc_result.real())>1){
-//	std::cout<<"Calculation returning large values - Flattening "<< calc_result <<std::endl;//}	
 
 results.push_back(calc_result);	
 }	
@@ -77,6 +71,16 @@ int dim=parms.N_INT_;
 
 //std::cout<<"dim="<<dim<< std::endl;
 SorF_t SorF_result;
+
+if (dim==1){
+SorF_t SF_left, SF_right;
+SorF_t S_double_left, S_double_right;	
+	
+SF_left=dot(S_array[0], fermi(parms,P_array[0], external));	
+
+SorF_result=SF_left;
+	
+}
 
 for (int i=0; i< dim-1; i++){
 
@@ -111,12 +115,13 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
 
 
-} 
+}
+ 
 
 
 std::complex<double> final_result;
 
-//std::cout<<"*R for dim="<<dim<< std::endl;
+// std::cout<<"*R for dim="<<dim<< std::endl;
 final_result=star(parms, SorF_result, R_array[dim], external);
 
 
