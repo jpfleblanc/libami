@@ -104,14 +104,14 @@ stat_type stat_;
 
 };
 
-// Pole structure. Equivalent to G structure, but kept separate. Tracks multiplicity, and which green's function it is attached to.
+// Pole structure. Equivalent to G structure, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
 struct pole_struct{
-
 
 epsilon_t eps_;
 alpha_t alpha_;
 int index_;
 int multiplicity_=1;
+int der_=0;
 std::vector<int> which_g_;
 
 };
