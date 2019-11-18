@@ -351,7 +351,7 @@ return output;
 
 std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
-std::complex<double>  output;
+std::complex<double>  output,term;
 int eta=0;
 
 double beta=external.BETA_;
@@ -376,38 +376,68 @@ double sigma= pow(-1.0, double(eta));
 std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
 
-// TODO: this might be an actual error. in practice hopefully very small
 
-// oct 4: TODO: comment or not?
-if(eta%2==1 && abs(E.real())<abs(E_REG)){//E==zero){
-	// std::cout<<"E was "<< E<<std::endl;
-// return zero;
+if(eta%2==1 && abs(E.real())<abs(E_REG)){
 E+=E_REG*sgn(E.real());
 }	
 
+// if(pole.der_==0){
+// output=1.0/(sigma*std::exp(beta*(E))+1.0);
+// return output;
+// }
 
-//if(eta==0){sigma=-1;}
+int m=pole.der_;
 
-//val = 1.0/(sigma*exp(B*z[0]-gamma)+1.0)
-//double gamma=0.01;
-//oct 4:  output=1.0/(sigma*std::exp(beta*E-E_REG*im)+1.0);
-output=1.0/(sigma*std::exp(beta*(E))+1.0);
-// output=1.0/(sigma*exp(beta*E)+1.0);
+// compute m'th derivative
+output=0;
+for( int k=0; k<m+1; k++){
+	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
+	output+= term;
+	// std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+}
+output=output*std::pow(beta,m)*(-1.0);
 
-// if(eta%2==1 && abs(E)<abs(E_REG)){
-	// std::cout<<"triggered catch  "<<std::endl;
-// return 0.0;
-// }	
-
-// std::cout<<"E was  "<< E<<" and output "<<output <<" for eta of "<<eta<<std::endl;
-
-// std::cout<< "Fermi output is "<< output << " for ereg beta E and sigma eta "<<E_REG<<" "<< beta <<" "<< E<<" "<< sigma <<" "<< eta << std::endl;
-// print_pole_struct_info(pole);
-
-// if(std::real(output)<0){return zero;}
+// std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E<<std::endl;
 
 return output;
 }
+
+double AmiCalc::frk(int r, int k){
+double output=0.0;
+
+
+
+for(int m=0; m< k+1; m++){
+	
+output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));	
+	
+	
+}
+
+// std::cout<<"Evaluating Frk function "<<r<<" "<<k<<" = "<<output<<std::endl;
+	
+	return output;
+	
+}
+
+// Returns value of Binomial Coefficient C(n, k)  
+int AmiCalc::binomialCoeff(int n, int k){  
+    int res = 1;  
+  
+    // Since C(n, k) = C(n, n-k)  
+    if ( k > n - k )  
+        k = n - k;  
+  
+    // Calculate value of  
+    // [n * (n-1) *---* (n-k+1)] / [k * (k-1) *----* 1]  
+    for (int i = 0; i < k; ++i)  
+    {  
+        res *= (n - i);  
+        res /= (i + 1);  
+    }  
+  
+    return res;  
+}  
 
 
 std::complex<double> AmiCalc::get_energy_from_pole( pole_struct pole, ami_vars external){

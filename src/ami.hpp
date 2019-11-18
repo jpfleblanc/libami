@@ -439,6 +439,11 @@ double get_starting_sign(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole);
 g_prod_t reduce_gprod(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole);
 
 
+// derivatives of fermi functions
+double frk(int r, int k);
+int binomialCoeff(int n, int k);
+
+
 public:
 
   ///setup of parameters

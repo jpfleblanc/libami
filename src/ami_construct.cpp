@@ -381,68 +381,6 @@ result=result/(double)factorial(pole.multiplicity_-1 );
 return result;
 }
 
-void AmiCalc::take_derivative_gprod(AmiCalc::g_prod_t &g_prod, AmiCalc::pole_struct pole, double start_sign, AmiCalc::Ri_t &r_out, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
-poles.clear();
-signs.clear();
-r_out.clear();	
-
-g_prod_t temp_gprod;
-
-
-
-for(int term=0; term< g_prod.size(); term++){
-int alpha=g_prod[term].alpha_[pole.index_];
-/* std::cout<<"Alpha is "<<alpha<<" for term "<< term<< " with start sign "<< start_sign <<std::endl;
-
-std::cout<<"Starting G_prod for term  "<< term<<" is"<<std::endl;
-print_g_prod_info(g_prod);
-
-std::cout<<"Pole is "<<std::endl;
-print_pole_struct_info(pole); */
-
-if(alpha!=0){
-	
-	// std::cout<<"g_prod.size() is "<< g_prod.size()<<std::endl;
-
- // signs.push_back(start_sign);
- signs.push_back(-(double)alpha*start_sign);
- // std::cout<<"Pushing back sign "<< start_sign<<std::endl;
-	for(int m=0; m< g_prod.size(); m++){
-	if(term==m){
-		// std::cout<<"Pushing back twice"<<std::endl;
-	temp_gprod.push_back(g_prod[m]);
-	temp_gprod.push_back(g_prod[m]);
-	// g_struct temp_g=der_fix(g_prod[m], alpha);
-	// temp_gprod.push_back(temp_g);
-	}
-	else{
-		// std::cout<<"Pushing back once"<<std::endl;
-	temp_gprod.push_back(g_prod[m]);
-	}
-    // std::cout<<"After m= "<< m<<" the temp_g_prod is "<<std::endl;
-    // print_g_prod_info(temp_gprod);	
-		
-		
-	}
-r_out.push_back(temp_gprod);
-temp_gprod.clear();
-
-	
-}
-
-
-
-}	
-
-for(int m=0; m<signs.size(); m++){
-poles.push_back(pole);	
-}
-
-	
- // std::cout<<"Sizes of r_out and poles and signs must match "<< r_out.size()<<" "<< poles.size()<<" "<<signs.size()	<<std::endl;
-	
-}
-
 AmiCalc::g_struct AmiCalc::der_fix(g_struct &g_in, double alpha){
 g_struct out;
 out.alpha_.resize(g_in.alpha_.size());
@@ -535,23 +473,28 @@ double starting_sign;
 starting_sign=get_starting_sign(G_in,pole);
 
 g_prod_t W_array;
-W_array=reduce_gprod(G_in,pole);
+W_array=reduce_gprod(G_in,pole);  // this is h(z) in f(z)h(z)
 
 
 
 Ri_t temp_ri, temp_ri_out;
-pole_array_t temp_poles;
+pole_array_t temp_poles_out;
 sign_t temp_signs_out;
 
 temp_ri.push_back(W_array);
 sign_t temp_signs;
+pole_array_t temp_pole_in;
 temp_signs.push_back(starting_sign);
+temp_pole_in.push_back(pole);
 // take derivatives
 for (int m=0; m< pole.multiplicity_-1; m++){
 
 for(int i=0; i< temp_ri.size(); i++){
+// First store the fermi derivative part 	
+	
+	
 // temp_ri and temp_signs have same length
-take_derivative_gprod(temp_ri[i], pole, temp_signs[i], temp_ri_out, temp_poles,temp_signs_out);	
+take_derivative_gprod(temp_ri[i], temp_pole_in[i], temp_signs[i], temp_ri_out, temp_poles_out,temp_signs_out);	
 // std::cout<<"temp_ri_out.size() is "<<temp_ri_out.size()<<std::endl;
 
 }
@@ -560,14 +503,15 @@ take_derivative_gprod(temp_ri[i], pole, temp_signs[i], temp_ri_out, temp_poles,t
 
 temp_ri=temp_ri_out;
 temp_signs=temp_signs_out;
+temp_pole_in=temp_poles_out;
 
 }
 
 signs=temp_signs_out;
-poles=temp_poles;
+poles=temp_poles_out;
 Ri_out=temp_ri_out;
 
-// std::cout<<"Signs poles and Ri are size "<<signs.size()<<" "<<poles.size()<<" "<<Ri_out.size()<<std::endl;
+std::cout<<"Signs poles and Ri are size "<<signs.size()<<" "<<poles.size()<<" "<<Ri_out.size()<<std::endl;
 
 // sub in pole at the end 
 for(int i=0; i< Ri_out.size();i++){
@@ -578,6 +522,87 @@ Ri_out[i][j]=update_G_pole(Ri_out[i][j],pole);
 }
 	
 }
+
+
+void AmiCalc::take_derivative_gprod(AmiCalc::g_prod_t &g_prod, AmiCalc::pole_struct pole, double start_sign, AmiCalc::Ri_t &r_out, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
+poles.clear();
+signs.clear();
+r_out.clear();	
+
+
+pole_struct fermi_pole=pole;
+fermi_pole.der_++;
+
+std::cout<<"Added fermi part to derivative"<<std::endl;
+// fermi derivative part 
+r_out.push_back(g_prod);
+poles.push_back(fermi_pole);	
+signs.push_back(start_sign);
+////
+ 
+
+g_prod_t temp_gprod;
+
+
+
+for(int term=0; term< g_prod.size(); term++){
+int alpha=g_prod[term].alpha_[pole.index_];
+/* std::cout<<"Alpha is "<<alpha<<" for term "<< term<< " with start sign "<< start_sign <<std::endl;
+
+std::cout<<"Starting G_prod for term  "<< term<<" is"<<std::endl;
+print_g_prod_info(g_prod);
+
+std::cout<<"Pole is "<<std::endl;
+print_pole_struct_info(pole); */
+
+if(alpha!=0){
+	
+	// std::cout<<"g_prod.size() is "<< g_prod.size()<<std::endl;
+
+ // signs.push_back(start_sign);
+ signs.push_back(-(double)alpha*start_sign);
+ // std::cout<<"Pushing back sign "<< start_sign<<std::endl;
+	for(int m=0; m< g_prod.size(); m++){
+	if(term==m){
+		// std::cout<<"Pushing back twice"<<std::endl;
+	temp_gprod.push_back(g_prod[m]);
+	temp_gprod.push_back(g_prod[m]);
+	// g_struct temp_g=der_fix(g_prod[m], alpha);
+	// temp_gprod.push_back(temp_g);
+	}
+	else{
+		// std::cout<<"Pushing back once"<<std::endl;
+	temp_gprod.push_back(g_prod[m]);
+	}
+    // std::cout<<"After m= "<< m<<" the temp_g_prod is "<<std::endl;
+    // print_g_prod_info(temp_gprod);	
+		
+		
+	}
+r_out.push_back(temp_gprod);
+temp_gprod.clear();
+
+	
+}
+
+
+
+}	
+
+
+// TODO : maybe this should be signs.size()-C, where C is defined to be the starting poles.size() ?
+for(int m=0; m<signs.size()-1; m++){
+poles.push_back(pole);	
+}
+// for(int m=0; m<signs.size(); m++){
+// poles.push_back(pole);	
+// }
+
+	
+ // std::cout<<"Sizes of r_out and poles and signs must match "<< r_out.size()<<" "<< poles.size()<<" "<<signs.size()	<<std::endl;
+	
+}
+
 
 /* // in the end, Ri will hold the array of updated G's
 void AmiCalc::evaluate_general_residue(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole, AmiCalc::Ri_t &Wi, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
