@@ -511,7 +511,7 @@ signs=temp_signs_out;
 poles=temp_poles_out;
 Ri_out=temp_ri_out;
 
-std::cout<<"Signs poles and Ri are size "<<signs.size()<<" "<<poles.size()<<" "<<Ri_out.size()<<std::endl;
+// std::cout<<"Signs poles and Ri are size "<<signs.size()<<" "<<poles.size()<<" "<<Ri_out.size()<<std::endl;
 
 // sub in pole at the end 
 for(int i=0; i< Ri_out.size();i++){
@@ -533,7 +533,7 @@ r_out.clear();
 pole_struct fermi_pole=pole;
 fermi_pole.der_++;
 
-std::cout<<"Added fermi part to derivative"<<std::endl;
+// std::cout<<"Added fermi part to derivative"<<std::endl;
 // fermi derivative part 
 r_out.push_back(g_prod);
 poles.push_back(fermi_pole);	
