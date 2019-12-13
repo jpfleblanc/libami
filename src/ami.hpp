@@ -36,8 +36,19 @@ public:
 //Fundamental objects
 
  //TODO: redefinition may be dangerous and does not provide speedup
-typedef std::vector<int> epsilon_t;  /// the symbolic epsilon
+//typedef std::pair< std::vector<int>, std::vector<std::complex<double>> epsilon_t;  /// 
+
+// use above, but then go through EVERYTHING and change eps[i] or eps_[i] -> eps_.first[i]
+
+//the symbolic epsilon
+typedef std::vector<int> epsilon_t;
 typedef std::vector<int> alpha_t;
+
+typedef double hopping_t;
+typedef std::vector<hopping_t> hopping_list_t;
+typedef int species_t;
+
+
 
 // typedef std::vector<signed char> epsilon_t;  /// the symbolic epsilon
 // typedef std::vector<signed char> alpha_t;
@@ -84,6 +95,7 @@ g_struct(epsilon_t eps, alpha_t alpha, stat_type stat){
 eps_=eps;
 alpha_=alpha;
 stat_=stat;
+species_=0;
 
 }
 
@@ -92,6 +104,7 @@ g_struct(epsilon_t eps, alpha_t alpha){
 eps_=eps;
 alpha_=alpha;
 stat_=Fermi;
+species_=0;
 
 }
 
@@ -101,6 +114,7 @@ epsilon_t eps_;
 // std::vector<int> eps_indices_;
 alpha_t alpha_;
 stat_type stat_;
+species_t species_;
 
 };
 
@@ -177,6 +191,7 @@ internal_state(int k_length, int dim){
 internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));	
 dim_=dim;
 order_=k_length;
+t_list_.resize(2*order_-1,1);
 }
 
 internal_state(){}
@@ -185,12 +200,15 @@ void initialize(int k_length, int dim){
 internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));	
 dim_=dim;
 order_=k_length;
+t_list_.resize(2*order_-1,1);
 	
 }
 
 k_vect_list_t internal_k_list_;
 int order_;
 int dim_;
+
+hopping_list_t t_list_;
 //double prefactor_;
 // R_t R_array_;
 // P_t P_array_;
@@ -332,7 +350,7 @@ void evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im
 void construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
 ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 energy_t construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
-std::complex<double> eval_epsilon(AmiCalc::k_vector_t k, std::complex<double> mu );
+std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu );
 k_vector_t construct_k(AmiCalc::alpha_t alpha, AmiCalc::k_vect_list_t &k);
 
 

@@ -519,8 +519,9 @@ result.resize(R0[0].eps_.size(),0);
 for(int i=0; i< R0.size(); i++){
 	for(int j=0; j<R0[i].eps_.size();j++){
 		if(R0[i].eps_[j]==1){
-result[j]=eval_epsilon( construct_k(R0[i].alpha_ , k_list) , external.MU_);
-//std::cout<<count<<" "<< result[j].real()<<std::endl;
+			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
+result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , external.MU_);
+// std::cout<<count<<" "<< result[j].real()<<std::endl;
 count++; 
 		}
 	}
@@ -544,13 +545,13 @@ vars_list.push_back(construct_ami_vars(R0, prefactor, state, external[i]));
 	
 }
 
-std::complex<double> AmiCalc::eval_epsilon(AmiCalc::k_vector_t k, std::complex<double> mu ){
+std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu ){
 	
 	std::complex<double> output(0,0);
 	// print_kvector(k);
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<std::endl;
-	output+=-2.0*cos(k[i]);	
+	output+=-2.0*t*cos(k[i]);	
 		
 	}
 	
