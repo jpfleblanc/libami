@@ -191,7 +191,8 @@ internal_state(int k_length, int dim){
 internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));	
 dim_=dim;
 order_=k_length;
-t_list_.resize(2*order_-1,1);
+if(2*order_-1>0){
+t_list_.resize(2*order_-1,1);}
 }
 
 internal_state(){}
@@ -200,7 +201,8 @@ void initialize(int k_length, int dim){
 internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));	
 dim_=dim;
 order_=k_length;
-t_list_.resize(2*order_-1,1);
+if(2*order_-1>0){
+t_list_.resize(2*order_-1,1);}
 	
 }
 
