@@ -358,6 +358,31 @@ double beta=external.BETA_;
 double E_REG=parms.E_REG_;
 
 
+// In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered. 
+
+// example fixed
+//
+// 1) create a stat map for the frequencies std::vector<int> stat_map: populate 1 for fermi and 0 for bose. length is equal to alpha.size() 
+// 2) simply replace eta=eta + 1*stat_map[i] 
+//
+
+// alternate fix.  parms.TYPE_ is 0 for sigma, 1 for Pi etc.  So if parms.TYPE_==1 and pole.alpha_.back()==1, don't add one. else add one to eta.
+/*
+
+// handle all but one external
+for (int i=0; i< pole.alpha_.size()-1; i++){
+//eta+= pole.alpha_[i];
+if(pole.alpha_[i]!=0){
+	eta++;
+}
+}
+
+// handle external based on graph type 
+if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi){
+eta++;	
+}
+*/
+
 
 
 for (int i=0; i< pole.alpha_.size(); i++){
@@ -367,6 +392,7 @@ if(pole.alpha_[i]!=0){
 }
 }
 
+// could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
 
 
@@ -395,6 +421,7 @@ for( int k=0; k<m+1; k++){
 	output+= term;
 	// std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
+// TODO: double check that this multiplication is general 
 output=output*std::pow(beta,m)*(-1.0);
 
 // std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E<<std::endl;

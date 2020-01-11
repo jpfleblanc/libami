@@ -59,6 +59,8 @@ typedef int species_t;
 typedef enum {Bose,Fermi} stat_type ;
 typedef enum {Sigma,Pi,Hartree, Bare} graph_type ;
 
+// TODO: graph_type needs to be extended to include: Sigma, Hartree, Bare, Pol_phuu, Pol_phud?
+
 bool flatten_warning=true;
 
 // AMI Parameter structure
