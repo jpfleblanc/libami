@@ -367,8 +367,8 @@ double E_REG=parms.E_REG_;
 //
 
 // alternate fix.  parms.TYPE_ is 0 for sigma, 1 for Pi etc.  So if parms.TYPE_==1 and pole.alpha_.back()==1, don't add one. else add one to eta.
-/*
 
+// TODO: should this be improved somehow? Should frequencies know their stat type?
 // handle all but one external
 for (int i=0; i< pole.alpha_.size()-1; i++){
 //eta+= pole.alpha_[i];
@@ -381,16 +381,16 @@ if(pole.alpha_[i]!=0){
 if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi){
 eta++;	
 }
-*/
+// END TODO
 
 
-
+/* 
 for (int i=0; i< pole.alpha_.size(); i++){
 //eta+= pole.alpha_[i];
 if(pole.alpha_[i]!=0){
 	eta++;
 }
-}
+} */
 
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
