@@ -57,7 +57,7 @@ typedef int species_t;
 // typedef std::vector<short int> alpha_t;
 
 typedef enum {Bose,Fermi} stat_type ;
-typedef enum {Sigma,Pi,Hartree, Bare} graph_type ;
+typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare} graph_type ;
 
 // TODO: graph_type needs to be extended to include: Sigma, Hartree, Bare, Pol_phuu, Pol_phud?
 

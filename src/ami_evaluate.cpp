@@ -378,7 +378,7 @@ if(pole.alpha_[i]!=0){
 }
 
 // handle external based on graph type 
-if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi){
+if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi_phuu && parms.TYPE_!=AmiCalc::Pi_phud){
 eta++;	
 }
 // END TODO
