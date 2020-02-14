@@ -298,6 +298,19 @@ prefactor_=prefactor;
 
 }
 
+solution_set(g_prod_t test_R0,S_t  test_S, P_t test_P, R_t test_R,ami_parms test_amiparms, double prefactor, std::vector<alpha_t> bose){
+
+R0_=test_R0;
+S_=test_S;
+P_=test_P;
+R_=test_R;
+ami_parms_=test_amiparms;
+prefactor_=prefactor;
+
+bose_alphas_=bose;
+
+}
+
 solution_set(){}
 	
 g_prod_t R0_;
@@ -307,6 +320,7 @@ R_t R_;
 ami_parms ami_parms_;
 double prefactor_;
 
+std::vector<alpha_t> bose_alphas_;
 
 	
 };
