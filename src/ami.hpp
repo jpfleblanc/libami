@@ -59,6 +59,9 @@ typedef int species_t;
 typedef enum {Bose,Fermi} stat_type ;
 typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare} graph_type ;
 
+typedef enum {hubbard,coulomb} int_type;
+typedef enum {tb, fp} disp_type;
+
 // TODO: graph_type needs to be extended to include: Sigma, Hartree, Bare, Pol_phuu, Pol_phud?
 
 bool flatten_warning=true;
@@ -72,6 +75,8 @@ N_INT_=N_INT;
 E_REG_=E_REG;
 N_EXT_=1;
 TYPE_=static_cast<AmiCalc::graph_type>(0); /// by default sigma
+int_type_=static_cast<AmiCalc::int_type>(0); /// by default is hubbard 
+dispersion_=static_cast<AmiCalc::disp_type>(0);// by default is tight-binding.
 }
 
 ami_parms(int N_INT, double E_REG, graph_type TYPE){
@@ -81,12 +86,24 @@ TYPE_=TYPE;
 N_EXT_=1;
 }
 
+ami_parms(int N_INT, double E_REG, graph_type TYPE, int_type inter, disp_type disp){
+N_INT_=N_INT;
+E_REG_=E_REG;
+TYPE_=TYPE;
+N_EXT_=1;
+int_type_=static_cast<AmiCalc::int_type>(inter);
+dispersion_=static_cast<AmiCalc::disp_type>(disp);
+}
+
 ami_parms(){}
 
 int N_INT_;
 int N_EXT_;
 double E_REG_;
 graph_type TYPE_;
+
+int_type int_type_;
+disp_type dispersion_;
 
 };
 
@@ -195,6 +212,11 @@ dim_=dim;
 order_=k_length;
 if(2*order_-1>0){
 t_list_.resize(2*order_-1,1);}
+disp_=static_cast<AmiCalc::disp_type>(0); // by default tight binding unless necessary to change 
+
+mink=0;
+maxk=2*M_PI;
+
 }
 
 internal_state(){}
@@ -205,6 +227,10 @@ dim_=dim;
 order_=k_length;
 if(2*order_-1>0){
 t_list_.resize(2*order_-1,1);}
+
+disp_=static_cast<AmiCalc::disp_type>(0); // by default tight binding unless necessary to change 
+mink=0;
+maxk=2*M_PI;
 	
 }
 
@@ -213,6 +239,9 @@ int order_;
 int dim_;
 
 hopping_list_t t_list_;
+disp_type disp_;
+
+double mink,maxk;
 //double prefactor_;
 // R_t R_array_;
 // P_t P_array_;
@@ -368,7 +397,7 @@ void evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im
 void construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
 ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 energy_t construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
-std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu );
+std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu  , disp_type disp );
 k_vector_t construct_k(AmiCalc::alpha_t alpha, AmiCalc::k_vect_list_t &k);
 
 
