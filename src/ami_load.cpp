@@ -117,6 +117,7 @@ while (std::getline(infile_stream, line))
 
 	std::stringstream ss(line);
     double beta, realmu,imagmu;
+	double H;
 	double kdim;
 	double realW, imagW;
 	double kx, ky;
@@ -124,7 +125,7 @@ while (std::getline(infile_stream, line))
 	bool read = bool(ss >> laststring);
 	if(read){
 	beta=std::stod(laststring);
-	ss >>  realmu>>imagmu >> kdim;// >> kx >> ky >> realW>> imagW;
+	ss >>  realmu>>imagmu >> H >> kdim;// >> kx >> ky >> realW>> imagW;
 	
 	// std::cout<<beta<<" "<<mu<<" "<<kdim<<std::endl;//<<" "<<kx<<" "<<ky<<" "<<realW<<" "<<imagW<<" "<<std::endl;
 	
@@ -134,6 +135,7 @@ while (std::getline(infile_stream, line))
 		line_variables.BETA_=beta;
 		std::complex<double> mu(realmu,imagmu);
 		line_variables.MU_=mu;
+		line_variables.H_=H;
 		line_variables.KDIM_=int(kdim);
 		line_variables.external_k_vector_.assign(kdim,0.0);
     // }

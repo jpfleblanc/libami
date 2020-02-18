@@ -547,7 +547,7 @@ for(int i=0; i< R0.size(); i++){
 	for(int j=0; j<R0[i].eps_.size();j++){
 		if(R0[i].eps_[j]==1){
 			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
-result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , external.MU_, state.disp_);
+result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
 // std::cout<<count<<" "<< result[j].real()<<std::endl;
 count++; 
 		}
@@ -569,6 +569,40 @@ for(int i=0; i<external.size(); i++){
 
 vars_list.push_back(construct_ami_vars(R0, prefactor, state, external[i]));
 }	
+	
+}
+
+std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, disp_type disp){
+	
+	std::complex<double> output(0,0);
+	// print_kvector(k);
+	
+if(disp==AmiCalc::tb){	
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=-2.0*t*cos(k[i]);	
+		
+	}
+}
+if(disp==AmiCalc::fp){
+
+for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=std::pow(k[i],2);	
+		
+	}
+}
+
+// assuming that spin=0 is up, and spin=1 is down. then spin-1/2, gives -1/2 for up and 1/2 for down. 
+	
+output+=H*(spin-0.5);	
+	
+output -= mu;
+	
+	
+return -output;	
+	
+	
 	
 }
 

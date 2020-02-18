@@ -214,8 +214,8 @@ if(2*order_-1>0){
 t_list_.resize(2*order_-1,1);}
 disp_=static_cast<AmiCalc::disp_type>(0); // by default tight binding unless necessary to change 
 
-mink=0;
-maxk=2*M_PI;
+mink_=0;
+maxk_=2*M_PI;
 
 }
 
@@ -229,8 +229,8 @@ if(2*order_-1>0){
 t_list_.resize(2*order_-1,1);}
 
 disp_=static_cast<AmiCalc::disp_type>(0); // by default tight binding unless necessary to change 
-mink=0;
-maxk=2*M_PI;
+mink_=0;
+maxk_=2*M_PI;
 	
 }
 
@@ -241,7 +241,7 @@ int dim_;
 hopping_list_t t_list_;
 disp_type disp_;
 
-double mink,maxk;
+double mink_,maxk_;
 //double prefactor_;
 // R_t R_array_;
 // P_t P_array_;
@@ -257,6 +257,8 @@ ext_vars(int dim){
 KDIM_=dim;
 external_k_vector_.assign(dim,0.0);	
 external_freq_.resize(1);
+
+
 	
 }
 ext_vars(int dim, double beta, std::complex<double> mu){
@@ -267,6 +269,21 @@ external_freq_.resize(1);
 
 BETA_=beta;
 MU_=mu;
+
+H_=0;
+	
+}
+
+ext_vars(int dim, double beta, std::complex<double> mu, double H){
+	
+KDIM_=dim;
+external_k_vector_.assign(dim,0.0);	
+external_freq_.resize(1);
+
+BETA_=beta;
+MU_=mu;
+
+H_=H;
 	
 }
 
@@ -281,6 +298,7 @@ int KDIM_;
 frequency_t external_freq_;
 
 double BETA_;
+double H_;
 std::complex<double> MU_;
 };
 
@@ -398,6 +416,7 @@ void construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::i
 ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 energy_t construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu  , disp_type disp );
+std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, disp_type disp);
 k_vector_t construct_k(AmiCalc::alpha_t alpha, AmiCalc::k_vect_list_t &k);
 
 
