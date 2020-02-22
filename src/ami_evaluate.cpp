@@ -17,8 +17,8 @@ void AmiCalc::evaluate_solutions(std::vector<double> &Re_results, std::vector<do
 
 Re_results.clear(); 
 Im_results.clear();
-Re_results.reserve(ami_eval_vars.size());
-Im_results.reserve(ami_eval_vars.size());
+Re_results.resize(ami_eval_vars.size(),0);
+Im_results.resize(ami_eval_vars.size(),0);
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
 // std::cout<<"Evaluating with ami_vars "<<std::endl;
@@ -34,8 +34,8 @@ std::complex<double> calc_result=evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_
 // calc_result=0.0;
 // }		
 
-Re_results.push_back(calc_result.real());
-Im_results.push_back(calc_result.imag());	
+Re_results[i]=calc_result.real();
+Im_results[i]=calc_result.imag();	
 }	
 	
 // std::cout<<"Eval complete"<<std::endl;	
@@ -356,6 +356,7 @@ int eta=0;
 
 double beta=external.BETA_;
 double E_REG=parms.E_REG_;
+// std::cout<<"Evaluating with energy regulator of "<< E_REG<<std::endl;
 
 
 // In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered. 
@@ -403,10 +404,14 @@ double sigma= pow(-1.0, double(eta));
 std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
 
+// TODO: This regulator may not be sufficient for derivative functions.
+// if(eta%2==1 && abs(E.real())<abs(E_REG)){
+// E+=E_REG*sgn(E.real());
+// }	
 
-if(eta%2==1 && abs(E.real())<abs(E_REG)){
+// TEST - always add the regulator
 E+=E_REG*sgn(E.real());
-}	
+
 
 // if(pole.der_==0){
 // output=1.0/(sigma*std::exp(beta*(E))+1.0);
@@ -547,14 +552,16 @@ result.resize(R0[0].eps_.size(),0);
 for(int i=0; i< R0.size(); i++){
 	for(int j=0; j<R0[i].eps_.size();j++){
 		if(R0[i].eps_[j]==1){
+			// std::cout<<"On energy item "<<j<<std::endl;
 			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
 result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
-// std::cout<<count<<" "<< result[j].real()<<std::endl;
+// std::cout<<"energy "<<count<<" "<< result[j].real()<<std::endl;
 count++; 
 		}
 	}
 }	
 
+// std::cout<<count<<" "<< R0[0].eps_.size();
 if(count != R0[0].eps_.size()){
 	std::cout<<count<<" "<< R0[0].eps_.size();
 	throw std::runtime_error("Something wrong with epsilon");}
@@ -567,7 +574,7 @@ void AmiCalc::construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, A
 vars_list.clear();
 vars_list.reserve(external.size());
 for(int i=0; i<external.size(); i++){
-
+// std::cout<<"Making ami vars on external "<< i<<std::endl;
 vars_list.push_back(construct_ami_vars(R0, prefactor, state, external[i]));
 }	
 	
@@ -582,7 +589,7 @@ if(disp==AmiCalc::tb){
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<std::endl;
 	output+=-2.0*t*cos(k[i]);	
-		
+		// std::cout<<"Evaluated tb "<< -2.0*t*cos(k[i]) <<std::endl;
 	}
 }
 if(disp==AmiCalc::fp){
@@ -654,6 +661,7 @@ AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, double pref
 	
 //energy_t energy={-4,1,-1};
 // std::cout<<"Beta value is "<<external.BETA_<<std::endl;
+// std::cout<<"Frequency value is "<< external.external_freq_[0]<<std::endl;
 
 AmiCalc::energy_t energy=construct_energy(R0, state, external);
 
