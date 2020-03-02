@@ -592,11 +592,13 @@ if(disp==AmiCalc::tb){
 		// std::cout<<"Evaluated tb "<< -2.0*t*cos(k[i]) <<std::endl;
 	}
 }
+
+// Units are of rydbergs:  We used the atomic Rydberg units. Please see the attachment for the details. In this unit, the length scale is the Bohr radius a_0, and the energy scale is the Rydberg energy e^2/2a_0. Equivalently,  you may set \hbar=1, m=1/2 and e^2/2=1. This is why the dispersion becomes \epsilon_k=k^2/2, and the Coulomb replusion =8*pi/q^2. 
 if(disp==AmiCalc::fp){
 
 for(int i=0; i<k.size();i++){
-		// std::cout<<"i is "<<i<<std::endl;
-	output+=std::pow(k[i],2);	
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	output+=std::pow(k[i],2)/2.0;	
 		
 	}
 }
@@ -606,8 +608,9 @@ for(int i=0; i<k.size();i++){
 output+=H*(spin-0.5);	
 	
 output -= mu;
-	
-	
+	// if(std::abs(output)<0.1){
+// std::cout<<"Returning epsilon of "<< output<<std::endl;
+	// }	
 return -output;	
 	
 	
