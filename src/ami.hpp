@@ -31,6 +31,19 @@ class AmiCalc
 
 public:
 
+
+// HARTREE FOCK ENERGY OBJECTS and functions
+
+void read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename);
+std::vector<int> ptoi;
+std::vector<double> pgrid, sigma_hf;
+double hf_mu, hf_kstep;
+double rs;
+
+double get_hf_sigma(double kk);
+double hf_energy(double kk);
+
+
 /// Type definitions for AMI
 
 //Fundamental objects
@@ -60,7 +73,7 @@ typedef enum {Bose,Fermi} stat_type ;
 typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare} graph_type ;
 
 typedef enum {hubbard,coulomb} int_type;
-typedef enum {tb, fp} disp_type;
+typedef enum {tb, fp, hf} disp_type;
 
 // TODO: graph_type needs to be extended to include: Sigma, Hartree, Bare, Pol_phuu, Pol_phud?
 

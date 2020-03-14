@@ -589,7 +589,7 @@ if(disp==AmiCalc::tb){
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<std::endl;
 	output+=-2.0*t*cos(k[i]);	
-		// std::cout<<"Evaluated tb "<< -2.0*t*cos(k[i]) <<std::endl;
+		// std::cout<<"Evaluated tb "<< -2.0*t*cos(k[i]) <<" with momentum "<< k[i]<<" and hopping "<< t <<std::endl;
 	}
 }
 
@@ -598,16 +598,32 @@ if(disp==AmiCalc::fp){
 
 for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
-	output+=std::pow(k[i],2)/2.0;	
+	output+=std::pow(k[i],2);	
 		
 	}
 }
 
-// assuming that spin=0 is up, and spin=1 is down. then spin-1/2, gives -1/2 for up and 1/2 for down. 
+// assuming that spin=0 is up, and spin=1 is down. then spin-1/2, gives -1/2 for up and 1/2 for down.
+
+if(disp==AmiCalc::hf){
+	double q=0.0;
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	q+=std::pow(k[i],2);	
+		
+	}
+	q=std::sqrt(q);
+
+output=hf_energy(q);
+}else{	
 	
 output+=H*(spin-0.5);	
 	
 output -= mu;
+
+}
+
+//TODO we don't subtract mu if the hf dispersion is given. it contains its own mu value. 
 	// if(std::abs(output)<0.1){
 // std::cout<<"Returning epsilon of "<< output<<std::endl;
 	// }	
@@ -637,9 +653,22 @@ for(int i=0; i<k.size();i++){
 		
 	}
 }
+
+if(disp==AmiCalc::hf){
+	double q=0.0;
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	q+=std::pow(k[i],2);	
+		
+	}
+	q=std::sqrt(q);
+
+output=hf_energy(q);
+}else{	
 	
-	output -= mu;
-	
+output -= mu;
+
+}
 	
 	return -output;
 }

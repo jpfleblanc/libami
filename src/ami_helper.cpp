@@ -493,3 +493,59 @@ std::cout<<") ";
 }
 std::cout<<std::endl;
 }
+
+
+double AmiCalc::hf_energy(double kk){
+double E_kk;
+double mass=0.5;
+double bolv=get_hf_sigma(kk);
+double amu=hf_mu;
+	
+E_kk=0.5*(kk*kk/mass)+bolv-amu 	;
+	
+return E_kk;	
+	
+}
+
+double AmiCalc::get_hf_sigma(double kk){
+
+double amom=kk;
+
+int ip_ind=kk/hf_kstep;
+int ipc=ptoi[ip_ind];
+
+int Npg=pgrid.size()-1;
+
+if(ipc<0 || ipc> Npg){
+throw std::runtime_error("Something wrong in get_hf_mu function");
+}	
+
+int ipc1, ipc2, ipc3;
+double pc1,pc2,pc3;
+double Ap1, Ap2, Ap3;
+double Fp1, Fp2, Fp3;
+
+double output=0.0;
+
+if(ipc==0){
+ipc1=0; ipc2=1; ipc3=2;	
+}else if(ipc==Npg){
+ipc1=Npg-2; ipc2=Npg-1; ipc3=Npg;	
+}else {
+ipc1=ipc-1; ipc2=ipc; ipc3=ipc+1;	
+}
+
+pc1=pgrid[ipc1]; pc2=pgrid[ipc2]; pc3=pgrid[ipc3];
+
+Fp1=sigma_hf[ipc1]; Fp2=sigma_hf[ipc2]; Fp3=sigma_hf[ipc3];
+
+Ap1=(amom-pc2)*(amom-pc3)/((pc1-pc2)*(pc1-pc3)) ;
+Ap2=(amom-pc1)*(amom-pc3)/((pc2-pc1)*(pc2-pc3)); 
+Ap3=(amom-pc1)*(amom-pc2)/((pc3-pc1)*(pc3-pc2)); 
+    
+output = Fp1*Ap1+Fp2*Ap2+Fp3*Ap3 ;
+
+return output;
+	
+}
+

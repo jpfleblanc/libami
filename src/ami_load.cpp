@@ -91,6 +91,122 @@ AMI_MATRIX[ord].push_back(solution);
 }
 }
 
+void AmiCalc::read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename){
+	
+std::ifstream infile_stream;
+
+
+// PTOI
+
+infile_stream.open(ptoi_filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<ptoi_filename<<std::endl;
+      throw std::runtime_error("Could not open ptoi file");
+    } 	
+
+std::string line;
+// throw away first lines and get second 
+std::getline(infile_stream,line);	
+std::getline(infile_stream,line);
+
+std::stringstream ssp(line);
+ssp>> hf_kstep;	
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+
+int throwaway, keep;
+std::string laststring;
+
+bool read = bool(ss >> laststring);
+	
+if(read){
+	// throwaway=std::stoi(laststring); // lets just throw this away 
+	ss >>  keep;
+
+ptoi.push_back(keep);
+
+}
+
+}
+
+infile_stream.close();
+
+/////////////// PGRID 
+
+infile_stream.open(pgrid_filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<pgrid_filename<<std::endl;
+      throw std::runtime_error("Could not open pgrid file");
+    } 	
+
+std::getline(infile_stream,line);	// throw away first line 
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+std::string laststring;
+
+double throwaway,keep;
+
+bool read = bool(ss >> laststring);
+if(read){
+	// throwaway=std::stod(laststring); // lets just throw this away 
+	ss >>  keep;
+
+pgrid.push_back(keep);
+
+}
+
+}	
+
+infile_stream.close();
+
+///////////////////////// SIGMA_HF
+
+
+infile_stream.open(sigma_filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<sigma_filename<<std::endl;
+      throw std::runtime_error("Could not open sigma_hf file");
+    } 	
+
+// read first line into mu 
+std::getline(infile_stream,line);	// first line is mu  
+std::stringstream sss(line);
+
+sss >> hf_mu;
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+
+double throwaway,keep;
+std::string laststring;
+bool read = bool(ss >> laststring);
+if(read){
+	// throwaway=std::stod(laststring); // lets just throw this away 
+	ss >>  keep;
+
+sigma_hf.push_back(keep);
+
+}
+
+}	
+
+infile_stream.close();
+
+	
+	
+}
+
 
 
 void AmiCalc::read_external(std::string filename, external_variable_list &extern_list){
