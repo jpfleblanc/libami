@@ -70,7 +70,7 @@ typedef int species_t;
 // typedef std::vector<short int> alpha_t;
 
 typedef enum {Bose,Fermi} stat_type ;
-typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare} graph_type ;
+typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density} graph_type ;
 
 typedef enum {hubbard,coulomb} int_type;
 typedef enum {tb, fp, hf} disp_type;
