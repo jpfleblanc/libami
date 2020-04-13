@@ -268,7 +268,9 @@ struct ext_vars{
 ext_vars(int dim){
 	
 KDIM_=dim;
-external_k_vector_.assign(dim,0.0);	
+// external_k_vector_.assign(dim,0.0);	
+dummy_k_.assign(dim,0.0);
+external_k_list_.push_back(dummy_k_);
 external_freq_.resize(1);
 
 
@@ -277,7 +279,9 @@ external_freq_.resize(1);
 ext_vars(int dim, double beta, std::complex<double> mu){
 	
 KDIM_=dim;
-external_k_vector_.assign(dim,0.0);	
+// external_k_vector_.assign(dim,0.0);
+dummy_k_.assign(dim,0.0);
+external_k_list_.push_back(dummy_k_);	
 external_freq_.resize(1);
 
 BETA_=beta;
@@ -290,7 +294,10 @@ H_=0;
 ext_vars(int dim, double beta, std::complex<double> mu, double H){
 	
 KDIM_=dim;
-external_k_vector_.assign(dim,0.0);	
+// TODO: make this a vector of external momentum vectors 
+// external_k_vector_.assign(dim,0.0);	
+dummy_k_.assign(dim,0.0);
+external_k_list_.push_back(dummy_k_);
 external_freq_.resize(1);
 
 BETA_=beta;
@@ -306,7 +313,10 @@ ext_vars(){
 }
 
 
-k_vector_t external_k_vector_;	
+// k_vector_t external_k_vector_;
+k_vector_t dummy_k_;
+k_vect_list_t external_k_list_;
+	
 int KDIM_;
 frequency_t external_freq_;
 

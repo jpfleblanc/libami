@@ -253,11 +253,12 @@ while (std::getline(infile_stream, line))
 		line_variables.MU_=mu;
 		line_variables.H_=H;
 		line_variables.KDIM_=int(kdim);
-		line_variables.external_k_vector_.assign(kdim,0.0);
+		line_variables.dummy_k_.assign(kdim,0.0);
+		// line_variables.external_k_vector_.assign(kdim,0.0);
     // }
 	 for (int i=0; i<kdim;i++){
-		 
-		 ss >> line_variables.external_k_vector_[i];
+		 ss >> line_variables.dummy_k_[i];
+		 // ss >> line_variables.external_k_vector_[i];
 		 // std::cout<<line_variables.external_k_vector_[i]<<std::endl;;
 	 }
 	 
@@ -265,9 +266,13 @@ while (std::getline(infile_stream, line))
 	 std::complex<double> freq(realW,imagW);
 	 line_variables.external_freq_[0]=freq;
 	 
+	 line_variables.external_k_list_.push_back(line_variables.dummy_k_);
+	 
+	 // TODO: This presumes there is only one external frequency 
 	 
 	//std::cout<<"Push back"<<std::endl;
 	extern_list.push_back(line_variables);
+	line_variables.external_k_list_.clear();
 	}
 }
 	

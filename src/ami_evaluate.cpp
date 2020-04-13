@@ -541,7 +541,14 @@ AmiCalc::energy_t result;
 AmiCalc::k_vect_list_t k_list;
 
 k_list=state.internal_k_list_;
-k_list.push_back(external.external_k_vector_);
+// if(external.external_k_vector_.size()!=0){
+
+
+for(int i=0; i<external.external_k_list_.size(); i++){
+k_list.push_back(external.external_k_list_[i]);
+}
+
+// }
 
 // std::cout<<"Momentum list is "<<std::endl;
 // print_array(k_list);
@@ -689,6 +696,8 @@ return kout;
 	
 }
 
+// TODO: Does this correctly handle susceptibilities?
+
 AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external){
 	
 //energy_t energy={-4,1,-1};
@@ -697,14 +706,24 @@ AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, double pref
 
 AmiCalc::energy_t energy=construct_energy(R0, state, external);
 
+// the state 'order_' is actually just the internal k-length - or number of independent variables 
 AmiCalc::frequency_t frequency;
 frequency.reserve(state.order_+1);
 
 for(int i=0;i<state.order_;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 // TODO : this doesn't work with multiple external frequencies 
-frequency.push_back(external.external_freq_[0]); // some number of external frequencies
+// if(external.external_freq_.size()!=0){
+// frequency.push_back(external.external_freq_[0]); // some number of external frequencies
+// }
 
+// This should address above todo: should allow multiple external frequencies.
+// TODO: need a check somewhere that the frequency length matches the alpha length 
+for(int i=0; i< external.external_freq_.size(); i++){
+	
+frequency.push_back(external.external_freq_[i]);	
+	
+}
 
 AmiCalc::ami_vars final_out(energy, frequency);
 final_out.BETA_=external.BETA_;
