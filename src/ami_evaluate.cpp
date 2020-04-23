@@ -348,7 +348,7 @@ output=1.0/denom_prod*prefactor;
 return output;
 }
 
-
+// TODO: For doubleocc it is very likely that the derivative term is incorrect?
 std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
 std::complex<double>  output,term;
@@ -379,8 +379,18 @@ if(pole.alpha_[i]!=0){
 }
 
 // handle external based on graph type 
-if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi_phuu && parms.TYPE_!=AmiCalc::Pi_phud){
+if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi_phuu && parms.TYPE_!=AmiCalc::Pi_phud  && parms.TYPE_ !=AmiCalc::doubleocc){
 eta++;	
+}
+
+// if this is a double occupancy graph then the external line is bosonic. so it is a bosonic matsubara integral. so eta needs to be incremented IF the pole is for the last integration index
+if(parms.TYPE_==AmiCalc::doubleocc){
+
+if(pole.index_==pole.alpha_.size()-1){
+eta++;
+// std::cout<<"Incrementing eta since this is a bosonic integral for "<< pole.index_<<std::endl;
+}	
+	
 }
 
 // END TODO
@@ -427,8 +437,15 @@ for( int k=0; k<m+1; k++){
 	output+= term;
 	// std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
+
 // TODO: double check that this multiplication is general 
 output=output*std::pow(beta,m)*(-1.0);
+
+// if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  
+if(parms.TYPE_==AmiCalc::doubleocc){
+output=-1.0*output;	
+}
+
 
 // std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E<<std::endl;
 
