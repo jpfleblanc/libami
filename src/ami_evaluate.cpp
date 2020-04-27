@@ -559,6 +559,8 @@ AmiCalc::k_vect_list_t k_list;
 
 k_list=state.internal_k_list_;
 // if(external.external_k_vector_.size()!=0){
+	
+// print_g_prod_info(R0);	
 
 
 for(int i=0; i<external.external_k_list_.size(); i++){
