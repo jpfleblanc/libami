@@ -380,7 +380,11 @@ if(pole.alpha_[i]!=0){
 
 // handle external based on graph type 
 if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiCalc::Pi_phuu && parms.TYPE_!=AmiCalc::Pi_phud  && parms.TYPE_ !=AmiCalc::doubleocc){
+
+
 eta++;	
+
+// std::cout<<"External triggered"<<std::endl;
 }
 
 // if this is a double occupancy graph then the external line is bosonic. so it is a bosonic matsubara integral. so eta needs to be incremented IF the pole is for the last integration index
@@ -406,6 +410,13 @@ if(pole.alpha_[i]!=0){
 
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
+
+
+// if(eta%2==0){
+// std::cout<<"eta was even"<<std::endl;
+// }else{
+	// std::cout<<"eta was odd"<<std::endl;
+// }
 
 
 double sigma= pow(-1.0, double(eta));
@@ -743,6 +754,12 @@ for(int i=0; i< external.external_freq_.size(); i++){
 frequency.push_back(external.external_freq_[i]);	
 	
 }
+
+
+if(frequency.size()!= R0[0].alpha_.size()){
+	throw std::runtime_error("Frequency size does not match alpha");
+}
+
 
 AmiCalc::ami_vars final_out(energy, frequency);
 final_out.BETA_=external.BETA_;
