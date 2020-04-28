@@ -7,6 +7,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 link_directories("/usr/lib")
 
 #find_package(Boost 1.36.0)
@@ -48,6 +49,17 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 
 #INSTALL(FILES ${files} DESTINATION include)
 
+
+
+#testing setup
+option(Testing "Enable testing" ON)
+
+if (Testing)
+  add_library(gtest ./test/gtest-all.cc ./test/gtest_main.cc)
+  list(APPEND  libami)
+  enable_testing(test)
+  add_subdirectory(test)
+endif (Testing)
 
 
 
