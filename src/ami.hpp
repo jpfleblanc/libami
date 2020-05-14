@@ -43,6 +43,11 @@ double rs;
 double get_hf_sigma(double kk);
 double hf_energy(double kk);
 
+// molecule functions 
+
+void read_hii(std::string filename);
+std::vector<double> global_hii;
+bool not_molecule=1;
 
 /// Type definitions for AMI
 
@@ -60,6 +65,8 @@ typedef std::vector<int> alpha_t;
 typedef double hopping_t;
 typedef std::vector<hopping_t> hopping_list_t;
 typedef int species_t;
+
+
 
 
 

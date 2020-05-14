@@ -591,7 +591,12 @@ for(int i=0; i< R0.size(); i++){
 		if(R0[i].eps_[j]==1){
 			// std::cout<<"On energy item "<<j<<std::endl;
 			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
+if(not_molecule){			
 result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
+}else{
+result[j]=global_hii[R0[i].species_];	
+}
+
 // std::cout<<"energy "<<count<<" "<< result[j].real()<<std::endl;
 count++; 
 		}
@@ -607,6 +612,7 @@ return result;
 	
 }
 
+// this could be in ami.hpp as part of the structure 
 void AmiCalc::construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list){
 vars_list.clear();
 vars_list.reserve(external.size());
@@ -727,7 +733,7 @@ return kout;
 }
 
 // TODO: Does this correctly handle susceptibilities?
-
+// this could be part of the ...?
 AmiCalc::ami_vars AmiCalc::construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external){
 	
 //energy_t energy={-4,1,-1};

@@ -91,6 +91,41 @@ AMI_MATRIX[ord].push_back(solution);
 }
 }
 
+void AmiCalc::read_hii(std::string filename){
+std::ifstream infile_stream;
+
+infile_stream.open(filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<filename<<std::endl;
+      throw std::runtime_error("Could not open hii file");
+    } 		
+	
+std::string line;
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+
+int throwaway;
+double value;
+
+bool read= bool( ss>> throwaway);
+
+if(read){
+ss>> value;
+
+global_hii.push_back(value);
+}
+
+}	
+
+infile_stream.close();
+	
+	
+}
+
 void AmiCalc::read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename){
 	
 std::ifstream infile_stream;
