@@ -589,21 +589,22 @@ result.resize(R0[0].eps_.size(),0);
 for(int i=0; i< R0.size(); i++){
 	for(int j=0; j<R0[i].eps_.size();j++){
 		if(R0[i].eps_[j]==1){
-			// std::cout<<"On energy item "<<j<<std::endl;
+			std::cout<<"On energy item "<<j<<std::endl;
 			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
 if(not_molecule){			
 result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
 }else{
+	
 result[j]=global_hii[R0[i].species_];	
 }
 
-// std::cout<<"energy "<<count<<" "<< result[j].real()<<std::endl;
+std::cout<<"energy "<<count<<" "<< result[j].real()<<" "<<result.size()<<std::endl;
 count++; 
 		}
 	}
 }	
 
-// std::cout<<count<<" "<< R0[0].eps_.size();
+std::cout<<count<<" "<< R0[0].eps_.size();
 if(count != R0[0].eps_.size()){
 	std::cout<<count<<" "<< R0[0].eps_.size();
 	throw std::runtime_error("Something wrong with epsilon");}
