@@ -229,8 +229,8 @@ std::complex<double> output=0;
 std::complex<double> term;
 std::complex<double> gprod;
 
-// std::ofstream file;
-// file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
+std::ofstream file;
+file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
 
 
 for( int i=0; i< K[0].size(); i++)
@@ -253,11 +253,11 @@ output+= term;
 
 
 
- // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+ file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
 
-// file.close();
+file.close();
 
 
 
