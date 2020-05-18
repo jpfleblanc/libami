@@ -69,7 +69,7 @@ std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_ar
 
 int dim=parms.N_INT_;
 
-//std::cout<<"dim="<<dim<< std::endl;
+std::cout<<"dim="<<dim<< std::endl;
 SorF_t SorF_result;
 
 if (dim==1){
@@ -94,7 +94,7 @@ SorF_t S_double_left, S_double_right;
 if(i==0){
 // do dot operation
 SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
-//  std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+ std::cout<<"S["<<i<<"].f(P["<<i<<"])";
 }
 else {SF_left=SorF_result;}
 
@@ -105,13 +105,13 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 // std::cout<<i<<std::endl;
 
  SorF_result=cross(SF_left,SF_right);
- // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+ std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
  
 
-// std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
-// for( int x=0; x< SorF_result[0].size(); x++){
-// std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
-// }
+std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
+for( int x=0; x< SorF_result[0].size(); x++){
+std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
+}
 
 
 
@@ -431,8 +431,12 @@ std::complex<double> im(0,1);
 // }	
 
 // TEST - always add the regulator
+// TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
+if(sgn(E.real())==0 && sigma==-1){
+E+=E_REG;	
+}else{
 E+=E_REG*sgn(E.real());
-
+}
 
 // if(pole.der_==0){
 // output=1.0/(sigma*std::exp(beta*(E))+1.0);
@@ -444,9 +448,10 @@ int m=pole.der_;
 // compute m'th derivative
 output=0;
 for( int k=0; k<m+1; k++){
+	std::cout<<"On k'th derivative "<<k<<std::endl;
 	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
 	output+= term;
-	// std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
 
 // TODO: double check that this multiplication is general 
