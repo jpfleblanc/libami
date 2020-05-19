@@ -62,8 +62,33 @@ if (Testing)
 endif (Testing)
 
 
-#option(Documentation "Build documentation" ON)
-#set(_am_building_documentation ${Documentation})
+option(Documentation "Build documentation" ON)
+if (DocumentationOnly)
+  set(Documentation ON)
+endif (DocumentationOnly)
+
+set(_am_building_documentation ${Documentation})
+if (Documentation)
+    message(STATUS "Enable build of documentation")
+    set(Documentation OFF) # not to spawn make doc jobs for each module
+endif(Documentation)
+
+
+#Doxygen building is a function to prevent namespace damage
+function(build_documentation_)
+    set(DOXYFILE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+    message(STATUS "Building documentation for sources in ${DOXYFILE_EXTRA_SOURCES}")  
+    set(DOXYFILE_IN "${CMAKE_SOURCE_DIR}/doc/Doxyfile.in") 
+    set(CMAKE_PROJECT_NAME "LIBAMI") # to provide name for the documentation 
+    include(UseDoxygen)
+    unset(CMAKE_PROJECT_NAME)
+endfunction()
+if(_am_building_documentation)
+  build_documentation_()
+endif(_am_building_documentation)
+
+# option(Documentation "Build documentation" ON)
+# set(_am_building_documentation ${Documentation})
 
 
 #Doxygen building is a function to prevent namespace damage

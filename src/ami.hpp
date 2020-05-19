@@ -26,6 +26,37 @@ template <typename T> int sgn(T val) {
 }
 
 
+
+/**
+ * \class AmiCalc
+ *
+ * \ingroup LIBAMI
+ * (Note, this needs exactly one \defgroup somewhere)
+ *
+ * \brief Provide an example
+ *
+ * This class is meant as an example.  It is not useful by itself
+ * rather its usefulness is only a function of how much it helps
+ * the reader.  It is in a sense defined by the person who reads it
+ * and otherwise does not exist in any real form. 
+ *
+ * \note Attempts at zen rarely work.
+ *
+ * \author JPF LeBlanc $Author: bv $
+ *
+ * \version $Revision: 1.5 $
+ *
+ * \date $Date: 2005/04/14 14:16:20 $
+ *
+ * Contact: jleblanc@mun.ca
+ *
+ * Created on: testdate later
+ *
+ * $Id:  $
+ *
+ */
+
+
 class AmiCalc 
 {
 
@@ -560,8 +591,9 @@ int binomialCoeff(int n, int k);
 
 public:
 
-  ///setup of parameters
+  ///Default Constructor
   AmiCalc();
+  /// Constructor with ami_parms
   AmiCalc(ami_parms &parms);
   ///define parameter defaults
 //  static void define_parameters(alps::params &p);  // this is needed for the evaluate stage
@@ -570,14 +602,32 @@ public:
   /// The construction
 
   void construct(ami_parms &parms);  // needs to know how many integrals to do
+  
+  /**
+ * Construct AMI solution set .
+ *
+ * @param[out] mean the mean of `data`, or `NaN` if `data` is empty
+ * @param[out] stdDev the unbiased (sample) standard deviation, or `NaN`
+ *     if `data` contains fewer than 2 elements
+ * @param[in] data the data to analyze
+ */
   void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
   // flip order of integration to try to reduce multipole issues
   void minimal_construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
 
-  /// The evaluation 
+  /// The evaluation - depricated
   void evaluate(ami_parms &parms);
   //void evaluate(alps::params &parms, R_t &R_array, P_t &P_array, S_t &S_array);
 
+
+/** \brief Evaluation Function .
+      * \param level an integer setting how useful to be
+      * \return Output that is extra useful
+      * 
+      * This method does unbelievably useful things.  
+      * And returns exceptionally useful results.
+      * Use it everyday with good health.
+      */
   std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
   void evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng);
   
