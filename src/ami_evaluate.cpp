@@ -276,7 +276,7 @@ double prefactor=external.prefactor;
 double E_REG=parms.E_REG_;
 // int N_EXT=parms.N_EXT_;
 
-// std::cout<<"Eval Gprod"<<std::endl;
+std::cout<<"Eval Gprod"<<std::endl;
 
 for(int i=0; i< g_prod.size(); i++){
 std::complex<double> alphadenom(0,0);
@@ -294,7 +294,7 @@ alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
  for(int a=0; a< g_prod[i].alpha_.size(); a++){
 alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
-// std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
+std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
 
 } 
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
@@ -307,12 +307,12 @@ if(alphadenom==zero){
 alphadenom+=E_REG;	
 }
 
-// std::cout<<"Energies"<<std::endl;
+std::cout<<"Energies"<<std::endl;
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
 for(int a=0; a< g_prod[i].eps_.size(); a++){
 epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 //denom-=double(g_prod[i].eps_[a])*external.energy_[a];
-// std::cout<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
+std::cout<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
 }
 // std::cout<<"End"<<std::endl;
 
@@ -332,8 +332,8 @@ denom_prod=denom_prod*(alphadenom+epsdenom);
 
 }
 
-// std::cout<<"Denominator product is "<< denom_prod<<std::endl;
-// std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
+std::cout<<"Denominator product is "<< denom_prod<<std::endl;
+std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
 
 output=1.0/denom_prod*prefactor;
 
@@ -349,6 +349,8 @@ return output;
 }
 
 // TODO: For doubleocc it is very likely that the derivative term is incorrect?
+
+// TODO: Slight worry that E should be -E in this function . think the 'energy from pole' fixes this. 
 std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
 std::complex<double>  output,term;
@@ -408,7 +410,7 @@ if(pole.alpha_[i]!=0){
 }
 } */
 
-// could put infor into ami_vars external as to what the state type of the external variables is.
+// could put infor into ami_vars ext																														<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<LKJjjjjjjjjjjjernal as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
 
 
@@ -451,7 +453,7 @@ for( int k=0; k<m+1; k++){
 	std::cout<<"On k'th derivative "<<k<<std::endl;
 	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
 	output+= term;
-	std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	// std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
 
 // TODO: double check that this multiplication is general 
@@ -600,7 +602,7 @@ if(not_molecule){
 result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
 }else{
 	
-result[j]=global_hii[R0[i].species_];	
+result[j]=-global_hii[R0[i].species_];	
 }
 
 std::cout<<"energy "<<count<<" "<< result[j].real()<<" "<<result.size()<<std::endl;
