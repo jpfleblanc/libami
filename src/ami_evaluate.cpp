@@ -251,7 +251,7 @@ output+= term;
 // print_g_prod_info(R[i]);
 // }
 
-
+std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
  file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
@@ -353,6 +353,9 @@ return output;
 // TODO: Slight worry that E should be -E in this function . think the 'energy from pole' fixes this. 
 std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
+std::cout<<"Working on pole"<<std::endl;
+print_pole_struct_info(pole);
+
 std::complex<double>  output,term;
 int eta=0;
 
@@ -434,11 +437,14 @@ std::complex<double> im(0,1);
 
 // TEST - always add the regulator
 // TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
-// if(sgn(E.real())==0 && sigma==-1){
+if(E==zero && sigma==-1){
+	std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
+	
+return zero;	
 // E+=E_REG;	
-// }else{
+}else{
 E+=E_REG*sgn(E.real());
-// }
+}
 
 // if(pole.der_==0){
 // output=1.0/(sigma*std::exp(beta*(E))+1.0);
