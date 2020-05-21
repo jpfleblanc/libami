@@ -434,11 +434,11 @@ std::complex<double> im(0,1);
 
 // TEST - always add the regulator
 // TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
-if(sgn(E.real())==0 && sigma==-1){
-E+=E_REG;	
-}else{
+// if(sgn(E.real())==0 && sigma==-1){
+// E+=E_REG;	
+// }else{
 E+=E_REG*sgn(E.real());
-}
+// }
 
 // if(pole.der_==0){
 // output=1.0/(sigma*std::exp(beta*(E))+1.0);
@@ -453,7 +453,7 @@ for( int k=0; k<m+1; k++){
 	std::cout<<"On k'th derivative "<<k<<std::endl;
 	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
 	output+= term;
-	// std::cout<<"Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
 
 // TODO: double check that this multiplication is general 
