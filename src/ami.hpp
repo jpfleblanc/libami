@@ -134,6 +134,7 @@ ami_parms(int N_INT, double E_REG, graph_type TYPE){
 N_INT_=N_INT;
 E_REG_=E_REG;
 TYPE_=TYPE;
+int_type_=static_cast<AmiCalc::int_type>(0);
 N_EXT_=1;
 }
 

@@ -251,6 +251,7 @@ output+= term;
 // print_g_prod_info(R[i]);
 // }
 
+std::cout<<"In star K[]*R"<<std::endl;
 std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
  file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
