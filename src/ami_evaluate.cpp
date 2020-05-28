@@ -69,7 +69,7 @@ std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_ar
 
 int dim=parms.N_INT_;
 
-std::cout<<"dim="<<dim<< std::endl;
+// std::cout<<"dim="<<dim<< std::endl;
 SorF_t SorF_result;
 
 if (dim==1){
@@ -94,7 +94,7 @@ SorF_t S_double_left, S_double_right;
 if(i==0){
 // do dot operation
 SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
- std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+ // std::cout<<"S["<<i<<"].f(P["<<i<<"])";
 }
 else {SF_left=SorF_result;}
 
@@ -105,13 +105,13 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 // std::cout<<i<<std::endl;
 
  SorF_result=cross(SF_left,SF_right);
- std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+ // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
  
 
-std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
-for( int x=0; x< SorF_result[0].size(); x++){
-std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
-}
+// std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
+// for( int x=0; x< SorF_result[0].size(); x++){
+// std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
+// }
 
 
 
@@ -229,8 +229,8 @@ std::complex<double> output=0;
 std::complex<double> term;
 std::complex<double> gprod;
 
-std::ofstream file;
-file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
+// std::ofstream file;
+// file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
 
 
 for( int i=0; i< K[0].size(); i++)
@@ -251,14 +251,14 @@ output+= term;
 // print_g_prod_info(R[i]);
 // }
 
-std::cout<<"In star K[]*R"<<std::endl;
-std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// std::cout<<"In star K[]*R"<<std::endl;
+// std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
- file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+ // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
 
-file.close();
+// file.close();
 
 
 
@@ -277,7 +277,7 @@ double prefactor=external.prefactor;
 double E_REG=parms.E_REG_;
 // int N_EXT=parms.N_EXT_;
 
-std::cout<<"Eval Gprod"<<std::endl;
+// std::cout<<"Eval Gprod"<<std::endl;
 
 for(int i=0; i< g_prod.size(); i++){
 std::complex<double> alphadenom(0,0);
@@ -295,7 +295,7 @@ alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
  for(int a=0; a< g_prod[i].alpha_.size(); a++){
 alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
-std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
+// std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
 
 } 
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
@@ -308,12 +308,12 @@ if(alphadenom==zero){
 alphadenom+=E_REG;	
 }
 
-std::cout<<"Energies"<<std::endl;
+// std::cout<<"Energies"<<std::endl;
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
 for(int a=0; a< g_prod[i].eps_.size(); a++){
 epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 //denom-=double(g_prod[i].eps_[a])*external.energy_[a];
-std::cout<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
+// std::cout<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
 }
 // std::cout<<"End"<<std::endl;
 
@@ -333,8 +333,8 @@ denom_prod=denom_prod*(alphadenom+epsdenom);
 
 }
 
-std::cout<<"Denominator product is "<< denom_prod<<std::endl;
-std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
+// std::cout<<"Denominator product is "<< denom_prod<<" with prefactor "<< prefactor<<std::endl;
+// std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
 
 output=1.0/denom_prod*prefactor;
 
@@ -354,8 +354,8 @@ return output;
 // TODO: Slight worry that E should be -E in this function . think the 'energy from pole' fixes this. 
 std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
-std::cout<<"Working on pole"<<std::endl;
-print_pole_struct_info(pole);
+// std::cout<<"Working on pole"<<std::endl;
+// print_pole_struct_info(pole);
 
 std::complex<double>  output,term;
 int eta=0;
@@ -439,7 +439,7 @@ std::complex<double> im(0,1);
 // TEST - always add the regulator
 // TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
 if(E==zero && sigma==-1){
-	std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
+	// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
 	
 return zero;	
 // E+=E_REG;	
@@ -457,10 +457,10 @@ int m=pole.der_;
 // compute m'th derivative
 output=0;
 for( int k=0; k<m+1; k++){
-	std::cout<<"On k'th derivative "<<k<<std::endl;
+	// std::cout<<"On k'th derivative "<<k<<std::endl;
 	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
 	output+= term;
-	std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
 
 // TODO: double check that this multiplication is general 
@@ -603,7 +603,7 @@ result.resize(R0[0].eps_.size(),0);
 for(int i=0; i< R0.size(); i++){
 	for(int j=0; j<R0[i].eps_.size();j++){
 		if(R0[i].eps_[j]==1){
-			std::cout<<"On energy item "<<j<<std::endl;
+			// std::cout<<"On energy item "<<j<<std::endl;
 			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
 if(not_molecule){			
 result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
@@ -612,13 +612,13 @@ result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0
 result[j]=-global_hii[R0[i].species_];	
 }
 
-std::cout<<"energy "<<count<<" "<< result[j].real()<<" "<<result.size()<<std::endl;
+// std::cout<<"energy "<<count<<" "<< result[j].real()<<" "<<result.size()<<std::endl;
 count++; 
 		}
 	}
 }	
 
-std::cout<<count<<" "<< R0[0].eps_.size();
+// std::cout<<count<<" "<< R0[0].eps_.size();
 if(count != R0[0].eps_.size()){
 	std::cout<<count<<" "<< R0[0].eps_.size();
 	throw std::runtime_error("Something wrong with epsilon");}

@@ -428,6 +428,7 @@ P_t P_;
 R_t R_;
 ami_parms ami_parms_;
 double prefactor_;
+int loops_;
 
 std::vector<alpha_t> bose_alphas_;
 
