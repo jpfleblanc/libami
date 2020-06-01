@@ -502,6 +502,8 @@ double bolv=get_hf_sigma(kk);
 double amu=hf_mu;
 	
 E_kk=0.5*(kk*kk/mass)+bolv-amu 	;
+
+// std::cout<<"Returning "<<E_kk<< " for kk, amu "<< kk<<" "<<amu<<std::endl;
 	
 return E_kk;	
 	
@@ -511,8 +513,12 @@ double AmiCalc::get_hf_sigma(double kk){
 
 double amom=kk;
 
+// std::cout<<"In get_hf_sigma with "<<kk<<std::endl;
+
 int ip_ind=kk/hf_kstep;
 int ipc=ptoi[ip_ind];
+
+// std::cout<<"ptoi gave "<< ipc<<std::endl;
 
 int Npg=pgrid.size()-1;
 

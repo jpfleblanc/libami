@@ -65,7 +65,7 @@ results.push_back(calc_result);
 std::complex<double> AmiCalc::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
 
- //std::cout<<"Evaluating Result for construction: ";
+ // std::cout<<"Evaluating Result for construction: ";
 
 int dim=parms.N_INT_;
 
@@ -641,6 +641,7 @@ vars_list.push_back(construct_ami_vars(R0, prefactor, state, external[i]));
 std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, disp_type disp){
 	
 	std::complex<double> output(0,0);
+	// std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
 	// print_kvector(k);
 	
 if(disp==AmiCalc::tb){	
@@ -672,6 +673,7 @@ if(disp==AmiCalc::hf){
 	}
 	q=std::sqrt(q);
 
+// std::cout<<"Calling hf_energy qith q "<< q<<std::endl;
 output=hf_energy(q);
 }else{	
 	
@@ -694,6 +696,7 @@ return -output;
 std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu , disp_type disp){
 	
 	std::complex<double> output(0,0);
+	std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
 	// print_kvector(k);
 	
 if(disp==AmiCalc::tb){	
