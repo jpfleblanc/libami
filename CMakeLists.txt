@@ -15,7 +15,7 @@ link_directories("/usr/lib")
 #  include_directories(${Boost_INCLUDE_DIRS})
 #endif()
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -std=c++11 -lstdc++fs ")#-ffast-math")# -ffast-math")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -std=c++11 -lstdc++fs")# -ffast-math -funsafe-math-optimizations -msse4.2 ")#-ffast-math")# -ffast-math")
 
 #include_directories(/home/jpfleblanc/software/boost_1_55_0)
 
