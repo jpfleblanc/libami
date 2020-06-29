@@ -273,6 +273,7 @@ std::complex<double> output(0,0);
 
 std::complex<double> denom_prod(1,0);
 double prefactor=external.prefactor;
+// std::cout<<"Evaluating with prefactor "<< prefactor<<std::endl;
 
 double E_REG=parms.E_REG_;
 // int N_EXT=parms.N_EXT_;
@@ -438,14 +439,33 @@ std::complex<double> im(0,1);
 
 // TEST - always add the regulator
 // TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
-if(E==zero && sigma==-1){
+
+
+if(E==zero && sigma==-1 && pole.der_==0 ){
 	// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
 	
 return zero;	
-// E+=E_REG;	
+E+=E_REG;	
 }else{
-E+=E_REG*sgn(E.real());
+	// if(sgn(E.real())!=0){
+	// E+=E_REG*sgn(E.real());}
+	// else{
+		// E+=E_REG;
+	// }
 }
+
+
+// if(sgn(E.real())!=0){
+	// E+=E_REG*sgn(E.real());}
+	// else{
+		// E+=E_REG;
+	// }
+
+if(pole.der_!=0){
+	
+	return zero;
+}
+
 
 // if(pole.der_==0){
 // output=1.0/(sigma*std::exp(beta*(E))+1.0);
