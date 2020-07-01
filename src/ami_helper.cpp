@@ -374,6 +374,7 @@ print_pole_struct_info(g[i]);
 
 void AmiCalc::print_g_struct_info(AmiCalc::g_struct g){
 
+std::cout<<"Species="<<g.species_<<" ";
 std::cout<<"Eps=(";
 print_epsilon_info(g.eps_);
 std::cout<<")";

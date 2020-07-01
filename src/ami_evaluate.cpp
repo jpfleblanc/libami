@@ -415,7 +415,7 @@ if(pole.alpha_[i]!=0){
 }
 } */
 
-// could put infor into ami_vars ext																														<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<LKJjjjjjjjjjjjernal as to what the state type of the external variables is.
+// could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
 
 
@@ -447,11 +447,11 @@ if(E==zero && sigma==-1 && pole.der_==0 ){
 return zero;	
 E+=E_REG;	
 }else{
-	// if(sgn(E.real())!=0){
-	// E+=E_REG*sgn(E.real());}
-	// else{
-		// E+=E_REG;
-	// }
+	if(sgn(E.real())!=0){
+	E+=E_REG*sgn(E.real());}
+	else{
+		E+=E_REG;
+	}
 }
 
 
