@@ -91,7 +91,7 @@ AMI_MATRIX[ord].push_back(solution);
 }
 }
 
-void AmiCalc::read_hii(std::string filename){
+void AmiCalc::read_hii(std::string filename,int maxval){
 std::ifstream infile_stream;
 
 infile_stream.open(filename);	
@@ -113,7 +113,9 @@ double value;
 
 bool read= bool( ss>> throwaway);
 
-if(read){
+// std::cout<<"Throw away is "<<throwaway <<std::endl;
+
+if(read && throwaway<=maxval){
 ss>> value;
 
 global_hii.push_back(value);

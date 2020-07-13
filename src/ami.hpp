@@ -76,7 +76,7 @@ double hf_energy(double kk);
 
 // molecule functions 
 
-void read_hii(std::string filename);
+void read_hii(std::string filename, int maxval);
 std::vector<double> global_hii;
 bool not_molecule=1;
 
