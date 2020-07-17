@@ -461,10 +461,10 @@ E+=E_REG;
 		// E+=E_REG;
 	// }
 
-if(pole.der_!=0){
+// if(pole.der_!=0){
 	
-	return zero;
-}
+	// return zero;
+// }
 
 
 // if(pole.der_==0){
