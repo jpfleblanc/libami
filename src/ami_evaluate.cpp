@@ -441,7 +441,7 @@ std::complex<double> im(0,1);
 // TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
 
 
-if(E==zero && sigma==-1 && pole.der_==0 ){
+if(E==zero && sigma==-1  ){  // && pole.der_==0    Not sure if pole derivative plays any role
 	// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
 	
 return zero;	
@@ -454,6 +454,13 @@ E+=E_REG;
 	}
 }
 
+// july 23rd adding back in a different regulator 
+
+if(sgn(E.real())!=0){
+	E+=E_REG*sgn(E.real());}
+	else{
+		E+=E_REG;
+	}
 
 // if(sgn(E.real())!=0){
 	// E+=E_REG*sgn(E.real());}
