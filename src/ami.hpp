@@ -80,6 +80,8 @@ void read_hii(std::string filename, int maxval);
 std::vector<double> global_hii;
 bool not_molecule=1;
 
+bool density_warning=true;
+
 /// Type definitions for AMI
 
 //Fundamental objects

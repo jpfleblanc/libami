@@ -640,8 +640,15 @@ count++;
 
 // std::cout<<count<<" "<< R0[0].eps_.size();
 if(count != R0[0].eps_.size()){
+	
+	if(density_warning){
 	std::cout<<count<<" "<< R0[0].eps_.size();
-	throw std::runtime_error("Something wrong with epsilon");}
+	std::cerr<<"Warning - Mismatch in size of R0 and epsilon: If this is not a density calculation then something is wrong!"<<std::endl;
+	density_warning=false;
+	
+	}
+}
+	// throw std::runtime_error("Something wrong with epsilon");}
 	
 return result;
 	
