@@ -3,7 +3,13 @@ include(EnableGtests) #defined in ./cmake
 set(test_src
   blank
   secondtest
-  pole_equiv
+
+  #default_modelTest
+  #backcontTest
+  # gridTest
+  # paramsTest
+  # simulationTest
+  # paramFailureTest
 )
 foreach(test ${test_src})
   add_gtest(${test})
