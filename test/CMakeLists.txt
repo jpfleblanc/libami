@@ -35,12 +35,13 @@ FetchContent_MakeAvailable(googletest)
 # Tests
 ################################
 # Add test cpp file
-add_executable(${TESTNAME} blank.cpp)
-add_executable(${TESTNAME} secondtest.cpp)
-add_executable(${TESTNAME} pole_equiv.cpp)
+#add_executable(blank blank.cpp)
+add_executable(second secondtest.cpp)
+add_executable(third pole_equiv.cpp)
 # Link test executable against gtest & gtest_main
-target_link_libraries(${TESTNAME} gtest gtest_main)
-
+#target_link_libraries(blank gtest gtest_main)
+target_link_libraries(second ami gtest gtest_main)
+target_link_libraries(third ami gtest gtest_main)
 
 
 

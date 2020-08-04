@@ -7,7 +7,7 @@
 #include <chrono>
 #include <random>
 
-#include "gtest.h"
+#include "gtest/gtest.h"
 // include other headers if necessary   #include ../src/ami.hpps
 // You are going to create two pole_struct (similar to g_struct) then,
 // test both epsilons have the same size, and both have the same alpha
@@ -74,7 +74,7 @@ TEST(pole_equiv, epsilon_size){
 }
 
 
-//Checks that elements in alpha vector are not the same
+//Checks that elements in alpha vector are not the same################
 TEST(pole_equiv, alpha_vector_diff){
 	// Create two alpha objects
 	AmiCalc::alpha_t alpha_1={0,0,1,1,0};
@@ -104,7 +104,7 @@ TEST(pole_equiv, alpha_vector_diff){
 
 
 //Checks that elements in epsilon vector are not the same
-TEST(pole_equiv, alpha_vector_diff){
+TEST(pole_equiv, epsilon_vector_diff){
 	// Create two alpha objects
 	AmiCalc::alpha_t alpha_1={0,0,0,1,0};
 	AmiCalc::alpha_t alpha_2={0,0,0,1,0};

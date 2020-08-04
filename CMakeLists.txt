@@ -66,11 +66,12 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 ###########################################################
 # New testing code
 set(TESTNAME "TestRunner")
-project(${TESTNAME})
+#project(${TESTNAME})
 
 add_subdirectory(test)
 enable_testing()
-add_test(${TESTNAME} ${TESTNAME})
+add_test(${TESTNAME} test/third)
+add_test(second test/second)
 
 
 
