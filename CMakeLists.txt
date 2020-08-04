@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.11)
 
 project (ami CXX)
 #find_package(ALPSCore REQUIRED)
@@ -6,6 +6,8 @@ project (ami CXX)
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
+
+
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 link_directories("/usr/lib")
@@ -52,16 +54,27 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 
 
 #testing setup
-option(Testing "Enable testing" ON)
+#option(Testing "Enable testing" ON)
 
-if (Testing)
-  add_library(gtest ./test/gtest-all.cc ./test/gtest_main.cc)
-  list(APPEND  libami)
-  enable_testing(test)
-  add_subdirectory(test)
-endif (Testing)
+#if (Testing)
+#  add_library(gtest ./test/gtest-all.cc ./test/gtest_main.cc)
+#  list(APPEND  libami)
+#  enable_testing(test)
+#  add_subdirectory(test)
+#endif (Testing)
+
+###########################################################
+# New testing code
+project(${TESTNAME})
+
+add_subdirectory(test)
+enable_testing()
+add_test(${TESTNAME} ${TESTNAME})
 
 
+
+
+############################################################
 option(Documentation "Build documentation" ON)
 if (DocumentationOnly)
   set(Documentation ON)
