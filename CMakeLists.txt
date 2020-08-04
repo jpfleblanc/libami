@@ -65,6 +65,7 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 
 ###########################################################
 # New testing code
+set(TESTNAME "TestRunner")
 project(${TESTNAME})
 
 add_subdirectory(test)
