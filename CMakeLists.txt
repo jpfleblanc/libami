@@ -65,14 +65,12 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 
 ###########################################################
 # New testing code
-set(TESTNAME "TestRunner")
-#project(${TESTNAME})
+
 
 add_subdirectory(test)
 enable_testing()
-add_test(${TESTNAME} test/third)
-add_test(second test/second)
-
+add_test(initial test/initial)
+add_test(pole_equiv_fun test/pole_equiv)
 
 
 
@@ -102,24 +100,6 @@ endfunction()
 if(_am_building_documentation)
   build_documentation_()
 endif(_am_building_documentation)
-
-# option(Documentation "Build documentation" ON)
-# set(_am_building_documentation ${Documentation})
-
-
-#Doxygen building is a function to prevent namespace damage
-#function(build_documentation_)
-#   set(DOXYFILE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/common/doc")
-#   message(STATUS "Building documentation for sources in ${DOXYFILE_EXTRA_SOURCES}")  
-#   set(DOXYFILE_IN "${CMAKE_SOURCE_DIR}/common/doc/Doxyfile.in") 
-#   set(CMAKE_PROJECT_NAME "ALPSCore reference") # to provide name for the documentation 
-#   include(UseDoxygen)
-#   unset(CMAKE_PROJECT_NAME)
-#endfunction()
-#if(_am_building_documentation)
-# build_documentation_()
-#endif(_am_building_documentation)
-
 
 
 
