@@ -49,7 +49,7 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
         FILES_MATCHING PATTERN "*.hpp" # select header files
 )
 
-#INSTALL(FILES ${files} DESTINATION include)
+add_subdirectory("doc")
 
 
 
