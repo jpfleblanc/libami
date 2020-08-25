@@ -4,6 +4,7 @@
  * For use in publications, see ACKNOWLEDGE.TXT
  */
 
+
 #pragma once
 
  
@@ -46,7 +47,7 @@ template <typename T> int sgn(T val) {
  *
  * \version $Revision: 1.5 $
  *
- * \date $Date: 2005/04/14 14:16:20 $
+ * \date $Date: 2020/09/01  $
  *
  * Contact: jleblanc@mun.ca
  *
@@ -63,6 +64,7 @@ class AmiCalc
 public:
 
 
+///----- Hartree fock functions are part of epsilon - and these should wind up external and be removed eventually 
 // HARTREE FOCK ENERGY OBJECTS and functions
 
 void read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename);
@@ -74,22 +76,21 @@ double rs;
 double get_hf_sigma(double kk);
 double hf_energy(double kk);
 
+
+// Similar to Hartree fock - these are not strictly part of AMI and should be removed 
 // molecule functions 
 
 void read_hii(std::string filename, int maxval);
 std::vector<double> global_hii;
-bool not_molecule=1;
+bool not_molecule=1; // When removed check the instance of this variable 
 
 bool density_warning=true;
 
+
+
 /// Type definitions for AMI
 
-//Fundamental objects
-
- //TODO: redefinition may be dangerous and does not provide speedup
-//typedef std::pair< std::vector<int>, std::vector<std::complex<double>> epsilon_t;  /// 
-
-// use above, but then go through EVERYTHING and change eps[i] or eps_[i] -> eps_.first[i]
+///Fundamental objects
 
 //the symbolic epsilon
 typedef std::vector<int> epsilon_t;
@@ -99,24 +100,15 @@ typedef double hopping_t;
 typedef std::vector<hopping_t> hopping_list_t;
 typedef int species_t;
 
-
-
-
-
-// typedef std::vector<signed char> epsilon_t;  /// the symbolic epsilon
-// typedef std::vector<signed char> alpha_t;
-
-// typedef std::vector<short int> epsilon_t;  /// the symbolic epsilon
-// typedef std::vector<short int> alpha_t;
-
 typedef enum {Bose,Fermi} stat_type ;
+
+// Graph types are an unfortunate oversight on my part - and should not strictly be in AMI 
 typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud} graph_type ;
 
 typedef enum {hubbard,coulomb} int_type;
 typedef enum {tb, fp, hf} disp_type;
 
-// TODO: graph_type needs to be extended to include: Sigma, Hartree, Bare, Pol_phuu, Pol_phud?
-
+// TODO: Check what this does 
 bool flatten_warning=true;
 
 // AMI Parameter structure
@@ -216,7 +208,7 @@ typedef std::vector< k_vector_t> k_vect_list_t;
 
 
 
-
+/// AMI output datatypes
 
 typedef std::vector<double> sign_t;
 typedef std::vector<g_struct> g_prod_t;
@@ -227,7 +219,7 @@ typedef std::vector<g_prod_t> g_prod_array_t;
 
 
 
-// arrays of arrays OMG this is annoying
+// S, P , R at each step
 
 typedef std::vector<g_prod_t> Ri_t;
 typedef std::vector<pole_array_t> Pi_t;
@@ -243,14 +235,6 @@ typedef std::vector<Si_t> S_t;
 
 typedef std::vector< std::vector<std::complex<double> > > SorF_t;
 
-//-----------
-//std::vector<std::vector<int>> intvec;
-//intvec filled somehow
-
-//std::vector<std::vector<double>> doublevec;
-//doublevec.reserve(intvec.size());
-//for (auto&& v : intvec) doublevec.emplace_back(std::begin(v), std::end(v));
-//-----------
 
 // various structures
 
@@ -296,10 +280,6 @@ hopping_list_t t_list_;
 disp_type disp_;
 
 double mink_,maxk_;
-//double prefactor_;
-// R_t R_array_;
-// P_t P_array_;
-// S_t S_array_;
 
 };
 
@@ -393,7 +373,7 @@ double BETA_;
 typedef std::vector<ami_vars> ami_vars_list;
 
 
-
+// The solution set structure is the complete package that is passed for evaluation 
 
 struct solution_set{
 	
@@ -438,6 +418,8 @@ std::vector<alpha_t> bose_alphas_;
 };
 
 
+// I'm not sure if this is actually used. 
+// TODO: this is likely depricated 
 struct evaluation_set{
 evaluation_set(){}
 
@@ -453,6 +435,7 @@ solution_set sol_;
 };
 
 
+/// These don't explicitly need to exist in ami library - but not harmful 
 typedef std::vector<solution_set> solution_set_vec_t;
 typedef std::vector< std::vector<solution_set> > solution_set_matrix_t;
 typedef std::vector< solution_set_matrix_t > gg_solution_set_matrix_t;
@@ -461,7 +444,13 @@ typedef std::vector< solution_set_matrix_t > gg_solution_set_matrix_t;
 
 
 // IO function for external variables
+
+//TODO: The external variable list is hardcoded for what I need.  A user might want something very different. So their external_variable_list might contain completely different things.  Some thought into how to restructure this with epsilon is warranted
+
 void read_external(std::string filename, external_variable_list &extern_list);
+
+// At one point we thought we would write S,P,R to files along with prefactors etc. Largely this was abbandoned but technically these work.
+// Test Priority: 3
 void read_text_S_solutions(std::string filename, S_t &s_array);
 void read_text_P_solutions(std::string eps_filename,std::string alpha_filename, P_t &p_array);
 void read_text_R_solutions(std::string eps_filename,std::string alpha_filename, R_t &r_array, int size);
@@ -472,13 +461,21 @@ void write_S_readable(S_t &s_array);
 void write_P_readable(P_t &p_array);
 void write_R_readable(R_t &r_array);
 
-// solution functions
 void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX, int MAX_ORDER, double EREG);
+
+/// Evaluation
+// evaluate functions 
+// TODO: Can't recall why there are two. Found it cleaner for some reason to separate the real and imaginary measurements. 
+/// Test Priority: 1 - however, this is a very complex function So rather than testing it directly, go into the function and find the functions it depends on and test those. I dont' think we can test the whole thing. 
 void evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars_list);
 void evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars);
 
+
 void construct_ami_vars_list(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::external_variable_list &external,AmiCalc::ami_vars_list &vars_list);
 ami_vars construct_ami_vars(AmiCalc::g_prod_t &R0, double prefactor, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
+
+// Energy and epsilon functions remain problematic
+// testing priority: 4
 energy_t construct_energy(AmiCalc::g_prod_t &R0, AmiCalc::internal_state &state, AmiCalc::ext_vars &external);
 std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu  , disp_type disp );
 std::complex<double> eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, disp_type disp);
@@ -505,6 +502,7 @@ ami_vars construct_4ord_ext_multipole_example();
 ami_vars construct_random_example_J(std::mt19937 &rng);
 
 // helper functions - could move to helper.hpp
+// testing priority: 4 - these are mostly debugging functions to see what is happening 
 void print_g_prod_info(g_prod_t g);
 void print_g_struct_info(g_struct g);
 void print_epsilon_info(epsilon_t eps);
@@ -534,54 +532,74 @@ void write_S(S_t &s_array);
 
 
 // Functions for poles
+//Testing Priority: 1 - this is an essential function - if it fails nothing will work 
 
 pole_array_t find_poles(int index, g_prod_t &R);
 
 // Residue Functions
-
+// TODO: Simple_residue might be depricated - check usage
 g_prod_t simple_residue(g_prod_t G_in, pole_struct pole);
+
+// Testing Priority: 1 - updating G with a given pole is an essential function - if it fails nothing will work 
 g_struct update_G_pole(g_struct g_in,pole_struct pole);
 
 
 // Functions for signs
+// TODO: check usage of 'simple' for depricated 
 sign_t find_signs(int index, g_prod_t &R);
 double get_simple_sign(int index,g_prod_t &R,pole_struct pole);
 
 // Functions for R's P's and S's
-
+// TODO: Of these three only 'update_gprod_general' is actually used.  'Simple' is the case with no multi-poles.  
 void update_gprod_simple(int index, R_t &R_array, P_t &P_array, S_t &S_array);
+
+// Testing Priority: 1 - This is the central loop of the code. However it is a very complicated function so again test the internal functions and not the function itself 
 void update_gprod_general(int int_index, int array_index,  R_t &R_array, P_t &P_array, S_t &S_array);
+
+// This was an attempt to reorder the integration to try to minimize the number of resulting terms. It is not strictly necessary and its status is unknown. TODO: likely remove 
 void update_gprod_general_minimal(int int_index, int array_index, R_t &R_array, P_t &P_array, S_t &S_array);
 
 // Functions for Evaluation
-
+// Testing Priority: 1 - these should all be testable - and form the backbone of the evaluation 
+// This is the star function from AMI paper below equation 20: Define the function here and reference the paper: prb 99 035120
 std::complex<double> star(ami_parms &parms, SorF_t H, Ri_t R, ami_vars external);
+//TODO: This is depricated star function 
 std::complex<double> star(SorF_t H, Ri_t R);
+
+// This function evaluates equation (20) - it takes an array of poles and evaluates the fermi function for each pole and keeps the array structure 
 SorF_t fermi(ami_parms &parms, Pi_t pi, ami_vars external);
+
+// This is the central evaluation of the fermi and bose functions.  It also includes evaluating arbitrary derivatives of the functions.  See frk function that is rather complicated .  This function is also the MOST challenging function for numerical evaluation.  It is the most likely source of issue or errors and some thought should go into testing this carefully
+//Testing Priority: 1
 std::complex<double>  fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external);
+
+// Cross and dot are other operations like 'star' above that are defined after equation (20) in the AMI paper 
 SorF_t cross(SorF_t left, SorF_t right);
 SorF_t dot(Si_t Si, SorF_t fermi);
 
+// Testing Priority: 2 should be easy to test 
 std::complex<double> get_energy_from_pole(pole_struct pole, ami_vars external);
 std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
-//std::complex<double> eval_gprod(g_prod_t g_prod, ami_vars external);
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
 
-
+// Not sure what this function was used for. Most likely depricated 
 energy_t random_energy(int N, std::mt19937 &rng);
 
 
 // Multipole functions
-// TODO Multipole construction not working
-
 bool pole_equiv(pole_struct pole1, pole_struct pole2);
 
-//void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri, pole_array_t &poles, sign_t &signs);
+/// Testing Priority: 1
+// evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
 void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pole_array_t &poles, sign_t &signs);
+
+// TODO: Check which of these is used or if both are used 
+// Testing Priority: 2 should be easy 
 void take_derivatives(AmiCalc::Ri_t &Wi, AmiCalc::pole_struct pole, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs);
 void take_derivative_gprod(AmiCalc::g_prod_t &g_prod, AmiCalc::pole_struct pole, double start_sign, AmiCalc::Ri_t &r_out, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs);
 
+// This is actually a pretty important function. probably needs a more clear name and documentation as to what it does 
 g_struct der_fix(g_struct &g_in, double alpha);
 
 double get_starting_sign(AmiCalc::g_prod_t G_in, AmiCalc::pole_struct pole);
@@ -593,6 +611,7 @@ double frk(int r, int k);
 int binomialCoeff(int n, int k);
 
 
+// most below here is the AmiCalc class stuff 
 public:
 
   ///Default Constructor
@@ -615,8 +634,11 @@ public:
  *     if `data` contains fewer than 2 elements
  * @param[in] data the data to analyze
  */
+ // Testing Priority: 1 - should be testable by picking a few specific inputs and knowing what the output should be 
+ // construct is the MAIN construction function - so really important 
   void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
   // flip order of integration to try to reduce multipole issues
+  // TODO: probably depricated and should be removed 
   void minimal_construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
 
   /// The evaluation - depricated
@@ -633,6 +655,8 @@ public:
       * Use it everyday with good health.
       */
   std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
+  
+// TODO: Check if depricated   
   void evaluate_multi_random(int NDAT, ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, std::mt19937 &rng);
   
 
