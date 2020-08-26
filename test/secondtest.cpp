@@ -1,6 +1,6 @@
 
 
-#include "gtest.h"
+#include "gtest/gtest.h"
 // include other headers if necessary   #include ../src/ami.hpps
 
 TEST(secondtest, starter){

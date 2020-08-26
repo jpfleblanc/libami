@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.11)
 
 project (ami CXX)
 #find_package(ALPSCore REQUIRED)
@@ -6,6 +6,8 @@ project (ami CXX)
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
+
+
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 link_directories("/usr/lib")
@@ -47,21 +49,32 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
         FILES_MATCHING PATTERN "*.hpp" # select header files
 )
 
-#INSTALL(FILES ${files} DESTINATION include)
+add_subdirectory("doc")
 
 
 
 #testing setup
-option(Testing "Enable testing" ON)
+#option(Testing "Enable testing" ON)
 
-if (Testing)
-  add_library(gtest ./test/gtest-all.cc ./test/gtest_main.cc)
-  list(APPEND  libami)
-  enable_testing(test)
-  add_subdirectory(test)
-endif (Testing)
+#if (Testing)
+#  add_library(gtest ./test/gtest-all.cc ./test/gtest_main.cc)
+#  list(APPEND  libami)
+#  enable_testing(test)
+#  add_subdirectory(test)
+#endif (Testing)
+
+###########################################################
+# New testing code
 
 
+add_subdirectory(test)
+enable_testing()
+add_test(initial test/initial)
+add_test(pole_equiv_fun test/pole_equiv)
+
+
+
+############################################################
 option(Documentation "Build documentation" ON)
 if (DocumentationOnly)
   set(Documentation ON)
@@ -87,24 +100,6 @@ endfunction()
 if(_am_building_documentation)
   build_documentation_()
 endif(_am_building_documentation)
-
-# option(Documentation "Build documentation" ON)
-# set(_am_building_documentation ${Documentation})
-
-
-#Doxygen building is a function to prevent namespace damage
-#function(build_documentation_)
-#   set(DOXYFILE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/common/doc")
-#   message(STATUS "Building documentation for sources in ${DOXYFILE_EXTRA_SOURCES}")  
-#   set(DOXYFILE_IN "${CMAKE_SOURCE_DIR}/common/doc/Doxyfile.in") 
-#   set(CMAKE_PROJECT_NAME "ALPSCore reference") # to provide name for the documentation 
-#   include(UseDoxygen)
-#   unset(CMAKE_PROJECT_NAME)
-#endfunction()
-#if(_am_building_documentation)
-# build_documentation_()
-#endif(_am_building_documentation)
-
 
 
 
