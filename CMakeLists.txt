@@ -75,31 +75,56 @@ add_test(pole_equiv_fun test/pole_equiv)
 
 
 ############################################################
-option(Documentation "Build documentation" ON)
-if (DocumentationOnly)
-  set(Documentation ON)
-endif (DocumentationOnly)
+#option(Documentation "Build documentation" ON)
+#if (DocumentationOnly)
+#  set(Documentation ON)
+#endif (DocumentationOnly)
 
-set(_am_building_documentation ${Documentation})
-if (Documentation)
-    message(STATUS "Enable build of documentation")
-    set(Documentation OFF) # not to spawn make doc jobs for each module
-endif(Documentation)
+#set(_am_building_documentation ${Documentation})
+#if (Documentation)
+#   message(STATUS "Enable build of documentation")
+#    set(Documentation OFF) # not to spawn make doc jobs for each module
+#endif(Documentation)
 
 
 #Doxygen building is a function to prevent namespace damage
-function(build_documentation_)
-    set(DOXYFILE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-	set(DOXYFILE_EXTRA_SOURCES "${CMAKE_SOURCE_DIR}/doc")
-    message(STATUS "Building documentation for sources in ${DOXYFILE_EXTRA_SOURCES}")  
-    set(DOXYFILE_IN "${CMAKE_SOURCE_DIR}/doc/Doxyfile.in") 
-    set(CMAKE_PROJECT_NAME "LIBAMI") # to provide name for the documentation 
-    include(UseDoxygen)
-    unset(CMAKE_PROJECT_NAME)
-endfunction()
-if(_am_building_documentation)
-  build_documentation_()
-endif(_am_building_documentation)
+#function(build_documentation_)
+#    set(DOXYFILE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+#	set(DOXYFILE_EXTRA_SOURCES "${CMAKE_SOURCE_DIR}/doc")
+#    message(STATUS "Building documentation for sources in ${DOXYFILE_EXTRA_SOURCES}")  
+#    set(DOXYFILE_IN "${CMAKE_SOURCE_DIR}/doc/Doxyfile.in") 
+#    set(CMAKE_PROJECT_NAME "LIBAMI") # to provide name for the documentation 
+#    include(UseDoxygen)
+#    unset(CMAKE_PROJECT_NAME)
+#endfunction()
+#if(_am_building_documentation)
+#  build_documentation_()
+#endif(_am_building_documentation)
+
+
+#########################################################
+#New documentation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  # exclude sqlite code
+  set(DOXYGEN_EXCLUDE_PATTERNS
+        */sqlite3/*
+  )
+  # doxygen settings can be set here, prefixed with "DOXYGEN_"
+  set(DOXYGEN_EXTRACT_PRIVATE YES)
+  set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/LibAMI-docs")
+  set(DOXYGEN_GENERATE_LATEX YES)
+  set(DOXYGEN_GENERATE_XML YES)
+  # this target will only be built if specifically asked to.
+  # run "make LibAMI-docs" to create the doxygen documentation
+  doxygen_add_docs(
+    LibAMI-docs
+    ${PROJECT_SOURCE_DIR}/src
+    COMMENT "Generate API-documents for LibAMI."
+  )
+endif(DOXYGEN_FOUND)
+
+
 
 
 

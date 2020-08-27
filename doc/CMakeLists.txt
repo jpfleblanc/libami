@@ -7,7 +7,7 @@ add_custom_target(Sphinx ALL
                   COMMAND
                   ${SPHINX_EXECUTABLE} -b html
 				   # Tell Breathe where to find the Doxygen output
-                  -Dbreathe_projects.Libami=${PROJECT_BINARY_DIR}/doc/xml
+                  -Dbreathe_projects.Libami=${PROJECT_BINARY_DIR}/LibAMI-docs/xml
                   ${SPHINX_SOURCE} ${SPHINX_BUILD}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                   COMMENT "Generating documentation with Sphinx")

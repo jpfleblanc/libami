@@ -1,0 +1,6 @@
+====
+Documentation
+====
+
+.. doxygenclass:: AmiCalc
+   :members:
