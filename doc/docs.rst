@@ -6,7 +6,7 @@ Welcome to the documentation webpage of LibAMI.
 .. toctree::
    :maxdepth: 2
    
-   g_struct
+   pole_equiv_func
    
    
    

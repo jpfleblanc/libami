@@ -215,7 +215,7 @@ return pole_array;
 }
 
 
-bool AmiCalc::pole_equiv(pole_struct pole1, pole_struct pole2){
+bool AmiCalc::pole_equiv (pole_struct pole1, pole_struct pole2){
 
 bool result=true;
 

@@ -31,8 +31,8 @@ template <typename T> int sgn(T val) {
 /**
  * \class AmiCalc
  *
- * \ingroup LIBAMI
- * (Note, this needs exactly one \defgroup somewhere)
+ *  LIBAMI
+ * (Note, this needs exactly one somewhere)
  *
  * \brief Provide an example
  *
@@ -43,17 +43,17 @@ template <typename T> int sgn(T val) {
  *
  * \note Attempts at zen rarely work.
  *
- * \author JPF LeBlanc $Author: bv $
+ * \author JPF LeBlanc 
  *
- * \version $Revision: 1.5 $
+ * \version Revision: 1.5 
  *
- * \date $Date: 2020/09/01  $
+ * \date Date: 2020/09/01  
  *
+ * 
  * Contact: jleblanc@mun.ca
  *
  * Created on: testdate later
  *
- * $Id:  $
  *
  */
 
@@ -588,7 +588,13 @@ energy_t random_energy(int N, std::mt19937 &rng);
 
 
 // Multipole functions
-bool pole_equiv(pole_struct pole1, pole_struct pole2);
+
+/**
+ * Function `pole_equiv`. Checks `pole 1` and `pole 2` have similar characteristics.
+ * These characteristics include `epsilon size` and `alpha size`.
+ * Additionally, it checks that each `epsilon value` and `alpha value` are the same for both poles.
+*/
+bool pole_equiv (pole_struct pole1, pole_struct pole2);
 
 /// Testing Priority: 1
 // evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
