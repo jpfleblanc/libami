@@ -81,7 +81,7 @@ double hf_energy(double kk);
 // molecule functions 
 
 void read_hii(std::string filename, int maxval);
-std::vector<double> global_hii;
+std::vector<std::complex<double>> global_hii;
 bool not_molecule=1; // When removed check the instance of this variable 
 
 bool density_warning=true;
