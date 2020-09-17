@@ -9,9 +9,6 @@ Welcome to the documentation webpage of LibAMI.
    pole_equiv_func
    
    
+  
+.. doxygenindex::
    
-===========
-Main Class
-===========
-
-.. doxygenclass:: AmiCalc
