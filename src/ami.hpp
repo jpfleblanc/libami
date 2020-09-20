@@ -26,34 +26,34 @@ template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-
+alpha_
 
 /**
- * \class AmiCalc
+ * @class AmiCalc
  *
- * \ingroup LIBAMI
- * (Note, this needs exactly one \defgroup somewhere)
+ *  LIBAMI
+ * (Note, this needs exactly one somewhere)
  *
- * \brief Provide an example
+ * @brief Provide an example
  *
  * This class is meant as an example.  It is not useful by itself
  * rather its usefulness is only a function of how much it helps
  * the reader.  It is in a sense defined by the person who reads it
  * and otherwise does not exist in any real form. 
  *
- * \note Attempts at zen rarely work.
+ * @note Attempts at zen rarely work.
  *
- * \author JPF LeBlanc $Author: bv $
+ * @author JPF LeBlanc 
  *
- * \version $Revision: 1.5 $
+ * @version Revision: 1.5 
  *
- * \date $Date: 2020/09/01  $
+ * @date Date: 2020/09/01  
  *
+ * 
  * Contact: jleblanc@mun.ca
  *
  * Created on: testdate later
  *
- * $Id:  $
  *
  */
 
@@ -88,12 +88,15 @@ bool density_warning=true;
 
 
 
-/// Type definitions for AMI
+// Type definitions for AMI
 
-///Fundamental objects
+// Fundamental objects
 
-//the symbolic epsilon
+// the symbolic epsilon
+
+/// Vector of type `int`
 typedef std::vector<int> epsilon_t;
+/// Vector of type `int`
 typedef std::vector<int> alpha_t;
 
 typedef double hopping_t;
@@ -183,22 +186,23 @@ species_t species_;
 
 };
 
-// Pole structure. Equivalent to G structure, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
+/// Pole structure. Equivalent to G structure, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
+
 struct pole_struct{
 
-epsilon_t eps_;
+epsilon_t eps_; 
 alpha_t alpha_;
-int index_;
+int index_; 
 int multiplicity_=1;
-int der_=0;
-std::vector<int> which_g_;
+int der_=0; /**< Count of derivatives */
+std::vector<int> which_g_; /**< G-structure that is attached to it */
 
 };
 
 
 // External Variable structure and typedefs
 
-/// external list of energies used with epsilon_t to construct energies
+/// external list of energies used with epsilon_t to construct energies.
 
 typedef std::vector<std::complex<double>> energy_t;
 typedef std::vector< std::complex<double>  > frequency_t;
@@ -588,7 +592,17 @@ energy_t random_energy(int N, std::mt19937 &rng);
 
 
 // Multipole functions
-bool pole_equiv(pole_struct pole1, pole_struct pole2);
+
+/**
+ *
+ * Checks if two Poles have similar characteristics.
+ * These characteristics include `epsilon_t` size and `alpha_t` size.
+ * Additionally, it checks each value of `epsilon_t` vector  and `alpha_t` vector are the same.
+ * @param[in] pole1 First pole you want to check and of type `pole_struct`
+ * @param[in] pole2 Second pole you want to check and of type `pole_struct`
+ * 
+*/
+bool pole_equiv (pole_struct pole1, pole_struct pole2);
 
 /// Testing Priority: 1
 // evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
