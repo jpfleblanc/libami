@@ -398,7 +398,7 @@ for(int i=0; i< g_in.eps_.size(); i++){
 return out;	
 }
 
-
+// TODO: This is depricated 
 void AmiCalc::take_derivatives(AmiCalc::Ri_t &Wi, AmiCalc::pole_struct pole, AmiCalc::pole_array_t &poles, AmiCalc::sign_t &signs){
 
 // std::cout<<"Before derivatives, sign list is of size "<<signs.size()<<std::endl;

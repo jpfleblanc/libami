@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <random>
 
+int factorial(int n);
 
 
 class AmiBase
@@ -25,6 +26,10 @@ class AmiBase
 	
 public:
 
+
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
 
 // AmiVars
 
@@ -221,15 +226,11 @@ void update_gprod_simple(int index, R_t &R_array, P_t &P_array, S_t &S_array);
 // Testing Priority: 1 - This is the central loop of the code. However it is a very complicated function so again test the internal functions and not the function itself 
 void update_gprod_general(int int_index, int array_index,  R_t &R_array, P_t &P_array, S_t &S_array);
 
-// This was an attempt to reorder the integration to try to minimize the number of resulting terms. It is not strictly necessary and its status is unknown. TODO: likely remove 
-void update_gprod_general_minimal(int int_index, int array_index, R_t &R_array, P_t &P_array, S_t &S_array);
 
 // Functions for Evaluation
 // Testing Priority: 1 - these should all be testable - and form the backbone of the evaluation 
 // This is the star function from AMI paper below equation 20: Define the function here and reference the paper: prb 99 035120
 std::complex<double> star(ami_parms &parms, SorF_t H, Ri_t R, ami_vars external);
-//TODO: This is depricated star function 
-std::complex<double> star(SorF_t H, Ri_t R);
 
 // This function evaluates equation (20) - it takes an array of poles and evaluates the fermi function for each pole and keeps the array structure 
 SorF_t fermi(ami_parms &parms, Pi_t pi, ami_vars external);
@@ -245,6 +246,7 @@ SorF_t dot(Si_t Si, SorF_t fermi);
 // Testing Priority: 2 should be easy to test 
 std::complex<double> get_energy_from_pole(pole_struct pole, ami_vars external);
 std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
+
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
 
@@ -265,13 +267,17 @@ void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pol
 
 // TODO: Check which of these is used or if both are used 
 // Testing Priority: 2 should be easy 
-void take_derivatives(Ri_t &Wi, pole_struct pole, pole_array_t &poles, sign_t &signs);
 void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign, Ri_t &r_out, pole_array_t &poles, sign_t &signs);
 
 // This is actually a pretty important function. probably needs a more clear name and documentation as to what it does 
-g_struct der_fix(g_struct &g_in, double alpha);
+// TODO: This became depricated - unsure how 
+// the der_fix function absorbed a minus sign into the alpha and epsilon values of one of the two green's functions before pushing it into the new array 
+// I think i bailed on amir's definition and instead put a minus sign into the sign array - much cleaner 
+// g_struct der_fix(g_struct &g_in, double alpha);
 
 double get_starting_sign(g_prod_t G_in, pole_struct pole);
+
+//This function removes the inert parts of the gprod in the context of taking derivatives 
 g_prod_t reduce_gprod(g_prod_t G_in, pole_struct pole);
 
 
@@ -292,7 +298,7 @@ int binomialCoeff(int n, int k);
 
   /// The construction
 
-void construct(ami_parms &parms); 
+void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
 
 std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
 
