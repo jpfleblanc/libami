@@ -85,6 +85,7 @@ double BETA_;
 
 
 // TODO: does ami_parms need TYPE_, int_type_, dispersion_ etc? 
+// TODO: Define new objects that satisfy the requirements of TYPE_ etc 
 struct ami_parms{
 ami_parms(int N_INT,  double E_REG){
 N_INT_=N_INT;
@@ -117,8 +118,10 @@ ami_parms(){}
 int N_INT_;
 int N_EXT_;
 double E_REG_;
-graph_type TYPE_;
 
+
+// these should be replaced with something more specific to AMI 
+graph_type TYPE_;
 int_type int_type_;
 disp_type dispersion_;
 
