@@ -29,12 +29,30 @@ set(LIB_FILES
   ./src/ami_helper.cpp
   ./src/ami_example.cpp
   ./src/ami_load.cpp
-  ./src/ami_base.cpp
-  ./src/ami_base_evaluate.cpp
-  ./src/ami_base_construct.cpp 
+  # ./src/ami_base.cpp
+  # ./src/ami_base_evaluate.cpp
+  # ./src/ami_base_construct.cpp 
+  # ./src/ami_calc_io.cpp
+  # ./src/ami_calc_evaluate.cpp
   )
 
 ADD_LIBRARY(ami SHARED ${LIB_FILES})
+
+
+set(LIB_FILES 
+  # ./src/ami_construct.cpp
+  # ./src/ami_evaluate.cpp
+  # ./src/ami_helper.cpp
+  # ./src/ami_example.cpp
+  # ./src/ami_load.cpp
+  ./src/ami_base.cpp
+  ./src/ami_base_evaluate.cpp
+  ./src/ami_base_construct.cpp 
+  ./src/ami_calc_io.cpp
+  ./src/ami_calc_evaluate.cpp
+  )
+
+ADD_LIBRARY(amibase SHARED ${LIB_FILES})
 
 
 #target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} m)
@@ -42,6 +60,11 @@ target_link_libraries(${PROJECT_NAME}  m stdc++fs)
 
 
 INSTALL(TARGETS ami 
+   ARCHIVE DESTINATION "lib/"
+   LIBRARY DESTINATION "lib/"
+   COMPONENT library)
+   
+   INSTALL(TARGETS amibase 
    ARCHIVE DESTINATION "lib/"
    LIBRARY DESTINATION "lib/"
    COMPONENT library)

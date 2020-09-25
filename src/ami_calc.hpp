@@ -199,9 +199,12 @@ typedef std::vector< solution_set_matrix_t > gg_solution_set_matrix_t;
 
 //TODO: The external variable list is hardcoded for what I need.  A user might want something very different. So their external_variable_list might contain completely different things.  Some thought into how to restructure this with epsilon is warranted
 
+// _io
 void read_external(std::string filename, external_variable_list &extern_list);
 
 // At one point we thought we would write S,P,R to files along with prefactors etc. Largely this was abbandoned but technically these work.
+
+// _io.cpp
 // Test Priority: 3
 void read_text_S_solutions(std::string filename, AmiBase::S_t &s_array);
 void read_text_P_solutions(std::string eps_filename,std::string alpha_filename, AmiBase::P_t &p_array);
@@ -209,11 +212,16 @@ void read_text_R_solutions(std::string eps_filename,std::string alpha_filename, 
 void read_text_R0(std::string alpha_filename, std::string eps_filename, AmiBase::g_prod_t &R0);
 double load_prefactor(std::string filename, std::string mul_file, int order);
 double load_mul(std::string filename);
+
+
+// _io.cpp 
 void write_S_readable(AmiBase::S_t &s_array);
 void write_P_readable(AmiBase::P_t &p_array);
 void write_R_readable(AmiBase::R_t &r_array);
 
 void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX, int MAX_ORDER, double EREG);
+
+// Complete up to here I think 
 
 /// Evaluation
 // evaluate functions 
@@ -222,6 +230,7 @@ void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX
 void evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars_list);
 void evaluate_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars);
 
+// here 
 
 void construct_ami_vars_list(AmiBase::g_prod_t &R0, double prefactor, internal_state &state, external_variable_list &external,ami_vars_list &vars_list);
 AmiBase::ami_vars construct_ami_vars(AmiBase::g_prod_t &R0, double prefactor, internal_state &state, ext_vars &external);
@@ -238,8 +247,8 @@ AmiBase::energy_t construct_energy(AmiBase::g_prod_t &R0, internal_state &state,
 k_vector_t construct_k(AmiBase::alpha_t alpha, k_vect_list_t &k);
 
 // These should live outside of ami - construct energy should be an external function
-std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, std::complex<double> mu  , AmiBase::disp_type disp );
-std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
+// std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, std::complex<double> mu  , AmiBase::disp_type disp );
+// std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
 
 
 
