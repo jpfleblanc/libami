@@ -198,15 +198,18 @@ typedef std::vector<Si_t> S_t;
 
 // typedefs for evaluation
 
+/*
+Though perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
+*/
 typedef std::vector< std::vector<std::complex<double> > > SorF_t;
-
-
 
 
 
 // Functions for poles
 //Testing Priority: 1 - this is an essential function - if it fails nothing will work 
-
+/*
+Given an array of Green's functions, finds all poles with respect to frequency index, and checks for multiplicities. Stores multiplicities of the poles as well as `which_g_`, an identifier that specifies which green's function it was attached to.  
+*/
 pole_array_t find_poles(int index, g_prod_t &R);
 
 // Residue Functions
@@ -216,9 +219,7 @@ g_prod_t simple_residue(g_prod_t G_in, pole_struct pole);
 // Testing Priority: 1 - updating G with a given pole is an essential function - if it fails nothing will work 
 g_struct update_G_pole(g_struct g_in,pole_struct pole);
 
-
 // Functions for signs
-// TODO: check usage of 'simple' for depricated 
 sign_t find_signs(int index, g_prod_t &R);
 double get_simple_sign(int index,g_prod_t &R,pole_struct pole);
 
@@ -228,7 +229,6 @@ void update_gprod_simple(int index, R_t &R_array, P_t &P_array, S_t &S_array);
 
 // Testing Priority: 1 - This is the central loop of the code. However it is a very complicated function so again test the internal functions and not the function itself 
 void update_gprod_general(int int_index, int array_index,  R_t &R_array, P_t &P_array, S_t &S_array);
-
 
 // Functions for Evaluation
 // Testing Priority: 1 - these should all be testable - and form the backbone of the evaluation 
@@ -266,10 +266,25 @@ bool pole_equiv (pole_struct pole1, pole_struct pole2);
 
 /// Testing Priority: 1
 // evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
+
+/**
+ *
+ * Void function takes a product of Green's functions - an element of an `Ri_t` object - and evaluates the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
+ * @param[in] G_in : Product of green's functions
+ * @param[in] pole : Pole to evaluate residue
+ * @param[in] Ri_out : Resultant `g_prod_t` 
+ * @param[in] poles : Resultant `pole_array_t`
+ * @param[in] signs : Resultant `sign_t`. 
+*/
 void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pole_array_t &poles, sign_t &signs);
 
 // TODO: Check which of these is used or if both are used 
 // Testing Priority: 2 should be easy 
+
+/**
+* Take derivative of `g_prod_t` with respect to index stored in `pole_struct`. 
+*
+*/
 void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign, Ri_t &r_out, pole_array_t &poles, sign_t &signs);
 
 // This is actually a pretty important function. probably needs a more clear name and documentation as to what it does 
@@ -278,6 +293,10 @@ void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign
 // I think i bailed on amir's definition and instead put a minus sign into the sign array - much cleaner 
 // g_struct der_fix(g_struct &g_in, double alpha);
 
+/**
+* As part of the construction of the `Si_t` arrays, the initial sign is extracted prior to taking derivatives.  Also is multiplied by 1/(M-1)! where M is the `multiplicity_` of the respective pole. 
+*
+*/
 double get_starting_sign(g_prod_t G_in, pole_struct pole);
 
 //This function removes the inert parts of the gprod in the context of taking derivatives 
@@ -285,7 +304,28 @@ g_prod_t reduce_gprod(g_prod_t G_in, pole_struct pole);
 
 
 // derivatives of fermi functions
+/**
+In order to take arbitrary derivatives of fermi functions - we need to know the prefactor.  It is given in general by this function.  TODO: This could be replaced with an algorithmic differentiation tool. 
+
+
+.. math::
+
+\sum\limits_{k=0}^{m} frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1)
+
+
+frk function itself returns 
+for(int m=0; m< k+1; m++){
+	
+output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));	
+
+}
+
+*/
 double frk(int r, int k);
+
+/*
+Recursive binomial coefficient function 
+*/
 int binomialCoeff(int n, int k);
 
 
@@ -300,8 +340,23 @@ int binomialCoeff(int n, int k);
   ///the main calculation
 
   /// The construction
+  
+  /*
+  
+  This is the primary build of the ami result.  
+  @param[in] parms : type `ami_parms` which contains instructions of what to do - number of integrations etc 
+  @param[in] R0 : Initial integrand `g_prod_t` 
+  @param[in] R_array : Resulting `R_t`
+  @param[in] P_array : Resulting `P_t`
+  @param[in] S_array : Resulting `S_t`
+  */
 
 void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
+
+
+/* 
+This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression 
+*/
 
 std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
 
