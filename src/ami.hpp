@@ -423,6 +423,7 @@ std::vector<alpha_t> bose_alphas_;
 
 // I'm not sure if this is actually used. 
 // TODO: this is likely depricated 
+// TODO: this is used by amicalc codes 
 struct evaluation_set{
 evaluation_set(){}
 
