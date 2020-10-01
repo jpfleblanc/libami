@@ -105,7 +105,7 @@ typedef int species_t;
 typedef enum {Bose,Fermi} stat_type ;
 
 // Graph types are an unfortunate oversight on my part - and should not strictly be in AMI 
-typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud} graph_type ;
+typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud, DOS} graph_type ;
 
 typedef enum {hubbard,coulomb} int_type;
 typedef enum {tb, fp, hf} disp_type;
@@ -258,6 +258,8 @@ disp_=static_cast<AmiCalc::disp_type>(0); // by default tight binding unless nec
 mink_=0;
 maxk_=2*M_PI;
 
+internal_freq_size_=k_length;
+
 }
 
 internal_state(){}
@@ -272,12 +274,15 @@ t_list_.resize(2*order_-1,1);}
 disp_=static_cast<AmiCalc::disp_type>(0); // by default tight binding unless necessary to change 
 mink_=0;
 maxk_=2*M_PI;
+
+internal_freq_size_=k_length;
 	
 }
 
 k_vect_list_t internal_k_list_;
 int order_;
 int dim_;
+int internal_freq_size_;
 
 hopping_list_t t_list_;
 disp_type disp_;
