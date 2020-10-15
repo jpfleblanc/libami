@@ -238,8 +238,8 @@ std::complex<double> AmiCalc::star(ami_parms &parms, SorF_t K, Ri_t R, ami_vars 
 // std::cout<<"Size of right is "<< R.size() <<std::endl;
 
 std::complex<double> output=0;
-std::complex<double> term;
-std::complex<double> gprod;
+// std::complex<double> term;
+// std::complex<double> gprod;
 
 // std::ofstream file;
 // file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
@@ -248,12 +248,12 @@ std::complex<double> gprod;
 for( int i=0; i< K[0].size(); i++)
 {
 
-gprod=eval_gprod(parms, R[i], external);
-term=K[0][i]*gprod;
+// gprod=eval_gprod(parms, R[i], external);
+// term=K[0][i]*gprod;
 //std::isnan(std::real(term))
 
 // if(abs(term)<1){
-output+= term;
+output+= K[0][i]*eval_gprod(parms, R[i], external);
 // }
 // if( true ){output+= term;
 
@@ -362,20 +362,17 @@ output=1.0/denom_prod*prefactor;
 return output;
 }
 
-// TODO: For doubleocc it is very likely that the derivative term is incorrect?
-
-// TODO: Slight worry that E should be -E in this function . think the 'energy from pole' fixes this. 
+ 
 std::complex<double>  AmiCalc::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
-// std::cout<<"Working on pole"<<std::endl;
-// print_pole_struct_info(pole);
 
 std::complex<double>  output,term;
 int eta=0;
 
 double beta=external.BETA_;
 double E_REG=parms.E_REG_;
-// std::cout<<"Evaluating with energy regulator of "<< E_REG<<std::endl;
+
+
 
 
 // In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered. 
@@ -493,8 +490,14 @@ if(sgn(E.real())!=0){
 
 int m=pole.der_;
 
-// compute m'th derivative
+
 output=0;
+
+if(pole.der_==0){
+output=1.0/(sigma*std::exp(beta*(E))+1.0);
+// return output;
+}else{  // compute m'th derivative
+
 for( int k=0; k<m+1; k++){
 	// std::cout<<"On k'th derivative "<<k<<std::endl;
 	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
@@ -504,6 +507,7 @@ for( int k=0; k<m+1; k++){
 
 // TODO: double check that this multiplication is general 
 output=output*std::pow(beta,m)*(-1.0);
+}
 
 // if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  
 if(parms.TYPE_==AmiCalc::doubleocc){
