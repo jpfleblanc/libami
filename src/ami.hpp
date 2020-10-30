@@ -419,6 +419,7 @@ R_t R_;
 ami_parms ami_parms_;
 double prefactor_;
 int loops_;
+int ct_count_=0;
 
 std::vector<alpha_t> bose_alphas_;
 
