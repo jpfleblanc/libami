@@ -181,6 +181,7 @@ AmiBase::R_t R_;
 AmiBase::ami_parms ami_parms_;
 double prefactor_;
 int loops_;
+int ct_count_=0;
 
 std::vector<AmiBase::alpha_t> bose_alphas_;
 
@@ -247,8 +248,8 @@ AmiBase::energy_t construct_energy(AmiBase::g_prod_t &R0, internal_state &state,
 k_vector_t construct_k(AmiBase::alpha_t alpha, k_vect_list_t &k);
 
 // These should live outside of ami - construct energy should be an external function
-// std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, std::complex<double> mu  , AmiBase::disp_type disp );
-// std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
+std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, std::complex<double> mu  , AmiBase::disp_type disp );
+std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
 
 
 

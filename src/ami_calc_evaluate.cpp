@@ -129,7 +129,7 @@ return kout;
 
 
 
-/* 
+
 // TODO: This function should be external to the library 
 AmiBase::energy_t NewAmiCalc::construct_energy(AmiBase::g_prod_t &R0, internal_state &state, ext_vars &external){
 
@@ -187,4 +187,101 @@ if(count != R0[0].eps_.size()){
 return result;
 	
 }
- */
+
+
+std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, disp_type disp){
+	
+	std::complex<double> output(0,0);
+	// std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
+	// print_kvector(k);
+	
+if(disp==AmiCalc::tb){	
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=-2.0*t*cos(k[i]);	
+		// std::cout<<"Evaluated tb "<< -2.0*t*cos(k[i]) <<" with momentum "<< k[i]<<" and hopping "<< t <<std::endl;
+	}
+}
+
+// Units are of rydbergs:  We used the atomic Rydberg units. Please see the attachment for the details. In this unit, the length scale is the Bohr radius a_0, and the energy scale is the Rydberg energy e^2/2a_0. Equivalently,  you may set \hbar=1, m=1/2 and e^2/2=1. This is why the dispersion becomes \epsilon_k=k^2/2, and the Coulomb replusion =8*pi/q^2. 
+if(disp==AmiCalc::fp){
+
+for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	output+=std::pow(k[i],2);	
+		
+	}
+}
+
+// assuming that spin=0 is up, and spin=1 is down. then spin-1/2, gives -1/2 for up and 1/2 for down.
+
+if(disp==AmiCalc::hf){
+	double q=0.0;
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	q+=std::pow(k[i],2);	
+		
+	}
+	q=std::sqrt(q);
+
+// std::cout<<"Calling hf_energy qith q "<< q<<std::endl;
+output=hf_energy(q);
+}else{	
+	
+output+=H*(spin-0.5);	
+	
+output -= mu;
+
+}
+
+//TODO we don't subtract mu if the hf dispersion is given. it contains its own mu value. 
+	// if(std::abs(output)<0.1){
+// std::cout<<"Returning epsilon of "<< output<<std::endl;
+	// }	
+return -output;	
+	
+	
+	
+}
+
+std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu , disp_type disp){
+	
+	std::complex<double> output(0,0);
+	std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
+	// print_kvector(k);
+	
+if(disp==AmiCalc::tb){	
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=-2.0*t*cos(k[i]);	
+		
+	}
+}
+if(disp==AmiCalc::fp){
+
+for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=std::pow(k[i],2);	
+		
+	}
+}
+
+if(disp==AmiCalc::hf){
+	double q=0.0;
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	q+=std::pow(k[i],2);	
+		
+	}
+	q=std::sqrt(q);
+
+output=hf_energy(q);
+}else{	
+	
+output -= mu;
+
+}
+	
+	return -output;
+}
+
