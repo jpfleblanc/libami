@@ -148,8 +148,9 @@ ami_parms(){}
 int N_INT_;
 int N_EXT_;
 double E_REG_;
-graph_type TYPE_;
 
+// these should be replaced with something more specific to AMI 
+graph_type TYPE_;
 int_type int_type_;
 disp_type dispersion_;
 
