@@ -35,23 +35,20 @@ template <typename T> int sgn(T val) {
  *
  * @brief Provide an example
  *
- * This class is meant as an example.  It is not useful by itself
- * rather its usefulness is only a function of how much it helps
- * the reader.  It is in a sense defined by the person who reads it
- * and otherwise does not exist in any real form. 
+ * This was the base class - prior to separation and documentation. Was split into two classes.  AmiBase and NewAmiCalc. 
  *
- * @note Attempts at zen rarely work.
+ * @note N/A
  *
  * @author JPF LeBlanc 
  *
- * @version Revision: 1.5 
+ * @version Revision: 0.4 
  *
- * @date Date: 2020/09/01  
+ * @date Date: 2020/11/03  
  *
  * 
  * Contact: jleblanc@mun.ca
  *
- * Created on: testdate later
+ *
  *
  *
  */

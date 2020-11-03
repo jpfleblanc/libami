@@ -15,6 +15,7 @@ Welcome to the frontpage of LibAMI's documentation!
    install
    docs
    support
+   Referencing
 
 ==================
 Indices and tables

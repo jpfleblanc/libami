@@ -26,9 +26,9 @@ In short:
 
 	+ Doxygen >= 1.9.0
 
-	+ Sphinx >= 3.2.1 (You can install it by `pip`. Beware, you need to install `pip3`, instead of `pip`)
+	+ Sphinx >= 3.2.1 (You can install it by `pip`. Since it is python3 you may need to install `pip3`, instead of `pip`)
 
-	+ Breath >= 4.20.0 (You can install it by `pip` as well.)
+	+ Breathe >= 4.20.0 (You can install it by `pip` as well.)
 
 3. Building:
 	Open `compile.sh` file in any editor, and change the file path.
@@ -62,6 +62,19 @@ In short, use a standard `CMake`-based approach:
 	  $ cmake .
 	  $ make
 
+
+
+4. Creating documentation:
+
+Libami is documented using doxygen and Sphinx.  Documentation can be built using 
+
+	::
+	$make LibAMI-docs
+	$make Sphinx 
+
+
+
+Further information and updates will be posted on the `Github Wiki`_. 
 
 	
 	

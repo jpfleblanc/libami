@@ -15,6 +15,29 @@
 
 
 
+/**
+ * @class NewAmiCalc
+ *
+ *  
+ *
+ * @brief  A somewhat more targetted application of the AmiBase class.  Intended primarily as an example, but for some problems my have direct applicability. 
+ *
+ * @note N/A
+ *
+ * @author JPF LeBlanc 
+ *
+ * @version Revision: 0.4 
+ *
+ * @date Date: 2020/11/03  
+ *
+ * 
+ * Contact: jleblanc@mun.ca
+ *
+ *
+ *
+ *
+ */
+
 class NewAmiCalc 
 {
 

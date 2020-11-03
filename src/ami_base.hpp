@@ -18,8 +18,33 @@
 #include <stdlib.h>
 #include <random>
 
+/// Simple factorial function - Nothing special. 
 int factorial(int n);
 
+
+
+/**
+ * @class AmiBase
+ *
+ *  
+ *
+ * @brief  The primary class of libami. 
+ *
+ * @note N/A
+ *
+ * @author JPF LeBlanc 
+ *
+ * @version Revision: 0.4 
+ *
+ * @date Date: 2020/11/03  
+ *
+ * 
+ * Contact: jleblanc@mun.ca
+ *
+ *
+ *
+ *
+ */
 
 class AmiBase
 {
@@ -252,6 +277,21 @@ std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
 
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
+/* math example 
+
+ * The distance between \f$(x_1,y_1)\f$ and \f$(x_2,y_2)\f$ is \f$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\f$.
+ * \f[
+    |I_2|=\left| \int_{0}^T \psi(t) 
+             \left\{ 
+                u(a,t)-
+                \int_{\gamma(t)}^a 
+                \frac{d\theta}{k(\theta,t)}
+                \int_{a}^\theta c(\xi)u_t(\xi,t)\,d\xi
+             \right\} dt
+          \right|
+ * \f]
+ */
+
 
 /**
  *
@@ -262,29 +302,15 @@ std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars exte
  * @param[in] pole2 Second pole you want to check and of type `pole_struct`
  * 
 */
+
 bool pole_equiv (pole_struct pole1, pole_struct pole2);
 
 /// Testing Priority: 1
 // evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
 
-/**
- *
- * Void function takes a product of Green's functions - an element of an `Ri_t` object - and evaluates the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
- * @param[in] G_in : Product of green's functions
- * @param[in] pole : Pole to evaluate residue
- * @param[in] Ri_out : Resultant `g_prod_t` 
- * @param[in] poles : Resultant `pole_array_t`
- * @param[in] signs : Resultant `sign_t`. 
-*/
 void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pole_array_t &poles, sign_t &signs);
 
-// TODO: Check which of these is used or if both are used 
-// Testing Priority: 2 should be easy 
 
-/**
-* Take derivative of `g_prod_t` with respect to index stored in `pole_struct`. 
-*
-*/
 void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign, Ri_t &r_out, pole_array_t &poles, sign_t &signs);
 
 // This is actually a pretty important function. probably needs a more clear name and documentation as to what it does 
@@ -336,21 +362,9 @@ int binomialCoeff(int n, int k);
   AmiBase();
   /// Constructor with ami_parms
   AmiBase(ami_parms &parms);
-  ///define parameter defaults
-  ///the main calculation
 
-  /// The construction
-  
-  /*
-  
-  This is the primary build of the ami result.  
-  @param[in] parms : type `ami_parms` which contains instructions of what to do - number of integrations etc 
-  @param[in] R0 : Initial integrand `g_prod_t` 
-  @param[in] R_array : Resulting `R_t`
-  @param[in] P_array : Resulting `P_t`
-  @param[in] S_array : Resulting `S_t`
-  */
 
+  // The construction
 void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array);
 
 

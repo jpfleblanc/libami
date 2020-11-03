@@ -1,9 +1,15 @@
 #include "ami_base.hpp"
 
-// TODO: Document completely 
+ /**
+ * This is the primary AMI symbolic integration function.  It takes a starting integrand defined by `g_prod_t` R0 and `ami_parms` object, and returns the S, P and R arrays necessary for symbolic evaluation. 
+ * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
+ * @param[in] R0 : `g_prod_t` integrand to be processed.
+ * @param[out] R_array: Resultant `R_t` 
+ * @param[out] P_array : Resultant `P_t`
+ * @param[out] S_array : Resultant `S_t`. 
+*/
 void AmiBase::construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
 
-// std::cout<<"Here the code constructs the analytic solution and stores it in the R, P and S arrays"<<std::endl;
 R_array.clear();
 P_array.clear();
 S_array.clear();
@@ -16,314 +22,33 @@ R_array.push_back(R0_array);
 
 pole_array_t poles;
 
-// this will be iterated from 0 to dim exclusive
 
-
-//TODO: for each GProd in R, for each pole in that Gprod, find residue for each and collect those in an array.
+//Explanation: for each GProd in R, for each pole in that Gprod, find residue for each and collect those in an array.
 
 
 for (int index=0; index<dim; index++){
-// std::cout<<"Working on integration number "<< index <<std::endl;
 
 update_gprod_general(index, index, R_array, P_array,S_array);
-// update_gprod_simple(index, R_array, P_array,S_array);
-
-/* std::cout<<"------------------"<<std::endl;
-std::cout<<"After integral "<<index<<" array sizes are"<<std::endl;
-std::cout<<"------------------"<<std::endl;
-
-std::cout<<"R["<<index+1<<"] is length"<<R_array[index+1].size()<<std::endl;
-
-int count=0;
-for(int i=0; i< S_array.size();i++){
-	count+= S_array[i].size();
-}
-std::cout<<"S total size is "<< count<<std::endl;
- */
-
-}
-
-
-
-
-
-
-}
-
-AmiBase::g_prod_t AmiBase::simple_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole){
-
-g_prod_t residue;
-
-if (pole.multiplicity_!=1){std::cerr<<"Simple residue called for pole with M!=1"<<std::endl;}
-
-// std::cout<<"Updating simple residue "<<std::endl;
-// print_pole_struct_info(pole);
-// print_g_prod_info(G_in);
-
-
-for (int i=0; i< G_in.size(); i++){
-
-
-if(i != pole.which_g_[0]){
-
-//update_G_pole(G_in[i],pole);
-residue.push_back(update_G_pole(G_in[i],pole) );
-
 
 }
 
 
 }
-// std::cout<<"Updated Gprod is now "<<std::endl;
-// print_g_prod_info(residue);
 
 
-return residue;
-}
 
-
-////
-AmiBase::g_struct AmiBase::update_G_pole(AmiBase::g_struct g_in, AmiBase::pole_struct pole){
-
-AmiBase::g_struct g_new;
-
-for (int i=0; i< g_in.alpha_.size(); i++){
-
-if (i != pole.index_){
-g_new.alpha_.push_back( g_in.alpha_[i] + g_in.alpha_[pole.index_]*pole.alpha_[i]   );
-}
-else{
-g_new.alpha_.push_back(0);
-}
-
-}
-
-// TODO: Can these two loops be combined into a single one?
-
-for (int i=0; i< g_in.eps_.size(); i++){
-g_new.eps_.push_back( g_in.eps_[i] + g_in.alpha_[pole.index_]*pole.eps_[i]   );
-}
-
-
-if ( g_new.alpha_.size() != g_in.alpha_.size()){std::cerr<<"Maybe something wrong? Alphas not the same size" <<std::endl; }
-
-
-return g_new;
-
-}
-
-
-
-
-AmiBase::pole_array_t AmiBase::find_poles(int index, AmiBase::g_prod_t &R){
-
-pole_array_t pole_array;
-pole_struct pole;
-
-// TODO: Optimize by predefining sizes.
-//int size=R[0].alpha_.size();
-//int epssize=R[0].eps_.size();
-
-pole.alpha_.reserve(R[0].alpha_.size());
-pole.eps_.reserve(R[0].eps_.size());
-
-pole.index_=index;
-
-for (int i=0; i< R.size(); i++){
-
-
-  if (R[i].alpha_[index] != 0){
-
-  pole.which_g_.push_back(i);
-
-  for (int j=0; j<R[i].alpha_.size(); j++){
-  if (j!=index){pole.alpha_.push_back(-R[i].alpha_[index]*R[i].alpha_[j]); }
-  else {pole.alpha_.push_back(0); }
-  }
-
-  for (int j=0; j<R[i].eps_.size(); j++){
-  pole.eps_.push_back(-R[i].alpha_[index]*R[i].eps_[j]) ;
-  }
-
-/// So now you have a pole... need to check if it is already in the array, and then if it isn't add it.  if it is, modify the multiplicity of the pole in the array it is equal to. and add it's which_g_ index to the pole_array with multiplicity
-
-bool duplicate=false;
-for(int ploop=0; ploop<pole_array.size();ploop++)
-{
-
-if(pole_equiv(pole_array[ploop], pole) ){
-duplicate=true;
-
-pole_array[ploop].multiplicity_+=1;
-pole_array[ploop].which_g_.push_back(pole.which_g_[0]);
-// std::cerr<<"Duplicate pole detected!"<<std::endl;
-break;
-}
-
-}
-
-if (duplicate==false){
-pole_array.push_back(pole);
-}
-
-
-
-///
-
-
-pole.alpha_.clear();
-pole.eps_.clear();
-pole.which_g_.clear();
-
-}
-
-
-
-
-}
-
-// std::cout<<"Found x poles "<< pole_array.size()<<std::endl;
-// std::cout<<"With multiplicities ";
-// for(int p=0; p< pole_array.size();p++){
-	// std::cout<< pole_array[p].multiplicity_<<std::endl;
-// }
-
-return pole_array;
-
-}
-
-
-
-bool AmiBase::pole_equiv (pole_struct pole1, pole_struct pole2){
-
-bool result=true;
-
-if(pole1.eps_.size()!= pole2.eps_.size()){ return false;}
-if(pole1.alpha_.size()!= pole2.alpha_.size()){ return false;}
-
-for (int i=0; i< pole1.eps_.size(); i++)
-{
-if (pole1.eps_[i] != pole2.eps_[i]){ return false; break;}
-
-}
-
-for (int i=0; i< pole1.alpha_.size(); i++)
-{
-if (pole1.alpha_[i] != pole2.alpha_[i]){ return false; break;}
-
-}
-
-
-
-return result;
-}
-
-
-AmiBase::sign_t AmiBase::find_signs(int index, g_prod_t &R){
-
-sign_t sign;
-
-
-
-  for (int i=0; i< R.size(); i++){
-
-
-	if (R[i].alpha_[index] != 0){
-
-	sign.push_back((double)R[i].alpha_[index]);
-		}
-
-  
- 
-  }
-
-
-
-return sign;
-}
-
-
-double AmiBase::get_simple_sign(int index,g_prod_t &R, pole_struct pole){
-	
-	double sign;
-
- sign=R[pole.which_g_[0]].alpha_[index];
-
-  
-
-return sign;
-	
-	
-	
-}
-
-
-void AmiBase::update_gprod_simple(int index, AmiBase::R_t &R_array, AmiBase::P_t &P_array,AmiBase::S_t &S_array){
-
-//TODO: for each GProd in R, for each pole in that Gprod, find residue for each and collect those in an array.
-
-int next=index+1;
-
-// std::cout<<"Size of R["<< index<<"]="<< R_array[index].size() <<std::endl;
-
-
-g_prod_array_t temp_g_array;
-Pi_t temp_pole_array;
-Si_t temp_sign_array;
-
-
-for (int j=0; j<R_array[index].size(); j++)
-{
-
-
-
-pole_array_t poles;
-poles=find_poles(index, R_array[index][j]);  
-
-sign_t signs;
-signs=find_signs(index,R_array[index][j]);
-
-pole_array_t cor_poles;
-
-
-
-
-for (int i=0; i < poles.size(); i++){
-
-// g new g_prod
-
-
-// append to the next R_array
-for(int m=0; m< poles[i].multiplicity_ ; m++){
-temp_g_array.push_back(simple_residue(R_array[index][j],poles[i]));
-cor_poles.push_back(poles[i]);
-}
-}
-//poles.clear();
-
-
-
-temp_pole_array.push_back(cor_poles);
-temp_sign_array.push_back(signs);
-// cor_poles.clear();
-// signs.clear();
-}
-
-
-R_array.push_back(temp_g_array);
-P_array.push_back(temp_pole_array);
-S_array.push_back(temp_sign_array);
-
-
-// std::cout<<"Size of R["<< next<<"]="<< R_array[next].size() <<std::endl;
-
-}
-
-
-//TODO: Comment this substantially since it is important
+/**
+*
+* Primary loop.  Takes R[n] as input and outputs R[n+1], P[n+1] and S[n+1].
+* @param[in] int_index: indicator for which is the integration variable
+* @param[in] array_index: indicator for which element of `alpha_t` corresponds to that integration variable. Typically the same as int_index, unless you want to perform out of order. 
+* @param[in] R_array: R[n] input 
+* @param[out] R_array: updated with R[n+1] on output. 
+* @param[out] S_array: updated with S[n+1] on output.
+* @param[out] P_array: updated with P[n+1] on output.
+*
+*/
 void AmiBase::update_gprod_general(int int_index, int array_index, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array){
-
-
 
 Ri_t g_in;
 
@@ -336,7 +61,6 @@ Si_t temp_sign_array;
 for (int j=0; j<R_array[array_index].size(); j++)
 {
 
-
 sign_t s_out, temp_s;
 pole_array_t p_out, temp_p;
 
@@ -346,8 +70,6 @@ poles=find_poles(int_index, R_array[array_index][j]);
 
 pole_array_t cor_poles;
 sign_t col_signs;
-
-
 
 
 for (int i=0; i < poles.size(); i++){
@@ -389,24 +111,281 @@ s_out.clear();
 }
 
 
-
-
 R_array.push_back(g_in);
 P_array.push_back(temp_pole_array);
 S_array.push_back(temp_sign_array);
+
+}
+
+
+/**
+* Used in pole multiplicity is 1 - aka, simple pole.  Performs residue theorem on G_in and produces a new `g_prod_t` as output. 
+*@param[in] G_in: `g_prod_t` to evaluate residues with respect to pole.
+*@param[in] pole: `pole_struct` defining the pole. 
+*
+*Output is `g_prod_t`. 
+*/
+AmiBase::g_prod_t AmiBase::simple_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole){
+
+g_prod_t residue;
+
+if (pole.multiplicity_!=1){std::cerr<<"Simple residue called for pole with M!=1"<<std::endl;}
+
+
+for (int i=0; i< G_in.size(); i++){
+
+
+if(i != pole.which_g_[0]){
+
+
+residue.push_back(update_G_pole(G_in[i],pole) );
+
+
+}
+
+
+}
+
+return residue;
+}
+
+
+/**
+* Manipulates a Green's function to replace residue variable 'z' with complex pole. 
+*
+*/
+AmiBase::g_struct AmiBase::update_G_pole(AmiBase::g_struct g_in, AmiBase::pole_struct pole){
+
+AmiBase::g_struct g_new;
+
+for (int i=0; i< g_in.alpha_.size(); i++){
+
+if (i != pole.index_){
+g_new.alpha_.push_back( g_in.alpha_[i] + g_in.alpha_[pole.index_]*pole.alpha_[i]   );
+}
+else{
+g_new.alpha_.push_back(0);
+}
+
+}
+
+
+for (int i=0; i< g_in.eps_.size(); i++){
+g_new.eps_.push_back( g_in.eps_[i] + g_in.alpha_[pole.index_]*pole.eps_[i]   );
+}
+
+
+if ( g_new.alpha_.size() != g_in.alpha_.size()){std::cerr<<"Error: Something may be wrong. Alphas of G and pole not the same size" <<std::endl; }
+
+
+return g_new;
+
+}
+
+
+
+/**
+
+* Simple function to scan through `g_prod_t` and collect an std::vector of poles with respect to index.
+
+*/
+AmiBase::pole_array_t AmiBase::find_poles(int index, AmiBase::g_prod_t &R){
+
+pole_array_t pole_array;
+pole_struct pole;
+
+
+pole.alpha_.reserve(R[0].alpha_.size());
+pole.eps_.reserve(R[0].eps_.size());
+
+pole.index_=index;
+
+for (int i=0; i< R.size(); i++){
+
+
+  if (R[i].alpha_[index] != 0){
+
+  pole.which_g_.push_back(i);
+
+  for (int j=0; j<R[i].alpha_.size(); j++){
+  if (j!=index){pole.alpha_.push_back(-R[i].alpha_[index]*R[i].alpha_[j]); }
+  else {pole.alpha_.push_back(0); }
+  }
+
+  for (int j=0; j<R[i].eps_.size(); j++){
+  pole.eps_.push_back(-R[i].alpha_[index]*R[i].eps_[j]) ;
+  }
+
+//Context:  So now you have a pole... need to check if it is already in the array, and then if it isn't add it.  if it is, modify the multiplicity of the pole in the array it is equal to. and add it's which_g_ index to the pole_array with multiplicity
+
+bool duplicate=false;
+for(int ploop=0; ploop<pole_array.size();ploop++)
+{
+
+if(pole_equiv(pole_array[ploop], pole) ){ // std::cerr<<"Duplicate pole detected!"<<std::endl;
+duplicate=true;
+
+pole_array[ploop].multiplicity_+=1;
+pole_array[ploop].which_g_.push_back(pole.which_g_[0]);
+
+break;
+}
+
+}
+
+if (duplicate==false){
+pole_array.push_back(pole);
+}
+
+
+pole.alpha_.clear();
+pole.eps_.clear();
+pole.which_g_.clear();
+
+}
 
 
 
 
 }
 
+return pole_array;
+
+}
+
+
+
+/**
+ *
+ * Checks if two Poles are equivalent and returns bool.  Used to collect pole multiplicities. 
+ * Characteristics include `epsilon_t` size and `alpha_t` size.
+ * Additionally, it checks each value of `epsilon_t` vector  and `alpha_t` vector are the same.
+ * @param[in] pole1: First pole you want to check of type `pole_struct`
+ * @param[in] pole2: Second pole you want to check of type `pole_struct`
+ * 
+*/
+bool AmiBase::pole_equiv (pole_struct pole1, pole_struct pole2){
+
+bool result=true;
+
+if(pole1.eps_.size()!= pole2.eps_.size()){ return false;}
+if(pole1.alpha_.size()!= pole2.alpha_.size()){ return false;}
+
+for (int i=0; i< pole1.eps_.size(); i++)
+{
+if (pole1.eps_[i] != pole2.eps_[i]){ return false; break;}
+
+}
+
+for (int i=0; i< pole1.alpha_.size(); i++)
+{
+if (pole1.alpha_[i] != pole2.alpha_[i]){ return false; break;}
+
+}
+
+
+
+return result;
+}
+
+
+AmiBase::sign_t AmiBase::find_signs(int index, g_prod_t &R){
+
+sign_t sign;
+
+  for (int i=0; i< R.size(); i++){
+
+
+	if (R[i].alpha_[index] != 0){
+
+	sign.push_back((double)R[i].alpha_[index]);
+		}
+
+ 
+  }
+
+return sign;
+}
+
+
+double AmiBase::get_simple_sign(int index,g_prod_t &R, pole_struct pole){
+	
+	double sign;
+
+ sign=R[pole.which_g_[0]].alpha_[index];
+
+  
+
+return sign;
+	
+	
+	
+}
+
+/**
+* Depricated version of update_gprod for only simple poles. Replaced by update_gprod_general.
+*/
+void AmiBase::update_gprod_simple(int index, AmiBase::R_t &R_array, AmiBase::P_t &P_array,AmiBase::S_t &S_array){
+
+int next=index+1;
+
+g_prod_array_t temp_g_array;
+Pi_t temp_pole_array;
+Si_t temp_sign_array;
+
+	for (int j=0; j<R_array[index].size(); j++){
+
+
+
+	pole_array_t poles;
+	poles=find_poles(index, R_array[index][j]);  
+
+	sign_t signs;
+	signs=find_signs(index,R_array[index][j]);
+
+	pole_array_t cor_poles;
+
+
+
+
+		for (int i=0; i < poles.size(); i++){
+
+		
+		// append to the next R_array
+			for(int m=0; m< poles[i].multiplicity_ ; m++){
+			temp_g_array.push_back(simple_residue(R_array[index][j],poles[i]));
+			cor_poles.push_back(poles[i]);
+			}
+		}
+	
+	temp_pole_array.push_back(cor_poles);
+	temp_sign_array.push_back(signs);
+	
+	}
+
+
+R_array.push_back(temp_g_array);
+P_array.push_back(temp_pole_array);
+S_array.push_back(temp_sign_array);
+
+
+}
+
+
+
 
 
 // TODO: the word 'evaluate' here is misleading, since it is a part of the construction 
+/**
+ *
+ * Void function takes a product of Green's functions - an element of an `Ri_t` object - and evaluates the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
+ * @param[in] G_in : Product of green's functions
+ * @param[in] pole : Pole to evaluate residue
+ * @param[in] Ri_out : Resultant `g_prod_t` 
+ * @param[in] poles : Resultant `pole_array_t`
+ * @param[in] signs : Resultant `sign_t`. 
+*/
 void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole, AmiBase::Ri_t &Ri_out, AmiBase::pole_array_t &poles, AmiBase::sign_t &signs){
-
-// poles.clear();
-// signs.clear();
 
 double starting_sign;
 starting_sign=get_starting_sign(G_in,pole);
@@ -432,13 +411,9 @@ for(int i=0; i< temp_ri.size(); i++){
 // First store the fermi derivative part 	
 	
 	
-// temp_ri and temp_signs have same length
 take_derivative_gprod(temp_ri[i], temp_pole_in[i], temp_signs[i], temp_ri_out, temp_poles_out,temp_signs_out);	
-// std::cout<<"temp_ri_out.size() is "<<temp_ri_out.size()<<std::endl;
 
 }
-
-// if(temp_ri_out.size()==0){break;}
 
 temp_ri=temp_ri_out;
 temp_signs=temp_signs_out;
@@ -449,20 +424,21 @@ temp_pole_in=temp_poles_out;
 signs=temp_signs_out;
 poles=temp_poles_out;
 Ri_out=temp_ri_out;
-
-// std::cout<<"Signs poles and Ri are size "<<signs.size()<<" "<<poles.size()<<" "<<Ri_out.size()<<std::endl;
-
-// sub in pole at the end 
-for(int i=0; i< Ri_out.size();i++){
-for(int j=0; j<Ri_out[i].size();j++){
-//std::cout<<i<<" "<<j<<std::endl;
-Ri_out[i][j]=update_G_pole(Ri_out[i][j],pole);
-}
-}
+		
+	// sub in pole at the end 
+	for(int i=0; i< Ri_out.size();i++){
+	for(int j=0; j<Ri_out[i].size();j++){
+	//std::cout<<i<<" "<<j<<std::endl;
+	Ri_out[i][j]=update_G_pole(Ri_out[i][j],pole);
+	}
+	}
 	
 }
 
-
+/**
+* Take derivative of `g_prod_t` with respect to index stored in `pole_struct`. This is accomplished via multiple applications of chain rule.  This is described somewhat in PRB 99 035120 - though the notation changed somewhat.  The prefactor of -1 is no longer absorbed into a green's function, but instead is stored in the `S_t` array.  What is omitted there is discussion of derivatives of the fermi functions.  Here they are simply tracked by defining an integer `der_` of the `pole-struct` that gets incremented. 
+*
+*/
 void AmiBase::take_derivative_gprod(AmiBase::g_prod_t &g_prod, AmiBase::pole_struct pole, double start_sign, AmiBase::Ri_t &r_out, AmiBase::pole_array_t &poles, AmiBase::sign_t &signs){
 poles.clear();
 signs.clear();
@@ -472,13 +448,9 @@ r_out.clear();
 pole_struct fermi_pole=pole;
 fermi_pole.der_++;
 
-// std::cout<<"Added fermi part to derivative"<<std::endl;
-// fermi derivative part 
 r_out.push_back(g_prod);
 poles.push_back(fermi_pole);	
 signs.push_back(start_sign);
-////
- 
 
 g_prod_t temp_gprod;
 
@@ -486,37 +458,22 @@ g_prod_t temp_gprod;
 
 for(int term=0; term< g_prod.size(); term++){
 int alpha=g_prod[term].alpha_[pole.index_];
-/* std::cout<<"Alpha is "<<alpha<<" for term "<< term<< " with start sign "<< start_sign <<std::endl;
-
-std::cout<<"Starting G_prod for term  "<< term<<" is"<<std::endl;
-print_g_prod_info(g_prod);
-
-std::cout<<"Pole is "<<std::endl;
-print_pole_struct_info(pole); */
 
 if(alpha!=0){
-	
-	// std::cout<<"g_prod.size() is "<< g_prod.size()<<std::endl;
 
- // signs.push_back(start_sign);
  signs.push_back(-(double)alpha*start_sign);
- // std::cout<<"Pushing back sign "<< start_sign<<std::endl;
+
 	for(int m=0; m< g_prod.size(); m++){
 	if(term==m){
-		// std::cout<<"Pushing back twice"<<std::endl;
+	
 	temp_gprod.push_back(g_prod[m]);
 	temp_gprod.push_back(g_prod[m]);
-	// g_struct temp_g=der_fix(g_prod[m], alpha);
-	// temp_gprod.push_back(temp_g);
 	}
 	else{
-		// std::cout<<"Pushing back once"<<std::endl;
+		
 	temp_gprod.push_back(g_prod[m]);
 	}
-    // std::cout<<"After m= "<< m<<" the temp_g_prod is "<<std::endl;
-    // print_g_prod_info(temp_gprod);	
-		
-		
+    		
 	}
 r_out.push_back(temp_gprod);
 temp_gprod.clear();
@@ -529,21 +486,16 @@ temp_gprod.clear();
 }	
 
 
-// TODO : maybe this should be signs.size()-C, where C is defined to be the starting poles.size() ?
 for(int m=0; m<signs.size()-1; m++){
 poles.push_back(pole);	
 }
-// for(int m=0; m<signs.size(); m++){
-// poles.push_back(pole);	
-// }
-
-	
- // std::cout<<"Sizes of r_out and poles and signs must match "<< r_out.size()<<" "<< poles.size()<<" "<<signs.size()	<<std::endl;
 	
 }
 
 
-
+/**
+* Obtains the elements of `S_t` arrays, modified for poles with multiplicity!=1. 
+*/
 double AmiBase::get_starting_sign(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole){
 
 double result=1.0;
@@ -554,15 +506,16 @@ result=result*(double)G_in[pole.which_g_[i]].alpha_[pole.index_];
 
 }
 
-// std::cout<<"Starting sign for m="<<pole.multiplicity_<<" is ";
 
 result=result/(double)factorial(pole.multiplicity_-1 );
 
-// std::cout<<result<<std::endl;
 
 return result;
 }
 
+/**
+* Removes green's functions from `g_prod_t` to account for numerator of residue (z-z0)^m
+*/
 AmiBase::g_prod_t AmiBase::reduce_gprod(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole){
 
 g_prod_t reduced;
