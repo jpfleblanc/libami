@@ -238,22 +238,22 @@ std::complex<double> AmiCalc::star(ami_parms &parms, SorF_t K, Ri_t R, ami_vars 
 // std::cout<<"Size of right is "<< R.size() <<std::endl;
 
 std::complex<double> output=0;
-// std::complex<double> term;
-// std::complex<double> gprod;
+std::complex<double> term;
+std::complex<double> gprod;
 
 // std::ofstream file;
 // file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
 
-
+// std::cout<<"In star K[]*R"<<std::endl;
 for( int i=0; i< K[0].size(); i++)
 {
 
-// gprod=eval_gprod(parms, R[i], external);
-// term=K[0][i]*gprod;
+gprod=eval_gprod(parms, R[i], external);
+term=K[0][i]*gprod;
 //std::isnan(std::real(term))
 
 // if(abs(term)<1){
-output+= K[0][i]*eval_gprod(parms, R[i], external);
+output+= term;// K[0][i]*eval_gprod(parms, R[i], external);
 // }
 // if( true ){output+= term;
 
@@ -507,6 +507,8 @@ for( int k=0; k<m+1; k++){
 
 // TODO: double check that this multiplication is general 
 output=output*std::pow(beta,m)*(-1.0);
+
+// output=0.0;
 }
 
 // if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  

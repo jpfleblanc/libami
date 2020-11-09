@@ -129,7 +129,7 @@ return kout;
 
 
 
-
+/* 
 // TODO: This function should be external to the library 
 AmiBase::energy_t NewAmiCalc::construct_energy(AmiBase::g_prod_t &R0, internal_state &state, ext_vars &external){
 
@@ -285,3 +285,4 @@ output -= mu;
 	return -output;
 }
 
+ */
