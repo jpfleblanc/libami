@@ -51,7 +51,7 @@ class AmiBase
 	
 public:
 
-
+/// Not to be underappreciated - returns the sign of a value - or zero if it is uniquely zero. 
 template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
@@ -60,8 +60,11 @@ template <typename T> int sgn(T val) {
 
 
 // External list of energies and frequencies 
-
+/// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ etc  
 typedef std::vector<std::complex<double>> energy_t;
+
+/// This is the list of independent and external frequencies.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are necessary. 
+///
 typedef std::vector< std::complex<double>  > frequency_t;
 
 
@@ -69,15 +72,17 @@ typedef std::vector< std::complex<double>  > frequency_t;
 
 // the symbolic epsilon
 
-/// Vector of type `int`
+/// Vector of type `int`.  This is the symbolic \f$-\epsilon\f$ described in Ref[AMI].  We use the convention \f$G=\frac{1}{\omega+\epsilon}\f$.  
 typedef std::vector<int> epsilon_t;
-/// Vector of type `int`
+
+
+/// Vector of type `int`.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
 typedef std::vector<int> alpha_t;
 
 /// Indicator for multi-species green's function or energy dispersions (spin-up vs spin-dn, multiband, etc)
 typedef int species_t;
 
-
+///
 typedef enum {Bose,Fermi} stat_type ;
 
 // Ideally these types will not appear in the ami_base class 
@@ -88,7 +93,7 @@ typedef enum {hubbard,coulomb} int_type;
 typedef enum {tb, fp, hf} disp_type;
 
 
-
+/// the ami_vars struct if the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
 
 struct ami_vars{
 
@@ -111,6 +116,9 @@ double BETA_;
 
 // TODO: does ami_parms need TYPE_, int_type_, dispersion_ etc? 
 // TODO: Define new objects that satisfy the requirements of TYPE_ etc 
+// TODO: is E_REG used during construction?  I think not. 
+
+/// Parameters for the construction phase of AMI.
 struct ami_parms{
 ami_parms(int N_INT,  double E_REG){
 N_INT_=N_INT;
@@ -142,7 +150,7 @@ ami_parms(){}
 
 int N_INT_;
 int N_EXT_;
-double E_REG_;
+double E_REG_;// does E_Reg belong here? 
 
 
 // these should be replaced with something more specific to AMI 
@@ -154,7 +162,8 @@ disp_type dispersion_;
 
 
 
-// Green's function structure which has a symbolic epsilon and set of alpha values
+/// A Green's function structure.  This is a symbolic vector of `epsilon_t` and vector of `alpha_t`.  Also needed is what the statistics of the line are.  While this could be determined from alpha - it is better to store it.  For multistate systems the species_ index might be useful.
+
 struct g_struct{
 g_struct(epsilon_t eps, alpha_t alpha, stat_type stat){
 eps_=eps;
@@ -164,7 +173,7 @@ species_=0;
 
 }
 
-// Assume fermi statistics if not specified for partially initialized structure
+/// Constructor assumes fermi statistics if not specified for partially initialized structure
 g_struct(epsilon_t eps, alpha_t alpha){
 eps_=eps;
 alpha_=alpha;
@@ -173,7 +182,8 @@ species_=0;
 
 }
 
-g_struct(){} // uninitialized variant
+/// uninitialized variant
+g_struct(){} 
 
 epsilon_t eps_;
 // std::vector<int> eps_indices_;
@@ -183,7 +193,7 @@ species_t species_;
 
 };
 
-/// Pole structure. Equivalent to G structure, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
+/// Pole structure. Equivalent to `g_struct`, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
 
 struct pole_struct{
 
@@ -320,7 +330,7 @@ void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign
 // g_struct der_fix(g_struct &g_in, double alpha);
 
 /**
-* As part of the construction of the `Si_t` arrays, the initial sign is extracted prior to taking derivatives.  Also is multiplied by 1/(M-1)! where M is the `multiplicity_` of the respective pole. 
+* As part of the construction of the `Si_t` arrays, the initial sign is extracted prior to taking derivatives.  Also is multiplied by \f$1/(M-1)!\f$ where M is the `multiplicity_` of the respective pole. 
 *
 */
 double get_starting_sign(g_prod_t G_in, pole_struct pole);
@@ -334,7 +344,7 @@ g_prod_t reduce_gprod(g_prod_t G_in, pole_struct pole);
 In order to take arbitrary derivatives of fermi functions - we need to know the prefactor.  It is given in general by this function.  TODO: This could be replaced with an algorithmic differentiation tool. 
 
 
-.. math::
+\f[
 
 \sum\limits_{k=0}^{m} frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1)
 
@@ -345,6 +355,7 @@ for(int m=0; m< k+1; m++){
 output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));	
 
 }
+\f]
 
 */
 double frk(int r, int k);
