@@ -129,7 +129,6 @@ return kout;
 
 
 
-/* 
 // TODO: This function should be external to the library 
 AmiBase::energy_t NewAmiCalc::construct_energy(AmiBase::g_prod_t &R0, internal_state &state, ext_vars &external){
 
@@ -189,13 +188,13 @@ return result;
 }
 
 
-std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, disp_type disp){
+std::complex<double> NewAmiCalc::eval_epsilon(hopping_t t, NewAmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp){
 	
 	std::complex<double> output(0,0);
 	// std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
 	// print_kvector(k);
 	
-if(disp==AmiCalc::tb){	
+if(disp==AmiBase::tb){	
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<std::endl;
 	output+=-2.0*t*cos(k[i]);	
@@ -204,7 +203,7 @@ if(disp==AmiCalc::tb){
 }
 
 // Units are of rydbergs:  We used the atomic Rydberg units. Please see the attachment for the details. In this unit, the length scale is the Bohr radius a_0, and the energy scale is the Rydberg energy e^2/2a_0. Equivalently,  you may set \hbar=1, m=1/2 and e^2/2=1. This is why the dispersion becomes \epsilon_k=k^2/2, and the Coulomb replusion =8*pi/q^2. 
-if(disp==AmiCalc::fp){
+if(disp==AmiBase::fp){
 
 for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
@@ -215,7 +214,7 @@ for(int i=0; i<k.size();i++){
 
 // assuming that spin=0 is up, and spin=1 is down. then spin-1/2, gives -1/2 for up and 1/2 for down.
 
-if(disp==AmiCalc::hf){
+if(disp==AmiBase::hf){
 	double q=0.0;
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
@@ -244,20 +243,20 @@ return -output;
 	
 }
 
-std::complex<double> AmiCalc::eval_epsilon(hopping_t t, AmiCalc::k_vector_t k, std::complex<double> mu , disp_type disp){
+std::complex<double> NewAmiCalc::eval_epsilon(hopping_t t, NewAmiCalc::k_vector_t k, std::complex<double> mu , AmiBase::disp_type disp){
 	
 	std::complex<double> output(0,0);
 	std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
 	// print_kvector(k);
 	
-if(disp==AmiCalc::tb){	
+if(disp==AmiBase::tb){	
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<std::endl;
 	output+=-2.0*t*cos(k[i]);	
 		
 	}
 }
-if(disp==AmiCalc::fp){
+if(disp==AmiBase::fp){
 
 for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<std::endl;
@@ -266,7 +265,7 @@ for(int i=0; i<k.size();i++){
 	}
 }
 
-if(disp==AmiCalc::hf){
+if(disp==AmiBase::hf){
 	double q=0.0;
 	for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
@@ -285,4 +284,65 @@ output -= mu;
 	return -output;
 }
 
- */
+
+double NewAmiCalc::hf_energy(double kk){
+double E_kk;
+double mass=0.5;
+double bolv=get_hf_sigma(kk);
+double amu=hf_mu;
+	
+E_kk=0.5*(kk*kk/mass)+bolv-amu 	;
+
+// std::cout<<"Returning "<<E_kk<< " for kk, amu "<< kk<<" "<<amu<<std::endl;
+	
+return E_kk;	
+	
+}
+
+double NewAmiCalc::get_hf_sigma(double kk){
+
+double amom=kk;
+
+// std::cout<<"In get_hf_sigma with "<<kk<<std::endl;
+
+int ip_ind=kk/hf_kstep;
+int ipc=ptoi[ip_ind];
+
+// std::cout<<"ptoi gave "<< ipc<<std::endl;
+
+int Npg=pgrid.size()-1;
+
+if(ipc<0 || ipc> Npg){
+throw std::runtime_error("Something wrong in get_hf_mu function");
+}	
+
+int ipc1, ipc2, ipc3;
+double pc1,pc2,pc3;
+double Ap1, Ap2, Ap3;
+double Fp1, Fp2, Fp3;
+
+double output=0.0;
+
+if(ipc==0){
+ipc1=0; ipc2=1; ipc3=2;	
+}else if(ipc==Npg){
+ipc1=Npg-2; ipc2=Npg-1; ipc3=Npg;	
+}else {
+ipc1=ipc-1; ipc2=ipc; ipc3=ipc+1;	
+}
+
+pc1=pgrid[ipc1]; pc2=pgrid[ipc2]; pc3=pgrid[ipc3];
+
+Fp1=sigma_hf[ipc1]; Fp2=sigma_hf[ipc2]; Fp3=sigma_hf[ipc3];
+
+Ap1=(amom-pc2)*(amom-pc3)/((pc1-pc2)*(pc1-pc3)) ;
+Ap2=(amom-pc1)*(amom-pc3)/((pc2-pc1)*(pc2-pc3)); 
+Ap3=(amom-pc1)*(amom-pc2)/((pc3-pc1)*(pc3-pc2)); 
+    
+output = Fp1*Ap1+Fp2*Ap2+Fp3*Ap3 ;
+
+return output;
+	
+}
+
+ 

@@ -951,3 +951,358 @@ AMI_MATRIX[ord].push_back(solution);
 }
 
 
+
+
+void NewAmiCalc::print_S( int dim, AmiBase::S_t &S_array){
+
+std::cout<<"Printing S"<<std::endl;
+ for (int i=0; i< S_array.size();i++){
+std::cout<<"S["<<i<<"]=(";
+  for (int j=0; j< S_array[i].size(); j++){
+    std::cout<<"{";
+    for (int k=0; k< S_array[i][j].size(); k++){
+
+    std::cout<<S_array[i][j][k]<<" ";
+    }
+    std::cout<<"}";
+  }
+std::cout<<")";
+std::cout<<std::endl;
+ }
+std::cout<<std::endl;
+
+
+
+}
+
+void NewAmiCalc::print_P( int dim, AmiBase::P_t &P_array){
+
+for (int i=0; i< P_array.size(); i++){
+std::cout<< "P["<< i<<"]=";
+
+print_Pi(dim, P_array[i]);
+
+}
+
+
+}
+
+
+void NewAmiCalc::print_Pi( int dim, AmiBase::Pi_t &Pi_array){
+
+for (int i=0; i< Pi_array.size(); i++){
+std::cout<<"[";
+print_pole_array(Pi_array[i]);
+std::cout<<"]";
+std::cout<<std::endl;
+}
+std::cout<<std::endl;
+
+}
+
+
+void NewAmiCalc::print_R( int dim, AmiBase::R_t &R_array){
+
+for (int i=0; i< R_array.size(); i++){
+std::cout<< "R["<< i<<"]=";
+
+print_g_prod_array(R_array[i]);
+
+}
+
+}
+
+
+void NewAmiCalc::print_final( int dim, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array){
+
+print_S(dim, S_array);
+print_P( dim, P_array);
+print_R( dim, R_array);
+
+
+}
+
+
+void NewAmiCalc::print_g_prod_array(AmiBase::g_prod_array_t g_array){
+
+for (int i=0; i< g_array.size(); i++){
+print_g_prod_info(g_array[i]);
+}
+
+
+}
+
+
+
+void NewAmiCalc::print_pole_array(AmiBase::pole_array_t g){
+
+for (int i=0; i< g.size(); i++){
+print_pole_struct_info(g[i]);
+
+}
+
+
+}
+
+
+
+
+void NewAmiCalc::print_g_prod_info(AmiBase::g_prod_t g){
+
+std::cout<<"----------Printing G_product---------- " <<std::endl;
+for (std::vector<AmiBase::g_struct>::iterator it= g.begin(); it != g.end(); ++it){
+
+std::cout<<"----------Printing next---------- " <<std::endl;
+print_g_struct_info(it[0]);
+
+}
+
+
+}
+
+
+
+void NewAmiCalc::print_g_struct_info(AmiBase::g_struct g){
+
+std::cout<<"Species="<<g.species_<<" ";
+std::cout<<"Eps=(";
+print_epsilon_info(g.eps_);
+std::cout<<")";
+std::cout<<std::endl;
+std::cout<<"Alpha=(";
+print_alpha_info(g.alpha_);
+std::cout<<")";
+std::cout<<std::endl;
+
+}
+
+
+
+void NewAmiCalc::print_epsilon_info(AmiBase::epsilon_t eps){
+
+
+//for (std::vector<signed char>::iterator it= eps.begin(); it != eps.end(); ++it){
+for (std::vector<int>::iterator it= eps.begin(); it != eps.end(); ++it){
+
+std::cout<< *it << ' ';
+
+}
+//std::cout << '\n';
+
+
+}
+
+
+void NewAmiCalc::print_alpha_info(AmiBase::alpha_t alpha){
+
+for (std::vector<int>::iterator it= alpha.begin(); it != alpha.end(); ++it){
+
+std::cout<< *it << ' ';
+
+}
+//std::cout << '\n';
+
+
+}
+
+void NewAmiCalc::print_pole_struct_info(AmiBase::pole_struct g){
+
+std::cout<<"Eps=(";
+print_epsilon_info(g.eps_);
+std::cout<<")";
+std::cout<<std::endl;
+std::cout<<"Alpha=(";
+print_alpha_info(g.alpha_);
+std::cout<<")";
+std::cout<<std::endl;
+
+}
+
+void NewAmiCalc::print_sign_array(AmiBase::sign_array_t signs){
+
+std::cout<<"Printing signs"<<std::endl;
+std::cout<<"[";
+ for (int i=0; i< signs.size();i++){
+std::cout<<"(";
+  for (int j=0; j< signs[i].size(); j++){
+    std::cout<<signs[i][j]<<" ";
+
+  }
+std::cout<<")";
+ }
+
+std::cout<<"]";
+
+
+}
+
+
+
+void NewAmiCalc::print_signs(AmiBase::sign_t signs){
+
+std::cout<<"(";
+ for (int i=0; i< signs.size();i++){
+
+     std::cout<<signs[i]<<" ";
+
+  }
+std::cout<<")";
+
+
+}
+
+
+
+void NewAmiCalc::read_hii(std::string filename,int maxval){
+std::ifstream infile_stream;
+
+infile_stream.open(filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<filename<<std::endl;
+      throw std::runtime_error("Could not open hii file");
+    } 		
+	
+std::string line;
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+
+int throwaway;
+double value;
+
+bool read= bool( ss>> throwaway);
+
+// std::cout<<"Throw away is "<<throwaway <<std::endl;
+
+if(read && throwaway<=maxval){
+ss>> value;
+
+global_hii.push_back(value);
+}
+
+}	
+
+infile_stream.close();
+	
+	
+}
+
+
+void NewAmiCalc::read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename){
+	
+std::ifstream infile_stream;
+
+
+// PTOI
+
+infile_stream.open(ptoi_filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<ptoi_filename<<std::endl;
+      throw std::runtime_error("Could not open ptoi file");
+    } 	
+
+std::string line;
+// throw away first lines and get second 
+std::getline(infile_stream,line);	
+std::getline(infile_stream,line);
+
+std::stringstream ssp(line);
+ssp>> hf_kstep;	
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+
+int throwaway, keep;
+std::string laststring;
+
+bool read = bool(ss >> laststring);
+	
+if(read){
+	// throwaway=std::stoi(laststring); // lets just throw this away 
+	ss >>  keep;
+
+ptoi.push_back(keep);
+
+}
+
+}
+
+infile_stream.close();
+
+/////////////// PGRID 
+
+infile_stream.open(pgrid_filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<pgrid_filename<<std::endl;
+      throw std::runtime_error("Could not open pgrid file");
+    } 	
+
+std::getline(infile_stream,line);	// throw away first line 
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+std::string laststring;
+
+double throwaway,keep;
+
+bool read = bool(ss >> laststring);
+if(read){
+	// throwaway=std::stod(laststring); // lets just throw this away 
+	ss >>  keep;
+
+pgrid.push_back(keep);
+
+}
+
+}	
+
+infile_stream.close();
+
+///////////////////////// SIGMA_HF
+
+
+infile_stream.open(sigma_filename);	
+
+if(infile_stream.fail()) // checks to see if file opended 
+    { 
+	std::cout<<sigma_filename<<std::endl;
+      throw std::runtime_error("Could not open sigma_hf file");
+    } 	
+
+// read first line into mu 
+std::getline(infile_stream,line);	// first line is mu  
+std::stringstream sss(line);
+
+sss >> hf_mu;
+
+while (std::getline(infile_stream,line)){
+
+std::stringstream ss(line);
+
+double throwaway,keep;
+std::string laststring;
+bool read = bool(ss >> laststring);
+if(read){
+	// throwaway=std::stod(laststring); // lets just throw this away 
+	ss >>  keep;
+
+sigma_hf.push_back(keep);
+
+}
+
+}	
+
+infile_stream.close();
+
+	
+	
+}

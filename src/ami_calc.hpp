@@ -245,6 +245,29 @@ void write_R_readable(AmiBase::R_t &r_array);
 
 void load_solutions(std::string top_directory, solution_set_matrix_t &AMI_MATRIX, int MAX_ORDER, double EREG);
 
+// screen io 
+
+void print_S(int dim, AmiBase::S_t &s_array);
+void print_P( int dim, AmiBase::P_t &p_array);
+void print_R( int dim, AmiBase::R_t &r_array);
+void print_final( int dim, AmiBase::R_t &r_array, AmiBase::P_t &p_array, AmiBase::S_t &s_array);
+
+void print_g_prod_array(AmiBase::g_prod_array_t g_array);
+void print_pole_array(AmiBase::pole_array_t g);
+
+void print_g_prod_info(AmiBase::g_prod_t g);
+void print_g_struct_info(AmiBase::g_struct g);
+void print_epsilon_info(AmiBase::epsilon_t eps);
+void print_alpha_info(AmiBase::alpha_t alpha);
+
+void print_pole_struct_info(AmiBase::pole_struct g);
+
+void print_sign_array(AmiBase::sign_array_t signs);
+void print_signs(AmiBase::sign_t signs);
+void print_Pi( int dim, AmiBase::Pi_t &Pi_array);
+
+
+
 // Complete up to here I think 
 
 /// Evaluation
@@ -275,7 +298,39 @@ std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, std::complex<double
 std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
 
 
+// Epsilon stuff
 
+bool not_molecule=1;
+std::vector<std::complex<double>> global_hii;
+
+bool density_warning=true;
+
+
+void read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename);
+std::vector<int> ptoi;
+std::vector<double> pgrid, sigma_hf;
+double hf_mu, hf_kstep;
+double rs;
+
+double get_hf_sigma(double kk);
+double hf_energy(double kk);
+
+void read_hii(std::string filename, int maxval);
+
+
+struct evaluation_set{
+evaluation_set(){}
+
+evaluation_set(solution_set s,	ext_vars ext){
+ext_vars_=ext;
+sol_=s;	
+}
+	
+	
+ext_vars ext_vars_;
+solution_set sol_;
+	
+};
 
 
 
