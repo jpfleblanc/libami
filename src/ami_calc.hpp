@@ -69,6 +69,9 @@ disp_=static_cast<AmiBase::disp_type>(0); // by default tight binding unless nec
 mink_=0;
 maxk_=2*M_PI;
 
+
+internal_freq_size_=k_length;
+
 }
 
 internal_state(){}
@@ -84,11 +87,15 @@ disp_=static_cast<AmiBase::disp_type>(0); // by default tight binding unless nec
 mink_=0;
 maxk_=2*M_PI;
 	
+internal_freq_size_=k_length;	
+	
 }
 
 k_vect_list_t internal_k_list_;
 int order_;
 int dim_;
+
+int internal_freq_size_;
 
 hopping_list_t t_list_;
 AmiBase::disp_type disp_;
