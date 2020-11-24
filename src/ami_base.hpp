@@ -18,8 +18,6 @@
 #include <stdlib.h>
 #include <random>
 
-/// Simple factorial function - Nothing special. 
-int factorial(int n);
 
 
 
@@ -56,6 +54,10 @@ public:
 template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
+
+
+/// Simple factorial function - Nothing special. 
+int factorial(int n);
 
 // AmiVars
 

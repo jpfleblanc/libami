@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project (ami CXX)
+project (amibase CXX)
 #find_package(ALPSCore REQUIRED)
 #For efficiency, compile with optimization by default
 if (NOT CMAKE_BUILD_TYPE)
@@ -23,20 +23,20 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -std=c++11 -lstdc++fs 
 
 #include_directories(/home/jpfleblanc/software/boost_1_55_0)
 
-set(LIB_FILES 
-  ./src/ami_construct.cpp
-  ./src/ami_evaluate.cpp
-  ./src/ami_helper.cpp
-  ./src/ami_example.cpp
-  ./src/ami_load.cpp
-  # ./src/ami_base.cpp
-  # ./src/ami_base_evaluate.cpp
-  # ./src/ami_base_construct.cpp 
-  # ./src/ami_calc_io.cpp
-  # ./src/ami_calc_evaluate.cpp
-  )
+# set(LIB_FILES 
+  # ./src/ami_construct.cpp
+  # ./src/ami_evaluate.cpp
+  # ./src/ami_helper.cpp
+  # ./src/ami_example.cpp
+  # ./src/ami_load.cpp
+  # # ./src/ami_base.cpp
+  # # ./src/ami_base_evaluate.cpp
+  # # ./src/ami_base_construct.cpp 
+  # # ./src/ami_calc_io.cpp
+  # # ./src/ami_calc_evaluate.cpp
+  # )
 
-ADD_LIBRARY(ami SHARED ${LIB_FILES})
+# ADD_LIBRARY(ami SHARED ${LIB_FILES})
 
 
 set(LIB_FILES 
@@ -59,10 +59,10 @@ ADD_LIBRARY(amibase SHARED ${LIB_FILES})
 target_link_libraries(${PROJECT_NAME}  m stdc++fs)
 
 
-INSTALL(TARGETS ami 
-   ARCHIVE DESTINATION "lib/"
-   LIBRARY DESTINATION "lib/"
-   COMPONENT library)
+# INSTALL(TARGETS ami 
+   # ARCHIVE DESTINATION "lib/"
+   # LIBRARY DESTINATION "lib/"
+   # COMPONENT library)
    
    INSTALL(TARGETS amibase 
    ARCHIVE DESTINATION "lib/"

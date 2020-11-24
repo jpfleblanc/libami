@@ -538,7 +538,7 @@ return reduced;
 }
 
 
-int factorial(int n)
+int AmiBase::factorial(int n)
 {
   return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
