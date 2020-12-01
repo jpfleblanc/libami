@@ -259,6 +259,7 @@ void print_P( int dim, AmiBase::P_t &p_array);
 void print_R( int dim, AmiBase::R_t &r_array);
 void print_final( int dim, AmiBase::R_t &r_array, AmiBase::P_t &p_array, AmiBase::S_t &s_array);
 
+
 void print_g_prod_array(AmiBase::g_prod_array_t g_array);
 void print_pole_array(AmiBase::pole_array_t g);
 

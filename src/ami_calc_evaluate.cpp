@@ -97,7 +97,7 @@ frequency.push_back(external.external_freq_[i]);
 
 
 if(frequency.size()!= R0[0].alpha_.size()){
-	throw std::runtime_error("Frequency size does not match alpha");
+	throw std::runtime_error(std::string("Frequency size does not match alpha:")+ std::to_string(frequency.size())+" "+std::to_string(R0[0].alpha_.size()));
 }
 
 

@@ -11,6 +11,16 @@ int dim=parms.N_INT_;
 // std::cout<<"dim="<<dim<< std::endl;
 SorF_t SorF_result;
 
+
+if(dim==0){
+std::complex<double> gprod;
+
+gprod=eval_gprod(parms, R_array[0][0], external);
+
+return gprod;
+
+}
+
 if (dim==1){
 SorF_t SF_left, SF_right;
 SorF_t S_double_left, S_double_right;	

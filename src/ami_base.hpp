@@ -90,7 +90,7 @@ typedef enum {Bose,Fermi} stat_type ;
 
 // Ideally these types will not appear in the ami_base class 
 // Graph types are an unfortunate oversight on my part - and should not strictly be in AMI 
-typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud, DOS} graph_type ;
+typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud, DOS,ENERGY} graph_type ;
 
 typedef enum {hubbard,coulomb} int_type;
 typedef enum {tb, fp, hf} disp_type;
