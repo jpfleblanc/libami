@@ -303,12 +303,14 @@ std::complex<double> im(0,1);
 
 // TEST - always add the regulator
 // TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
-
+// std::cout<<"DB is "<<drop_bosonic_diverge<<std::endl;
 
 if(E==zero && sigma==-1  ){  // && pole.der_==0    Not sure if pole derivative plays any role
 	// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
-	
-return zero;	
+if(drop_bosonic_diverge){	
+// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
+return zero;	// TODO: need to test this might be an approximation 
+}
 E+=E_REG;	
 }else{
 	if(sgn(E.real())!=0){
@@ -347,6 +349,12 @@ int m=pole.der_;
 
 // compute m'th derivative
 output=0;
+
+if(pole.der_==0){
+output=1.0/(sigma*std::exp(beta*(E))+1.0);
+// return output;
+}else{  // compute m'th derivative
+
 for( int k=0; k<m+1; k++){
 	// std::cout<<"On k'th derivative "<<k<<std::endl;
 	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
@@ -356,6 +364,9 @@ for( int k=0; k<m+1; k++){
 
 // TODO: double check that this multiplication is general 
 output=output*std::pow(beta,m)*(-1.0);
+
+// output=0.0;
+}
 
 // if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  
 if(parms.TYPE_==AmiBase::doubleocc){

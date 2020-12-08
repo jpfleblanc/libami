@@ -61,6 +61,8 @@ int factorial(int n);
 
 // AmiVars
 
+bool drop_bosonic_diverge=false; // if set to true, then E_REG not needed because bosonic divergences will simply be set to zero.  Rigorously this may not be correct. 
+
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ etc  

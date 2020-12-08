@@ -159,7 +159,8 @@ for(int i=0; i< R0.size(); i++){
 			// std::cout<<"On energy item "<<j<<std::endl;
 			// std::cout<<"t list entry is "<<state.t_list_[j]<<std::endl;
 if(not_molecule){			
-result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
+// result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
+result[j]=eval_epsilon(state.t_list_[j], state.tp_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
 }else{
 	
 result[j]=-global_hii[R0[i].species_];	
@@ -187,6 +188,71 @@ return result;
 	
 }
 
+
+
+std::complex<double> NewAmiCalc::eval_epsilon(hopping_t t, hopping_t tp, NewAmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp){
+	
+	std::complex<double> output(0,0);
+	// std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
+	// print_kvector(k);
+	
+if(disp==AmiBase::tb){	
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<std::endl;
+	output+=-2.0*t*cos(k[i]);	
+		// std::cout<<"Evaluated tb "<< -2.0*t*cos(k[i]) <<" with momentum "<< k[i]<<" and hopping "<< t <<std::endl;
+	}
+	
+	double term=-4.0*tp;
+	for(int i=0; i<k.size(); i++){
+		
+		term=term*cos(k[i]);
+	}
+	output+=term;
+	
+	
+}
+
+// Units are of rydbergs:  We used the atomic Rydberg units. Please see the attachment for the details. In this unit, the length scale is the Bohr radius a_0, and the energy scale is the Rydberg energy e^2/2a_0. Equivalently,  you may set \hbar=1, m=1/2 and e^2/2=1. This is why the dispersion becomes \epsilon_k=k^2/2, and the Coulomb replusion =8*pi/q^2. 
+if(disp==AmiBase::fp){
+
+for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	output+=std::pow(k[i],2);	
+		
+	}
+}
+
+// assuming that spin=0 is up, and spin=1 is down. then spin-1/2, gives -1/2 for up and 1/2 for down.
+
+if(disp==AmiBase::hf){
+	double q=0.0;
+	for(int i=0; i<k.size();i++){
+		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
+	q+=std::pow(k[i],2);	
+		
+	}
+	q=std::sqrt(q);
+
+// std::cout<<"Calling hf_energy qith q "<< q<<std::endl;
+output=hf_energy(q);
+}else{	
+	
+output+=H*(spin-0.5);	
+	
+output -= mu;
+
+}
+
+//TODO we don't subtract mu if the hf dispersion is given. it contains its own mu value. 
+	// if(std::abs(output)<0.1){
+// std::cout<<"Returning epsilon of "<< output<<std::endl;
+	// }	
+return -output;	
+	
+	
+	
+}
 
 std::complex<double> NewAmiCalc::eval_epsilon(hopping_t t, NewAmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp){
 	

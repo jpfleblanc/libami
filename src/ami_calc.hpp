@@ -63,7 +63,9 @@ internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));
 dim_=dim;
 order_=k_length;
 if(2*order_-1>0){
-t_list_.resize(2*order_-1,1);}
+t_list_.resize(2*order_-1,1);
+tp_list_.resize(2*order_-1,0);
+}
 disp_=static_cast<AmiBase::disp_type>(0); // by default tight binding unless necessary to change 
 
 mink_=0;
@@ -81,7 +83,9 @@ internal_k_list_.assign(k_length, std::vector< double>(dim,0.0));
 dim_=dim;
 order_=k_length;
 if(2*order_-1>0){
-t_list_.resize(2*order_-1,1);}
+t_list_.resize(2*order_-1,1);
+tp_list_.resize(2*order_-1,0);
+}
 
 disp_=static_cast<AmiBase::disp_type>(0); // by default tight binding unless necessary to change 
 mink_=0;
@@ -98,6 +102,7 @@ int dim_;
 int internal_freq_size_;
 
 hopping_list_t t_list_;
+hopping_list_t tp_list_;
 AmiBase::disp_type disp_;
 
 double mink_,maxk_;
@@ -302,6 +307,8 @@ AmiBase::energy_t construct_energy(AmiBase::g_prod_t &R0, internal_state &state,
 k_vector_t construct_k(AmiBase::alpha_t alpha, k_vect_list_t &k);
 
 // These should live outside of ami - construct energy should be an external function
+std::complex<double> eval_epsilon(hopping_t t, hopping_t tp, NewAmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
+
 std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, std::complex<double> mu  , AmiBase::disp_type disp );
 std::complex<double> eval_epsilon(hopping_t t, k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
 
