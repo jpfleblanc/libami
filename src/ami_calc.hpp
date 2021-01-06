@@ -106,6 +106,7 @@ hopping_list_t tp_list_;
 AmiBase::disp_type disp_;
 
 double mink_,maxk_;
+double Jk_=1;
 
 };
 

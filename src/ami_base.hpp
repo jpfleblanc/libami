@@ -81,13 +81,13 @@ typedef std::vector< std::complex<double>  > frequency_t;
 typedef std::vector<int> epsilon_t;
 
 
-/// Vector of type `int`.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
+/// Vector of type `int`.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1. Other values at intermediate steps typically represent an error.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
 typedef std::vector<int> alpha_t;
 
 /// Indicator for multi-species green's function or energy dispersions (spin-up vs spin-dn, multiband, etc)
 typedef int species_t;
 
-///
+/// Indicator for statistics. A future version might use this more frequently.  Current version presumes all integration frequencies are Fermionic. 
 typedef enum {Bose,Fermi} stat_type ;
 
 // Ideally these types will not appear in the ami_base class 
