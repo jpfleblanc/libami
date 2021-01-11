@@ -154,7 +154,7 @@ dispersion_=static_cast<AmiBase::disp_type>(disp);
 ami_parms(){}
 
 int N_INT_;
-int N_EXT_;
+int N_EXT_=1;
 double E_REG_;// does E_Reg belong here? 
 
 
