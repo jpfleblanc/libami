@@ -177,7 +177,7 @@ if(count != R0[0].eps_.size()){
 	
 	if(density_warning){
 	std::cout<<count<<" "<< R0[0].eps_.size();
-	std::cerr<<"Warning - Mismatch in size of R0 and epsilon: If this is not a density calculation then something is wrong!"<<std::endl;
+	std::cerr<<"Warning - Mismatch in size of R0 and epsilon: If this is not a density calculation (or something with counter-terms) then something might be wrong!"<<std::endl;
 	density_warning=false;
 	
 	}

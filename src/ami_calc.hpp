@@ -218,6 +218,7 @@ AmiBase::ami_parms ami_parms_;
 double prefactor_;
 int loops_;
 int ct_count_=0;
+int sigma_ct_count_=0;
 
 std::vector<AmiBase::alpha_t> bose_alphas_;
 
