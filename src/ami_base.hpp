@@ -365,6 +365,14 @@ output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));
 */
 double frk(int r, int k);
 
+
+/*
+Recursive construction of fermi_bose derivatives 
+*/
+std::complex<double> fermi_bose(int m, double sigma, double beta, std::complex<double> E);
+
+
+
 /*
 Recursive binomial coefficient function 
 */

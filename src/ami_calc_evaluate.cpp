@@ -312,7 +312,7 @@ return -output;
 std::complex<double> NewAmiCalc::eval_epsilon(hopping_t t, NewAmiCalc::k_vector_t k, std::complex<double> mu , AmiBase::disp_type disp){
 	
 	std::complex<double> output(0,0);
-	std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
+	// std::cout<<"In eval_epsilon with dispersion type "<< disp <<std::endl;
 	// print_kvector(k);
 	
 if(disp==AmiBase::tb){	
@@ -352,12 +352,13 @@ output -= mu;
 
 
 double NewAmiCalc::hf_energy(double kk){
+// std::cout<<"HF q arguement is "<<kk<<std::endl;
 double E_kk;
 double mass=0.5;
 double bolv=get_hf_sigma(kk);
 double amu=hf_mu;
 	
-E_kk=0.5*(kk*kk/mass)+bolv-amu 	;
+E_kk=(0.5*(kk*kk/mass)+bolv-amu);//*1.91916*1.91916;
 
 // std::cout<<"Returning "<<E_kk<< " for kk, amu "<< kk<<" "<<amu<<std::endl;
 	
@@ -379,6 +380,7 @@ int ipc=ptoi[ip_ind];
 int Npg=pgrid.size()-1;
 
 if(ipc<0 || ipc> Npg){
+std::cout<<"ptoi gave "<< ipc<<" for kk="<<kk<<std::endl;
 throw std::runtime_error("Something wrong in get_hf_mu function");
 }	
 

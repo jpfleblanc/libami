@@ -143,7 +143,8 @@ std::vector<std::complex<double> > line;
 line.reserve(Si[i].size());
 for(int j=0; j< Si[i].size(); j++){
 
-//std::cout<<"Dot term 
+// std::cout<<"Dot term "<<std::endl;
+// std::cout<<Si[i][j]<<" "<<fermi[i][j]<<std::endl;
 line.push_back(Si[i][j]*fermi[i][j]);
 
 }
@@ -200,7 +201,7 @@ std::vector<std::complex<double> > group;
 group.reserve(Pi[i].size());
 
   for (int j=0; j< Pi[i].size(); j++){
-
+// std::cout<<"Fermi term "<< fermi_pole(parms, Pi[i][j], external)<<std::endl;
   group.push_back( fermi_pole(parms, Pi[i][j], external));
 
 }
@@ -281,7 +282,7 @@ if(pole.alpha_[i]!=0){
 
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
-
+// std::cout<<"Energy is "<<E<<std::endl;
 
 // if(eta%2==0){
 // std::cout<<"eta was even"<<std::endl;
@@ -348,8 +349,12 @@ if(sgn(E.real())!=0){
 int m=pole.der_;
 
 // compute m'th derivative
-output=0;
 
+// std::cout<<m<<" "<<sigma<<" "<<beta<<" "<<E<<std::endl;
+output=fermi_bose(m,sigma,beta,E);
+
+
+/*
 if(pole.der_==0){
 output=1.0/(sigma*std::exp(beta*(E))+1.0);
 // return output;
@@ -367,8 +372,9 @@ output=output*std::pow(beta,m)*(-1.0);
 
 // output=0.0;
 }
+*/
 
-// if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  
+// if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  should generalize this
 if(parms.TYPE_==AmiBase::doubleocc){
 output=-1.0*output;	
 }
@@ -377,6 +383,35 @@ output=-1.0*output;
 // std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E<<std::endl;
 
 return output;
+}
+
+// this computes the mth order derivative of the fermi or bose distribution functions at beta, for energy E. sigma=1.0 for fermi and -1.0 for bose. 
+std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta, std::complex<double> E){
+
+std::complex<double> output,term;
+output=0.0;
+
+if(m==0){
+output=1.0/(sigma*std::exp(beta*(E))+1.0);
+// return output;
+}else{  // compute m'th derivative
+
+for( int k=0; k<m+1; k++){
+	// std::cout<<"On k'th derivative "<<k<<std::endl;
+	// term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
+	term= frk(m,k)*std::pow(sigma,k) *std::pow(-1.0, k+1)*(1.0/(sigma*std::exp(beta*(E))+1.0)/std::pow(sigma +std::exp(-beta*(E)), k)) ;
+	output+= term;
+	// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+}
+
+// TODO: double check that this multiplication is general 
+output=output*std::pow(beta,m)*(-1.0);
+}
+	
+	// std::cout<<"Fermi Pole output evaluated to "<< output << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+
+return output;	
+	
 }
 
 

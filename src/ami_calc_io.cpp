@@ -1107,6 +1107,7 @@ std::cout<< *it << ' ';
 
 void NewAmiCalc::print_pole_struct_info(AmiBase::pole_struct g){
 
+std::cout<<"Der="<<g.der_<<" | ";
 std::cout<<"Eps=(";
 print_epsilon_info(g.eps_);
 std::cout<<")";
