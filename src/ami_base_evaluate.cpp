@@ -110,10 +110,10 @@ output+= term;
 // if(std::real(term)>10){
 // print_g_prod_info(R[i]);
 // }
-
+// if(term.real() > 100){
 // std::cout<<"In star K[]*R"<<std::endl;
 // std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
-
+// }
  // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
@@ -462,6 +462,8 @@ double prefactor=external.prefactor;
 // std::cout<<"Evaluating with prefactor "<< prefactor<<std::endl;
 
 double E_REG=parms.E_REG_;
+
+bool verbose=false;
 // int N_EXT=parms.N_EXT_;
 
 // std::cout<<"Eval Gprod"<<std::endl;
@@ -492,6 +494,8 @@ std::complex<double> im(0,1);
 
 if(alphadenom==zero){
 //alphadenom+=E_REG*im+E_REG;
+// std::cout<<"Added ereg in gprod_eval"<<std::endl;
+// verbose=true;
 alphadenom+=E_REG;	
 }
 
@@ -500,14 +504,24 @@ alphadenom+=E_REG;
 for(int a=0; a< g_prod[i].eps_.size(); a++){
 epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 //denom-=double(g_prod[i].eps_[a])*external.energy_[a];
-// std::cout<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
+// if(verbose){
+// std::cout<<a<<" "<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
+// }
+}
+/* 
+if(verbose){
+std::cout<<"Epsdenom gave "<<epsdenom<<std::endl;
 }
 // std::cout<<"End"<<std::endl;
 
-// if(std::abs(epsdenom)< E_REG){
-	// std::cout<<"Small epsilon denominator detected"<<std::endl;
-// }
+if(epsdenom==zero){
+	std::cout<<"Epsilon returned zero"<<std::endl;
+}
 
+if(std::abs(epsdenom)< E_REG){
+	std::cout<<"Small epsilon denominator detected"<<std::endl;
+}
+ */
 //denom+=get_energy_from_g(parms, g_prod[i], external);
 
 //if (denom==std::complex<double>((0,0))){denom=E_REG;}//  prefactor=1.0;}//0.0;}
@@ -516,6 +530,23 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // if(std::abs(epsdenom)>E_REG){
 denom_prod=denom_prod*(alphadenom+epsdenom);
 // }
+
+/* 
+if((1.0/denom_prod).real()> 1000){
+	std::cout<<"Denominator product is "<< denom_prod<<" with prefactor "<< prefactor<<std::endl;
+std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
+
+for(int a=0; a< g_prod[i].eps_.size(); a++){
+// epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
+//denom-=double(g_prod[i].eps_[a])*external.energy_[a];
+// if(verbose){
+std::cout<<a<<" "<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
+// }
+}
+
+	
+} */
+
 
 
 }
