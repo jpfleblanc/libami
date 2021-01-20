@@ -491,13 +491,13 @@ alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
 std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
-
+/* 
 if(alphadenom==zero){
-//alphadenom+=E_REG*im+E_REG;
+alphadenom+=E_REG*im+E_REG;
 // std::cout<<"Added ereg in gprod_eval"<<std::endl;
 // verbose=true;
-alphadenom+=E_REG;	
-}
+// alphadenom+=E_REG;	
+} */
 
 // std::cout<<"Energies"<<std::endl;
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
@@ -508,6 +508,17 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // std::cout<<a<<" "<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
 // }
 }
+
+if(alphadenom==zero){
+	// return zero;
+	double val=E_REG*sgn(epsdenom.real());
+alphadenom+=val+val*im;
+// std::cout<<"Added ereg in gprod_eval "<<E_REG<<std::endl;
+// verbose=true;
+// alphadenom+=E_REG;	
+}
+
+
 /* 
 if(verbose){
 std::cout<<"Epsdenom gave "<<epsdenom<<std::endl;
@@ -532,7 +543,7 @@ denom_prod=denom_prod*(alphadenom+epsdenom);
 // }
 
 /* 
-if((1.0/denom_prod).real()> 1000){
+if((1.0/denom_prod).real()> 100){
 	std::cout<<"Denominator product is "<< denom_prod<<" with prefactor "<< prefactor<<std::endl;
 std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
 
@@ -545,7 +556,7 @@ std::cout<<a<<" "<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::e
 }
 
 	
-} */
+}  */
 
 
 
