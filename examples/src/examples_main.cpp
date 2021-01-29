@@ -29,10 +29,10 @@ std::cout<<"----"<<std::endl;
 void example2(){
 	
 
-AmiCalc ami;
+AmiBase ami;
 
-AmiCalc::g_prod_t R0=ami.construct_example();
-AmiCalc::ami_vars avars=ami.construct_ext_example_Sigma();//construct_ext_example_Y();//construct_ext_multipole_example();
+AmiBase::g_prod_t R0=construct_example();
+AmiBase::ami_vars avars=construct_ext_example_Sigma();//construct_ext_example_Y();//construct_ext_multipole_example();
 
 // Timing testing 
 // clock_t t1, t2, t_end;
@@ -42,14 +42,14 @@ AmiCalc::ami_vars avars=ami.construct_ext_example_Sigma();//construct_ext_exampl
 auto t1=std::chrono::high_resolution_clock::now();
  // for(int i=0; i< top; i++)
 // {
-AmiCalc::R_t R_array;
-AmiCalc::P_t P_array;
-AmiCalc::S_t S_array;
+AmiBase::R_t R_array;
+AmiBase::P_t P_array;
+AmiBase::S_t S_array;
 
 
 double E_REG=0;//1e-5;
 int N_INT=2;
-AmiCalc::ami_parms test_amiparms(N_INT, E_REG);
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
 
 
 ami.construct(test_amiparms, R0, R_array, P_array, S_array);
@@ -82,10 +82,10 @@ std::cout<<"Evaluation took "<< d2.count()<<" microseconds"<<std::endl;
 void example4(){
 	
 
-AmiCalc ami;
+AmiBase ami;
 
-AmiCalc::g_prod_t R0=ami.construct_multipole_example();
-AmiCalc::ami_vars avars=ami.construct_4ord_ext_multipole_example();//construct_ext_example_Y();//construct_ext_multipole_example();
+AmiBase::g_prod_t R0=construct_multipole_example();
+AmiBase::ami_vars avars=construct_4ord_ext_multipole_example();//construct_ext_example_Y();//construct_ext_multipole_example();
 
 // Timing testing 
 // clock_t t1, t2, t_end;
@@ -95,14 +95,14 @@ AmiCalc::ami_vars avars=ami.construct_4ord_ext_multipole_example();//construct_e
 auto t1=std::chrono::high_resolution_clock::now();
  // for(int i=0; i< top; i++)
 // {
-AmiCalc::R_t R_array;
-AmiCalc::P_t P_array;
-AmiCalc::S_t S_array;
+AmiBase::R_t R_array;
+AmiBase::P_t P_array;
+AmiBase::S_t S_array;
 
 
 double E_REG=0;//1e-10;
 int N_INT=4;
-AmiCalc::ami_parms test_amiparms(N_INT, E_REG);
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
 
 
 ami.construct(test_amiparms, R0, R_array, P_array, S_array);
@@ -132,10 +132,10 @@ std::cout<<"Evaluation took "<< d2.count()<<" microseconds"<<std::endl;
 void example9(){
 	
 
-AmiCalc ami;
+AmiBase ami;
 
-AmiCalc::g_prod_t R0=ami.construct_example_J();
-AmiCalc::ami_vars avars=ami.construct_ext_example_J();//construct_ext_example_Y();//construct_ext_multipole_example();
+AmiBase::g_prod_t R0=construct_example_J();
+AmiBase::ami_vars avars=construct_ext_example_J();//construct_ext_example_Y();//construct_ext_multipole_example();
 
 // Timing testing 
 // clock_t t1, t2, t_end;
@@ -145,14 +145,14 @@ AmiCalc::ami_vars avars=ami.construct_ext_example_J();//construct_ext_example_Y(
 auto t1=std::chrono::high_resolution_clock::now();
  // for(int i=0; i< top; i++)
 // {
-AmiCalc::R_t R_array;
-AmiCalc::P_t P_array;
-AmiCalc::S_t S_array;
+AmiBase::R_t R_array;
+AmiBase::P_t P_array;
+AmiBase::S_t S_array;
 
 
 double E_REG=0;//1e-8;
 int N_INT=9;
-AmiCalc::ami_parms test_amiparms(N_INT, E_REG);
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
 
 
 ami.construct(test_amiparms, R0, R_array, P_array, S_array);
