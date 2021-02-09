@@ -91,7 +91,7 @@ std::complex<double> gprod;
 
 // std::ofstream file;
 // file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
-
+bool print_output=false;
 
 for( int i=0; i< K[0].size(); i++)
 {
@@ -110,9 +110,10 @@ output+= term;
 // if(std::real(term)>10){
 // print_g_prod_info(R[i]);
 // }
-// if(term.real() > 100){
+// if(term.real() > 100 || term.imag()>100 ){
 // std::cout<<"In star K[]*R"<<std::endl;
 // std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// print_output=true;
 // }
  // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
@@ -121,8 +122,9 @@ output+= term;
 // file.close();
 
 
-
+// if(print_output){
 // std::cout<<"Returning value of "<< output <<std::endl;
+// }
 
 return output;
 
@@ -335,10 +337,12 @@ if(sgn(E.real())!=0){
 		// E+=E_REG;
 	// }
 
+if(drop_der && pole.der_!=0){
+
 // if(pole.der_!=0){
 	
-	// return zero;
-// }
+	return zero;
+}
 
 
 // if(pole.der_==0){
@@ -374,6 +378,7 @@ output=output*std::pow(beta,m)*(-1.0);
 }
 */
 
+// TODO I'm not sure this is correct for doubleocc 
 // if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  should generalize this
 if(parms.TYPE_==AmiBase::doubleocc){
 output=-1.0*output;	
