@@ -292,7 +292,14 @@ SorF_t cross(SorF_t left, SorF_t right);
 SorF_t dot(Si_t Si, SorF_t fermi);
 
 // Testing Priority: 2 should be easy to test 
+/// Blurb about pole 
+// if I give a pole.eps_ ad an external.energy_ of different sizes 
+// if .eps_.size() > energy_.size() it will crash
+// if the two sizes are not equal. 
+// Q: is checking this worthwhile?  Is it slow?
 std::complex<double> get_energy_from_pole(pole_struct pole, ami_vars external);
+
+/// Blurb about g
 std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
 
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
@@ -322,7 +329,6 @@ std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars exte
  * @param[in] pole2 Second pole you want to check and of type `pole_struct`
  * 
 */
-
 bool pole_equiv (pole_struct pole1, pole_struct pole2);
 
 /// Testing Priority: 1

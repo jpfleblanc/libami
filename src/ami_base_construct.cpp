@@ -255,15 +255,6 @@ return pole_array;
 
 
 
-/**
- *
- * Checks if two Poles are equivalent and returns bool.  Used to collect pole multiplicities. 
- * Characteristics include `epsilon_t` size and `alpha_t` size.
- * Additionally, it checks each value of `epsilon_t` vector  and `alpha_t` vector are the same.
- * @param[in] pole1: First pole you want to check of type `pole_struct`
- * @param[in] pole2: Second pole you want to check of type `pole_struct`
- * 
-*/
 bool AmiBase::pole_equiv (pole_struct pole1, pole_struct pole2){
 
 bool result=true;

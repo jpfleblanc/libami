@@ -96,6 +96,7 @@ add_subdirectory("doc")
 add_subdirectory(test)
 enable_testing()
 add_test(fb test/fb)
+add_test(getE test/getE)
 add_test(pole_equiv_fun test/pole_equiv)
 
 
