@@ -89,6 +89,8 @@ std::complex<double> output=0;
 std::complex<double> term;
 std::complex<double> gprod;
 
+std::complex<double> t0,t10;
+
 // std::ofstream file;
 // file.open("outfile.dat",  std::ofstream::out | std::ofstream::app);
 bool print_output=false;
@@ -96,8 +98,14 @@ bool print_output=false;
 for( int i=0; i< K[0].size(); i++)
 {
 
+
+
 gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
+
+// if(i==0){t0=term;}
+// if(i==10){t10=term;}
+
 //std::isnan(std::real(term))
 
 // if(abs(term)<1){
@@ -112,7 +120,7 @@ output+= term;
 // }
 // if(term.real() > 100 || term.imag()>100 ){
 // std::cout<<"In star K[]*R"<<std::endl;
-// std::cout<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 // print_output=true;
 // }
  // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
@@ -121,6 +129,7 @@ output+= term;
 
 // file.close();
 
+// std::cout<<"t0 plus t10 gives "<< t0<<" "<<t10<<" "<< t0+t10<<std::endl;
 
 // if(print_output){
 // std::cout<<"Returning value of "<< output <<std::endl;
@@ -325,11 +334,11 @@ E+=E_REG;
 
 // july 23rd adding back in a different regulator 
 
-if(sgn(E.real())!=0){
-	E+=E_REG*sgn(E.real());}
-	else{
-		E+=E_REG;
-	}
+// if(sgn(E.real())!=0){
+	// E+=E_REG*sgn(E.real());}
+	// else{
+		// E+=E_REG;
+	// }
 
 // if(sgn(E.real())!=0){
 	// E+=E_REG*sgn(E.real());}

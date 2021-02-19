@@ -17,6 +17,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <random>
+#include <iomanip> 
 
 
 
@@ -69,6 +70,7 @@ bool drop_der=false; // if set to true, then E_REG not needed because bosonic di
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ etc  
+/// By convention, the energy_t contains the NEGATIVE of the energy of a given green's function line, 1/(w+Energy), E=-eps
 typedef std::vector<std::complex<double>> energy_t;
 
 /// This is the list of independent and external frequencies.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are necessary. 
@@ -354,7 +356,7 @@ In order to take arbitrary derivatives of fermi functions - we need to know the 
 
 \f[
 
-\sum\limits_{k=0}^{m} frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1)
+\sum\limits_{k=0}^{m} frk(m,k)*std::pow(sigma,k) *std::pow(-1.0, k+1)*(1.0/(sigma*std::exp(beta*(E))+1.0)/std::pow(sigma +std::exp(-beta*(E)), k))
 
 
 frk function itself returns 
