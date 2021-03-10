@@ -394,7 +394,7 @@ output=-1.0*output;
 }
 
 
-// std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E<<std::endl;
+// std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E <<" with der="<<pole.der_<<" and sigma="<<sigma<<std::endl;
 
 return output;
 }
@@ -525,9 +525,9 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 
 if(alphadenom==zero){
 	// return zero;
-	double val=E_REG*sgn(epsdenom.real());
-alphadenom+=val+val*im;
-// std::cout<<"Added ereg in gprod_eval "<<E_REG<<std::endl;
+	// double val=E_REG*sgn(epsdenom.real());
+alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*sgn(epsdenom.imag())*im;
+// std::cout<<"Added ereg in gprod_eval "<<val<<std::endl;
 // verbose=true;
 // alphadenom+=E_REG;	
 }
