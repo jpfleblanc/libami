@@ -17,7 +17,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <random>
-#include <iomanip> 
+#include <iomanip>
+#include <algorithm>
+#include <functional> 
 
 
 
@@ -193,7 +195,11 @@ species_=0;
 }
 
 /// uninitialized variant
-g_struct(){} 
+g_struct(){
+	
+stat_=Fermi;
+species_=0;
+} 
 
 epsilon_t eps_;
 // std::vector<int> eps_indices_;
@@ -410,6 +416,20 @@ This is the primary evaluation which takes again `ami_parms`, the outputs from `
 std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
 
 
+// Optimization functions - not strictly necessary but might implement automatically 
+typedef std::pair<int,int> ref_t;
+typedef std::vector<ref_t> ref_v_t;
+typedef std::vector<ref_v_t> R_ref_t;
+typedef R_ref_t ref_eval_t;
+void factorize_Rn(Ri_t &Rn, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
+void reduce_rref(R_ref_t &Rref, ref_eval_t &Eval_list);
+
+bool pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign);
+bool g_struct_equiv(g_struct &g1, g_struct &g2, int &sign);
+void print_g_struct_info(g_struct g);
+void print_epsilon_info(epsilon_t eps);
+void print_alpha_info(alpha_t alpha);
+////
 
 
 private:
