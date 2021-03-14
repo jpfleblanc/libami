@@ -44,9 +44,10 @@ for (int i=0; i< Rref.size(); i++){
 		
 		
 	}
-	
+	// don't want empty though don't think it is possible 
+	if(this_vec.size()>0){
 	Eval_list.push_back(this_vec);
-	
+	}
 }
 	
 	
@@ -146,13 +147,13 @@ species_t species_;
 
 bool AmiBase::g_struct_equiv(g_struct &g1, g_struct &g2, int &sign){
 	
-std::cout<<"Comparing graphs "<<std::endl;
-print_g_struct_info(g1);
-std::cout<<"g1 stat "<<g1.stat_<<std::endl;
-std::cout<<"Vs"<<std::endl;
-print_g_struct_info(g2);
-std::cout<<"g2 stat "<<g2.stat_<<std::endl;
-std::cout<<"------"<<std::endl;
+// std::cout<<"Comparing graphs "<<std::endl;
+// print_g_struct_info(g1);
+// std::cout<<"g1 stat "<<g1.stat_<<std::endl;
+// std::cout<<"Vs"<<std::endl;
+// print_g_struct_info(g2);
+// std::cout<<"g2 stat "<<g2.stat_<<std::endl;
+// std::cout<<"------"<<std::endl;
 	
 sign=0;// by default zero sign means they are not equiv
 
@@ -191,8 +192,8 @@ if ( std::adjacent_find( signs.begin(), signs.end(), std::not_equal_to<int>() ) 
     sign=signs.back();
 }
 
-std::cout<<"Found equiv"<<std::endl;
-std::cout<<"-----"<<std::endl;
+// std::cout<<"Found equiv"<<std::endl;
+// std::cout<<"-----"<<std::endl;
 	
 return result;	
 }

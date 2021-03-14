@@ -15,7 +15,10 @@ for(int i=0; i<ami_eval_vars.size(); i++){
 // print_complex_array(ami_eval_vars[i].energy_);
 // print_complex_array(ami_eval_vars[i].frequency_);
 
-std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+// std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+
+std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+
 
 // TODO: this seems really dangerous...
 // if(calc_result.imag()==0 && std::abs(calc_result.real())>1 ){
@@ -41,7 +44,7 @@ results.reserve(ami_eval_vars.size());
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
 
-std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
 
 
 results.push_back(calc_result);	

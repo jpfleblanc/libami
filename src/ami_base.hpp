@@ -417,12 +417,20 @@ std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t 
 
 
 // Optimization functions - not strictly necessary but might implement automatically 
+
+
 typedef std::pair<int,int> ref_t;
 typedef std::vector<ref_t> ref_v_t;
 typedef std::vector<ref_v_t> R_ref_t;
 typedef R_ref_t ref_eval_t;
+
+/// This is an optimized version of the evaluate function. For simplicity if the new objects are empty the evaluate function is called directly 
+std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
+
 void factorize_Rn(Ri_t &Rn, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 void reduce_rref(R_ref_t &Rref, ref_eval_t &Eval_list);
+
+std::complex<double> optimized_star(ami_parms &parms, SorF_t K, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list, ami_vars external);
 
 bool pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign);
 bool g_struct_equiv(g_struct &g1, g_struct &g2, int &sign);

@@ -222,6 +222,12 @@ int sigma_ct_count_=0;
 
 std::vector<AmiBase::alpha_t> bose_alphas_;
 
+//optimization
+
+AmiBase::g_prod_t Unique;
+AmiBase::R_ref_t Rref;
+AmiBase::ref_eval_t Eval_list;
+
 	
 };
 

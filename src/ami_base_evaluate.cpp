@@ -1,5 +1,144 @@
 #include "ami_base.hpp"
 
+// TODO: since there is some duplication of code in these two evaluate commands they should be separated 
+std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
+
+if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
+	return evaluate(parms,R_array, P_array, S_array, external);
+}
+
+
+ // std::cout<<"Evaluating Result for construction: ";
+
+int dim=parms.N_INT_;
+
+// std::cout<<"dim="<<dim<< std::endl;
+SorF_t SorF_result;
+
+
+if(dim==0){
+std::complex<double> gprod;
+
+gprod=eval_gprod(parms, R_array[0][0], external);
+
+return gprod;
+
+}
+
+if (dim==1){
+SorF_t SF_left, SF_right;
+SorF_t S_double_left, S_double_right;	
+	
+SF_left=dot(S_array[0], fermi(parms,P_array[0], external));	
+
+SorF_result=SF_left;
+	
+}
+
+for (int i=0; i< dim-1; i++){
+
+SorF_t SF_left, SF_right;
+SorF_t S_double_left, S_double_right;
+
+// need line that converts the Si_t from integers to doubles? So that the dot operator has doubles both left and right entries.
+
+
+
+if(i==0){
+// do dot operation
+SF_left=dot(S_array[i], fermi(parms,P_array[i], external));
+ // std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+}
+else {SF_left=SorF_result;}
+
+// do dot
+//std::cout<<"Before i="<<i<<std::endl;
+SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
+
+// std::cout<<i<<std::endl;
+
+ SorF_result=cross(SF_left,SF_right);
+ // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
+ 
+
+// std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
+// for( int x=0; x< SorF_result[0].size(); x++){
+// std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
+// }
+
+
+
+}
+ 
+
+
+std::complex<double> final_result;
+
+// std::cout<<"*R for dim="<<dim<< std::endl;
+// final_result=star(parms, SorF_result, R_array[dim], external);
+
+final_result=optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, external);
+
+
+
+return final_result;
+
+
+	
+	
+}
+
+
+std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list, ami_vars external){
+
+
+std::complex<double> output=0;
+std::complex<double> term;
+// std::complex<double> gprod;
+
+
+std::vector< std::complex<double>> unique_vals;
+
+for(int i=0; i< unique_g.size(); i++){
+// we pretend each G is a g_prod and use the same function as the normal star operation for evaluating products of G's 
+g_prod_t this_term;
+this_term.push_back(unique_g[i]);
+
+unique_vals.push_back(eval_gprod(parms,this_term,external));
+		
+}
+
+// now I have the numerical values of our unique G's 
+
+for(int i=0; i< Eval_list.size(); i++){
+	
+	std::complex<double> ksum(0,0);
+	for(int j=0; j< Eval_list[i].size(); j++){
+		
+		ksum+=K[0][Eval_list[i][j].first]*double(Eval_list[i][j].second);
+		
+	}
+	// in principle, every entry in eval_list has the same Rref terms 
+	ref_v_t pair_vec= Rref[Eval_list[i][0].first]; // just grab the first one 
+	std::complex<double> this_gprod(1,0);
+	for(int j=0; j< pair_vec.size(); j++){
+	
+	this_gprod=this_gprod*unique_vals[pair_vec[j].first];
+	
+	}
+	
+	term=ksum*this_gprod;
+	output+=term;
+	
+}
+
+
+
+return output;
+
+}
+
+
 
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
@@ -487,31 +626,15 @@ std::complex<double> alphadenom(0,0);
 std::complex<double> epsdenom(0,0);
 
 
-// TODO: This should multiply from the back and stop when it hits the end of num_ext freq. 
-
-// precompute a list of non-zero alpha_ and eps_ vector indices, so these only loop over non-zero entries.
-// TODO: this change has almost no practical speedup
-/* for(int a=g_prod[i].alpha_.size()-1; a>g_prod[i].alpha_.size()-1-N_EXT; a--){
-alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];	
-} */
-
  for(int a=0; a< g_prod[i].alpha_.size(); a++){
 alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
-
-// std::cout<<"Alpha's and frequencies " << g_prod[i].alpha_[a] <<" " << external.frequency_[a] << std::endl;
 
 } 
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
 
 std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
-/* 
-if(alphadenom==zero){
-alphadenom+=E_REG*im+E_REG;
-// std::cout<<"Added ereg in gprod_eval"<<std::endl;
-// verbose=true;
-// alphadenom+=E_REG;	
-} */
+
 
 // std::cout<<"Energies"<<std::endl;
 // Unsure. should this be -=? given that my epsilon is the positive quantity?
@@ -533,51 +656,12 @@ alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*sgn(epsdenom.imag())*im;
 }
 
 
-/* 
-if(verbose){
-std::cout<<"Epsdenom gave "<<epsdenom<<std::endl;
-}
-// std::cout<<"End"<<std::endl;
-
-if(epsdenom==zero){
-	std::cout<<"Epsilon returned zero"<<std::endl;
-}
-
-if(std::abs(epsdenom)< E_REG){
-	std::cout<<"Small epsilon denominator detected"<<std::endl;
-}
- */
-//denom+=get_energy_from_g(parms, g_prod[i], external);
-
-//if (denom==std::complex<double>((0,0))){denom=E_REG;}//  prefactor=1.0;}//0.0;}
-// std::cout<<"This denom gives term "<<alphadenom+epsdenom<<std::endl;
-
-// if(std::abs(epsdenom)>E_REG){
 denom_prod=denom_prod*(alphadenom+epsdenom);
-// }
-
-/* 
-if((1.0/denom_prod).real()> 100){
-	std::cout<<"Denominator product is "<< denom_prod<<" with prefactor "<< prefactor<<std::endl;
-std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
-
-for(int a=0; a< g_prod[i].eps_.size(); a++){
-// epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
-//denom-=double(g_prod[i].eps_[a])*external.energy_[a];
-// if(verbose){
-std::cout<<a<<" "<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
-// }
-}
-
-	
-}  */
 
 
 
 }
 
-// std::cout<<"Denominator product is "<< denom_prod<<" with prefactor "<< prefactor<<std::endl;
-// std::cout<<"returning value "<< 1.0/denom_prod*prefactor<<std::endl;
 
 output=1.0/denom_prod*prefactor;
 
