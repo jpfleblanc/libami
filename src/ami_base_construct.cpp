@@ -378,6 +378,8 @@ S_array.push_back(temp_sign_array);
 */
 void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole, AmiBase::Ri_t &Ri_out, AmiBase::pole_array_t &poles, AmiBase::sign_t &signs){
 
+// std::cout<<"------Starting a residue---------"<<std::endl;
+
 double starting_sign;
 starting_sign=get_starting_sign(G_in,pole);
 
@@ -385,10 +387,9 @@ g_prod_t W_array;
 W_array=reduce_gprod(G_in,pole);  // this is h(z) in f(z)h(z)
 
 
-
-Ri_t temp_ri, temp_ri_out;
-pole_array_t temp_poles_out;
-sign_t temp_signs_out;
+Ri_t temp_ri, temp_ri_out, collect_ri;
+pole_array_t temp_poles_out, collect_poles;
+sign_t temp_signs_out, collect_signs;
 
 temp_ri.push_back(W_array);
 sign_t temp_signs;
@@ -397,24 +398,47 @@ temp_signs.push_back(starting_sign);
 temp_pole_in.push_back(pole);
 // take derivatives
 for (int m=0; m< pole.multiplicity_-1; m++){
-
+// std::cout<<"On derivative "<<m+1<<std::endl;
+// std::cout<<"temp ri has size "<<temp_ri.size()<<std::endl;
 for(int i=0; i< temp_ri.size(); i++){
 // First store the fermi derivative part 	
-	
+	// std::cout<<"On i="<<i<<std::endl;
 	
 take_derivative_gprod(temp_ri[i], temp_pole_in[i], temp_signs[i], temp_ri_out, temp_poles_out,temp_signs_out);	
 
+// std::cout<<"Temp ri out has size "<<temp_ri_out.size()<<std::endl;
+// std::cout<<"Temp poles out has size "<<temp_poles_out.size()<<std::endl;
+// std::cout<<"Temp signs out has size "<<temp_signs_out.size()<<std::endl;
+// for(int k=0; k< temp_poles_out.size(); k++){
+// std::cout<<"Pole "<<k<<" with der="<< temp_poles_out[k].der_<<std::endl;	
+	
+// }
+
+for(int add=0; add< temp_ri_out.size(); add++){
+collect_ri.push_back(temp_ri_out[add]);
+collect_poles.push_back(temp_poles_out[add]);
+collect_signs.push_back(temp_signs_out[add]);
+
 }
 
-temp_ri=temp_ri_out;
-temp_signs=temp_signs_out;
-temp_pole_in=temp_poles_out;
+}
+
+// std::cout<<"Temp_ri_out has size "<<temp_ri_out.size()<<std::endl;
+// std::cout<<"Collect ri has size "<<collect_ri.size()<<std::endl;
+
+temp_ri=collect_ri;// temp_ri_out;
+temp_signs=collect_signs;//temp_signs_out;
+temp_pole_in=collect_poles;//temp_poles_out;
+
+collect_ri.clear();
+collect_poles.clear();
+collect_signs.clear();
 
 }
 
-signs=temp_signs_out;
-poles=temp_poles_out;
-Ri_out=temp_ri_out;
+signs=temp_signs;//signs_out;
+poles=temp_pole_in;//s_out;
+Ri_out=temp_ri;//_out;
 		
 	// sub in pole at the end 
 	for(int i=0; i< Ri_out.size();i++){
@@ -497,6 +521,7 @@ result=result*(double)G_in[pole.which_g_[i]].alpha_[pole.index_];
 
 }
 
+// std::cout<<"On pole with multiplicity "<<pole.multiplicity_<<std::endl;
 
 result=result/(double)factorial(pole.multiplicity_-1 );
 
