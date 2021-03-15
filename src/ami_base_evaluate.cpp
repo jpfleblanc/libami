@@ -108,7 +108,32 @@ unique_vals.push_back(eval_gprod(parms,this_term,external));
 		
 }
 
+
+// std::cout<<"Debugging Energy values "<<std::endl;
+
+// for(int i=0; i< external.energy_.size(); i++){
+	
+	// std::cout<<external.energy_[i]<<std::endl;
+	
+// }
+
+
+// std::cout<<"Debugging Unique G's "<<std::endl;
+// for(int i=0; i<unique_vals.size(); i++){
+	// std::cout<<i<<std::endl;
+	// print_g_struct_info(unique_g[i]);
+	
+// }
+
+// std::cout<<"Debugging unique values "<<std::endl;
+// for(int i=0; i<unique_vals.size(); i++){
+	// std::cout<<i<<" "<<unique_vals[i]<<std::endl;
+	
+// }
+
 // now I have the numerical values of our unique G's 
+
+bool verbose=0;
 
 for(int i=0; i< Eval_list.size(); i++){
 	
@@ -121,16 +146,65 @@ for(int i=0; i< Eval_list.size(); i++){
 	// in principle, every entry in eval_list has the same Rref terms 
 	ref_v_t pair_vec= Rref[Eval_list[i][0].first]; // just grab the first one 
 	std::complex<double> this_gprod(1,0);
-	for(int j=0; j< pair_vec.size(); j++){
 	
+	// std::cout<<"Term comprised of unique G indexes ";
+	for(int j=0; j< pair_vec.size(); j++){
+	// std::cout<<pair_vec[j].first<<" ";
 	this_gprod=this_gprod*unique_vals[pair_vec[j].first];
 	
 	}
 	
+	// std::cout<<std::endl;
+	
 	term=ksum*this_gprod;
+	
+	
+	// std::cout<<"In optimized star K[]*R"<<std::endl;
+// std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+	
 	output+=term;
 	
+	if(std::real(output)>1e5){
+		verbose=1;
+		
+		std::cout<<"In optimized star K[]*R"<<std::endl;
+std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+		
+		
+	}
+
+
+	
 }
+
+
+if(verbose){
+	
+
+std::cout<<"Debugging Unique G's "<<std::endl;
+for(int i=0; i<unique_vals.size(); i++){
+	std::cout<<i<<std::endl;
+	print_g_struct_info(unique_g[i]);
+	
+}
+
+std::cout<<"Debugging unique values "<<std::endl;
+for(int i=0; i<unique_vals.size(); i++){
+	std::cout<<i<<" "<<unique_vals[i]<<std::endl;
+	
+}	
+
+std::cout<<"Debugging Energy values "<<std::endl;
+
+for(int i=0; i< external.energy_.size(); i++){
+	
+	std::cout<<external.energy_[i]<<std::endl;
+	
+}
+
+	
+}
+
 
 
 
@@ -646,14 +720,15 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // }
 }
 
-if(alphadenom==zero){
+// if(alphadenom==zero){
 	// return zero;
 	// double val=E_REG*sgn(epsdenom.real());
-alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*sgn(epsdenom.imag())*im;
-// std::cout<<"Added ereg in gprod_eval "<<val<<std::endl;
+// alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*sgn(epsdenom.imag())*im;
+// alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*im;
+// std::cout<<"Added ereg in gprod_eval "<<alphadenom<<std::endl;
 // verbose=true;
 // alphadenom+=E_REG;	
-}
+// }
 
 
 denom_prod=denom_prod*(alphadenom+epsdenom);
