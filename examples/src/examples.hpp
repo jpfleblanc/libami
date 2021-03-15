@@ -14,6 +14,7 @@
 
 void example2();
 void example4();
+void example4hm();
 void example9();
 
 
@@ -21,6 +22,7 @@ void example9();
 /// Various functions
 
 AmiBase::g_prod_t construct_multipole_example();
+AmiBase::g_prod_t construct_hm_multipole_example();
 AmiBase::g_prod_t construct_example();
 AmiBase::g_prod_t construct_example_Y();
 AmiBase::g_prod_t construct_example_J();

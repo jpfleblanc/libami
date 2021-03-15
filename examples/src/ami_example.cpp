@@ -66,6 +66,60 @@ R0.push_back(g7);
 return R0;
 }
 
+
+AmiBase::g_prod_t construct_hm_multipole_example(){
+
+AmiBase::g_prod_t g;
+
+
+// Setting up G array
+// defining alpha's
+
+AmiBase::alpha_t alpha_1={1,0,0,1,-1};
+AmiBase::alpha_t alpha_2={0,0,0,1,0};
+AmiBase::alpha_t alpha_3={1,0,0,0,0};
+AmiBase::alpha_t alpha_4={1,0,0,0,0};
+AmiBase::alpha_t alpha_5={1,0,0,0,0};
+AmiBase::alpha_t alpha_6={-1,1,1,0,0};
+AmiBase::alpha_t alpha_7={0,0,1,0,0};
+
+
+//defining epsilon's
+AmiBase::epsilon_t epsilon_1={0,0,0,0,0,1,0};
+AmiBase::epsilon_t epsilon_2={0,0,0,0,1,0,0};
+AmiBase::epsilon_t epsilon_3={1,0,0,0,0,0,0};
+AmiBase::epsilon_t epsilon_4={1,0,0,0,0,0,0};
+AmiBase::epsilon_t epsilon_5={1,0,0,0,0,0,0};
+AmiBase::epsilon_t epsilon_6={0,0,0,1,0,0,0};
+AmiBase::epsilon_t epsilon_7={0,0,1,0,0,0,0};
+
+
+AmiBase::g_struct g1(epsilon_1,alpha_1);
+AmiBase::g_struct g2(epsilon_2,alpha_2);
+AmiBase::g_struct g3(epsilon_3,alpha_3);
+AmiBase::g_struct g4(epsilon_4,alpha_4);
+AmiBase::g_struct g5(epsilon_5,alpha_5);
+AmiBase::g_struct g6(epsilon_6,alpha_6);
+AmiBase::g_struct g7(epsilon_7,alpha_7);
+
+
+AmiBase::g_prod_t R0;
+
+R0.push_back(g1);
+R0.push_back(g2);
+R0.push_back(g3);
+R0.push_back(g4);
+R0.push_back(g5);
+R0.push_back(g6);
+R0.push_back(g7);
+
+
+
+return R0;
+}
+
+
+
 AmiBase::ami_vars construct_ext_multipole_example(){
 
 

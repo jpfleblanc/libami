@@ -12,6 +12,21 @@ for(int i=0; i<ami_eval_vars.size(); i++){
 
 // std::cout<<"Evaluating with ami_vars "<<std::endl;
 // std::cout<<ami_eval_vars[i].BETA_<<" "<<ami_eval_vars[i].prefactor<<std::endl;
+
+// ami_eval_vars[i].prefactor=1;
+
+	// for(int j=0; j< ami_eval_vars[i].energy_.size(); j++){
+		// std::cout<<ami_eval_vars[i].energy_[j]<<" ";
+	// }
+	// std::cout<<std::endl;
+	
+	
+	// for(int j=0; j< ami_eval_vars[i].frequency_.size(); j++){
+		// std::cout<<ami_eval_vars[i].frequency_[j]<<" ";
+	// }
+	// std::cout<<std::endl;
+	
+
 // print_complex_array(ami_eval_vars[i].energy_);
 // print_complex_array(ami_eval_vars[i].frequency_);
 

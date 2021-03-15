@@ -2,11 +2,25 @@
 
 // TODO: since there is some duplication of code in these two evaluate commands they should be separated 
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
+	
+	// std::cout<<"Evaluating with external"<<std::endl;
+	
+	// for(int i=0; i< external.energy_.size(); i++){
+		// std::cout<<external.energy_[i]<<" ";
+	// }
+	// std::cout<<std::endl;
+	
+	
+	// for(int i=0; i< external.frequency_.size(); i++){
+		// std::cout<<external.frequency_[i]<<" ";
+	// }
+	// std::cout<<std::endl;
 
 if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
 	return evaluate(parms,R_array, P_array, S_array, external);
 }
 
+// std::complex<double> double_check=evaluate(parms,R_array, P_array, S_array, external);
 
  // std::cout<<"Evaluating Result for construction: ";
 
@@ -80,6 +94,11 @@ std::complex<double> final_result;
 final_result=optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, external);
 
 
+// if(double_check!=final_result){
+	// std::cout<<"Double checking got"<<std::endl;
+	// std::cout<<double_check<<" "<<final_result<<std::endl;
+	
+// }
 
 return final_result;
 
@@ -104,7 +123,7 @@ for(int i=0; i< unique_g.size(); i++){
 g_prod_t this_term;
 this_term.push_back(unique_g[i]);
 
-unique_vals.push_back(eval_gprod(parms,this_term,external));
+unique_vals.push_back(eval_gprod(parms,this_term,external)*external.prefactor); // This removes the overall prefactor for each g. we then add that back later 
 		
 }
 
@@ -156,7 +175,7 @@ for(int i=0; i< Eval_list.size(); i++){
 	
 	// std::cout<<std::endl;
 	
-	term=ksum*this_gprod;
+	term=ksum*this_gprod*external.prefactor; // add back the overall prefactor for this term 
 	
 	
 	// std::cout<<"In optimized star K[]*R"<<std::endl;
@@ -164,46 +183,46 @@ for(int i=0; i< Eval_list.size(); i++){
 	
 	output+=term;
 	
-	if(std::real(output)>1e5){
-		verbose=1;
+	// if(std::real(output)>1e5){
+		// verbose=1;
 		
-		std::cout<<"In optimized star K[]*R"<<std::endl;
-std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+		// std::cout<<"In optimized star K[]*R"<<std::endl;
+// std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 		
 		
-	}
+	// }
 
 
 	
 }
 
 
-if(verbose){
+// if(verbose){
 	
 
-std::cout<<"Debugging Unique G's "<<std::endl;
-for(int i=0; i<unique_vals.size(); i++){
-	std::cout<<i<<std::endl;
-	print_g_struct_info(unique_g[i]);
+// std::cout<<"Debugging Unique G's "<<std::endl;
+// for(int i=0; i<unique_vals.size(); i++){
+	// std::cout<<i<<std::endl;
+	// print_g_struct_info(unique_g[i]);
 	
-}
+// }
 
-std::cout<<"Debugging unique values "<<std::endl;
-for(int i=0; i<unique_vals.size(); i++){
-	std::cout<<i<<" "<<unique_vals[i]<<std::endl;
+// std::cout<<"Debugging unique values "<<std::endl;
+// for(int i=0; i<unique_vals.size(); i++){
+	// std::cout<<i<<" "<<unique_vals[i]<<std::endl;
 	
-}	
+// }	
 
-std::cout<<"Debugging Energy values "<<std::endl;
+// std::cout<<"Debugging Energy values "<<std::endl;
 
-for(int i=0; i< external.energy_.size(); i++){
+// for(int i=0; i< external.energy_.size(); i++){
 	
-	std::cout<<external.energy_[i]<<std::endl;
+	// std::cout<<external.energy_[i]<<std::endl;
 	
-}
+// }
 
 	
-}
+// }
 
 
 
