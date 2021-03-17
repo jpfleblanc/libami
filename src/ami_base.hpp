@@ -439,6 +439,9 @@ void print_epsilon_info(epsilon_t eps);
 void print_alpha_info(alpha_t alpha);
 ////
 
+// experimental
+void derivative_opt(g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
+
 
 private:
 

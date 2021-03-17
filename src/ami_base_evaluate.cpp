@@ -163,7 +163,7 @@ for(int i=0; i< Eval_list.size(); i++){
 		
 	}
 	// in principle, every entry in eval_list has the same Rref terms 
-	ref_v_t pair_vec= Rref[Eval_list[i][0].first]; // just grab the first one 
+	ref_v_t pair_vec= Rref[i]; // just grab the first one 
 	std::complex<double> this_gprod(1,0);
 	
 	// std::cout<<"Term comprised of unique G indexes ";
