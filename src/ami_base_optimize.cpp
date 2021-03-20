@@ -86,7 +86,7 @@ Eval_list=nEval_list;
 void AmiBase::reduce_rref(R_ref_t &Rref, ref_eval_t &Eval_list){
 	
 std::vector<int> used;
-std::cout<<"Rref size is "<<Rref.size()<<std::endl;
+// std::cout<<"Rref size is "<<Rref.size()<<std::endl;
 	
 for (int i=0; i< Rref.size(); i++){
 	// std::cout<<"On i="<<i<<std::endl;
@@ -97,6 +97,7 @@ for (int i=0; i< Rref.size(); i++){
 		used.push_back(i);
 		int this_sign=1;
 		for (int pair=0; pair< Rref[i].size(); pair++){
+			// std::cout<<"("<<Rref[i][pair].first<<","<<Rref[i][pair].second<<")"<<std::endl;
 			this_sign=this_sign*Rref[i][pair].second;
 		}
 		ref_t this_ref=std::make_pair(i,this_sign);
@@ -220,10 +221,28 @@ for (int i=0; i< Rref.size(); i++){
 } */
 
 bool AmiBase::pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign){
+	
+	
+	
 	r1sign=0;
 	r2sign=0;
 	
 	if(r1.size()!=r2.size()){return false;}
+	
+	// std::cout<<"Comparing ref_v's"<<std::endl;
+	// std::cout<<"R1:";
+	// for(int i=0; i< r1.size(); i++){
+		// std::cout<<"("<<r1[i].first<<","<<r1[i].second<<")-";
+		
+	// }
+	// std::cout<<std::endl;
+	// std::cout<<"R2:";
+	// for(int i=0; i< r2.size(); i++){
+		// std::cout<<"("<<r2[i].first<<","<<r2[i].second<<")-";
+		
+	// }
+	// std::cout<<std::endl;
+	
 	int this_sign=1;
 	int this_sign2=1;
 	for(int i=0; i< r1.size(); i++){
@@ -234,6 +253,8 @@ bool AmiBase::pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign){
 		
 		
 	}
+	
+	// std::cout<<"Returning signs "<< this_sign<<" "<< this_sign2<<std::endl;
 	
 	r1sign=this_sign;
 	r2sign=this_sign2;
@@ -303,6 +324,15 @@ for(int i=0; i< Rn.size(); i++){
 	Rref.push_back(ref_v);
 	
 }	
+
+
+// std::cout<<"Before reduce Rref is "<<std::endl;
+// for(int i=0; i< Rref.size(); i++){
+	// std::cout<<"----"<<std::endl;
+	// for(int pair=0; pair<Rref[i].size(); pair++){
+	// std::cout<<Rref[i][pair].first<<"-"<<Rref[i][pair].second<<std::endl;
+	// }
+// }
 
 
 reduce_rref(Rref, Eval_list);
@@ -425,9 +455,16 @@ for( int i=0; i< g1.alpha_.size(); i++){
 
 // in principle if the code gets here the size of signs is >0 so don't need to check that
 
+// std::cout<<"List of signs is "<<std::endl;
+// for(int i=0; i< signs.size(); i++){
+	// std::cout<<signs[i]<<std::endl;
+// }
+
 if ( std::adjacent_find( signs.begin(), signs.end(), std::not_equal_to<int>() ) == signs.end() )
 {
     sign=signs.back();
+}else{
+	return false;
 }
 
 // std::cout<<"Found equiv"<<std::endl;
