@@ -138,6 +138,7 @@ BETA_=beta;
 MU_=mu;
 
 H_=0;
+gamma_=0.1;
 	
 }
 
@@ -154,6 +155,24 @@ BETA_=beta;
 MU_=mu;
 
 H_=H;
+gamma_=0.1;
+	
+}
+
+ext_vars(int dim, double beta, std::complex<double> mu, double H, double gamma){
+	
+KDIM_=dim;
+// TODO: make this a vector of external momentum vectors 
+// external_k_vector_.assign(dim,0.0);	
+dummy_k_.assign(dim,0.0);
+external_k_list_.push_back(dummy_k_);
+external_freq_.resize(1);
+
+BETA_=beta;
+MU_=mu;
+
+H_=H;
+gamma_=gamma;
 	
 }
 
@@ -173,6 +192,7 @@ AmiBase::frequency_t external_freq_;
 double BETA_;
 double H_;
 std::complex<double> MU_;
+double gamma_;
 };
 
 typedef std::vector< ext_vars> external_variable_list;
@@ -368,7 +388,7 @@ solution_set sol_;
 // Spectral Representation
 bool find_spectral_pole(int xb, AmiBase::g_struct &g, AmiBase::pole_struct &pole);
 void collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t &pa);
-std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state);
+std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list,  internal_state &state, ext_vars &ext_var);
 
 void get_pp_comb(int length, std::vector< std::vector<int> > &ppv);
 std::vector<int> toBinary(int n,int length);
@@ -378,6 +398,8 @@ std::complex<double> get_xb_from_pole( AmiBase::pole_struct pole, AmiBase::ami_v
 
 std::complex<double> optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase::SorF_t K, AmiBase::g_prod_t &unique_g, AmiBase::ref_v_t &Rref,AmiBase::ref_v_t &Eval_list, AmiBase::ami_vars external, std::vector<int> &pp);
 
+
+std::complex<double> eval_spectral_product(AmiBase::g_prod_t &R0,  internal_state &state, ext_vars &external, AmiBase::ami_vars &external_xi);
 
 
 private:

@@ -115,7 +115,7 @@ for(int i=0; i< pole_list.size(); i++){
 
 
 
-std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list,internal_state &state){
+std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var){
 	
 	
 
@@ -249,6 +249,8 @@ SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], this_extern
 // final_result=amibase.optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, this_external);
 std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], this_external,pp);
 std::complex<double> imag(0.,1.0);
+ // internal_state &state, ext_vars &ext_var
+std::complex<double> A_prod=eval_spectral_product(R_array[0][0], state, ext_var,this_external);
 final_result=final_result+this_result*std::pow(-imag*M_PI, ndelta);
 
 
@@ -272,6 +274,52 @@ return final_result;
 	
 	
 }
+
+std::complex<double> NewAmiCalc::eval_spectral_product(AmiBase::g_prod_t &R0,  internal_state &state, ext_vars &external, AmiBase::ami_vars &external_xi){
+	
+if(R0.size()!=external_xi.energy_.size()){ throw std::runtime_error("Mismatch in R0 and xi list size for spectral evaluation");}	
+	
+std::complex<double> output(1,0);
+
+// recombine internal and external state momenta 
+NewAmiCalc::k_vect_list_t k_list;
+
+k_list=state.internal_k_list_;
+// if(external.external_k_vector_.size()!=0){
+	
+// print_g_prod_info(R0);	
+
+
+for(int i=0; i<external.external_k_list_.size(); i++){
+k_list.push_back(external.external_k_list_[i]);
+}
+
+
+
+for(int i=0; i< R0.size(); i++){
+	
+// k_vector_t this_k=construct_k(R0[i].alpha_, k_list);	
+
+std::complex<double> this_E=eval_epsilon(state.t_list_[i], state.tp_list_[i], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);	
+
+// double gamma=0.1;
+std::complex<double> this_A=external.gamma_/(std::pow(external_xi.energy_[i] - this_E,2) + std::pow(external.gamma_,2))/M_PI;
+
+
+output=output*this_A;
+	
+	
+}
+	
+return output;	
+}
+
+// std::complex<double> NewAmiCalc::eval_A(k_vector_t &k, std::complex<double> omega){
+
+// return 	
+	
+	
+// }
 
 
 std::complex<double> NewAmiCalc::optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase::SorF_t K, AmiBase::g_prod_t &unique_g, AmiBase::ref_v_t &Rref,AmiBase::ref_v_t &Eval_list, AmiBase::ami_vars external, std::vector<int> &pp){
