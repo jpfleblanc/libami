@@ -207,6 +207,9 @@ alpha_t alpha_;
 stat_type stat_;
 species_t species_;
 
+// Experimental Spectral representation
+int pp=-1;  // pp=0 means this G represents a principle part integral. pp=1 it is a delta function. else it is inert 
+
 };
 
 /// Pole structure. Equivalent to `g_struct`, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
