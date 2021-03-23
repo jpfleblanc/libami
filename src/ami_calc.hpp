@@ -368,7 +368,7 @@ solution_set sol_;
 // Spectral Representation
 bool find_spectral_pole(int xb, AmiBase::g_struct &g, AmiBase::pole_struct &pole);
 void collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t &pa);
-std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list);
+std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state);
 
 void get_pp_comb(int length, std::vector< std::vector<int> > &ppv);
 std::vector<int> toBinary(int n,int length);
@@ -376,7 +376,7 @@ void remap_external(AmiBase::ami_vars &external,AmiBase::ami_vars &this_external
 
 std::complex<double> get_xb_from_pole( AmiBase::pole_struct pole, AmiBase::ami_vars external);
 
-std::complex<double> optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase::SorF_t K, AmiBase::g_prod_t &unique_g, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, AmiBase::ami_vars external, std::vector<int> &pp);
+std::complex<double> optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase::SorF_t K, AmiBase::g_prod_t &unique_g, AmiBase::ref_v_t &Rref,AmiBase::ref_v_t &Eval_list, AmiBase::ami_vars external, std::vector<int> &pp);
 
 
 

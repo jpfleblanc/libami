@@ -115,7 +115,7 @@ for(int i=0; i< pole_list.size(); i++){
 
 
 
-std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list){
+std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list,internal_state &state){
 	
 	
 
@@ -247,7 +247,7 @@ SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], this_extern
 // final_result=star(parms, SorF_result, R_array[dim], external);
 
 // final_result=amibase.optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, this_external);
-std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref,Eval_list, this_external,pp);
+std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], this_external,pp);
 std::complex<double> imag(0.,1.0);
 final_result=final_result+this_result*std::pow(-imag*M_PI, ndelta);
 
@@ -274,7 +274,7 @@ return final_result;
 }
 
 
-std::complex<double> NewAmiCalc::optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase::SorF_t K, AmiBase::g_prod_t &unique_g, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, AmiBase::ami_vars external, std::vector<int> &pp){
+std::complex<double> NewAmiCalc::optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase::SorF_t K, AmiBase::g_prod_t &unique_g, AmiBase::ref_v_t &Rref,AmiBase::ref_v_t &Eval_list, AmiBase::ami_vars external, std::vector<int> &pp){
 
 
 std::complex<double> output=0;
@@ -297,16 +297,16 @@ unique_vals.push_back(amibase.eval_gprod(parms,this_term,external)*external.pref
 
 bool verbose=0;
 
-for(int i=0; i< Eval_list.size(); i++){
+// for(int i=0; i< Eval_list.size(); i++){
 	
 	std::complex<double> ksum(0,0);
-	for(int j=0; j< Eval_list[i].size(); j++){
+	for(int j=0; j< Eval_list.size(); j++){
 		
-		ksum+=K[0][Eval_list[i][j].first]*double(Eval_list[i][j].second);
+		ksum+=K[0][Eval_list[j].first]*double(Eval_list[j].second);
 		
 	}
 	// in principle, every entry in eval_list has the same Rref terms 
-	AmiBase::ref_v_t pair_vec= Rref[i];  
+	AmiBase::ref_v_t pair_vec= Rref;  
 	std::complex<double> this_gprod(1,0);
 	
 	// std::cout<<"Term comprised of unique G indexes ";
@@ -329,7 +329,7 @@ for(int i=0; i< Eval_list.size(); i++){
 
 
 	
-}
+// }
 
 
 
