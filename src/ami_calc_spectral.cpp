@@ -29,8 +29,15 @@ temp.insert(temp.end(), r.begin(), r.end());
 }
 
 void NewAmiCalc::get_pp_comb(int length, std::vector< std::vector<int> > &ppv){
-	
+ppv.clear();
+
 int max = std::pow(2,length);	
+
+for(int n=0; n<max ;n++){
+
+ppv.push_back(toBinary(n,length));	
+	
+}
 	
 	
 }
@@ -128,20 +135,24 @@ if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
 std::complex<double> final_result;
 
 
- // std::cout<<"Evaluating Result for construction: ";
+ std::cout<<"Evaluating Result in spectral notation : ";
 
 int dim=parms.N_INT_;
 
 
 for(int opt_term=0; opt_term<Rref.size(); opt_term++){
 
+std::cout<<"On opt term "<<opt_term<<std::endl;
+
 // first look at what is in the opt_term and now iterate over the different combinations of delta functions 
 int ndelta=0;
 
 std::vector<int> delta_indices;
 
-for(int i=0; i< Rref[opt_term].size(); i++){
+// std::cout<<"Unique
 
+for(int i=0; i< Rref[opt_term].size(); i++){
+std::cout<<"For opt_term the number of pole choices is "<<Unique_poles[Rref[opt_term][i].first].size()<<std::endl;
 if( Unique_poles[Rref[opt_term][i].first].size()!=0){
 ndelta++;
 delta_indices.push_back(i);
@@ -153,8 +164,10 @@ delta_indices.push_back(i);
 std::vector<std::vector<int>> pp_v;
 get_pp_comb(ndelta,pp_v);
 
+std::cout<<"ppv size is "<<pp_v.size()<<" for ndelta="<<ndelta<<std::endl;
+
 for(int delta_term=0; delta_term< pp_v.size(); delta_term++){
-	
+	std::cout<<"On delta_term "<<delta_term<<std::endl;
 	
 	
 	std::vector<int> pp;
@@ -248,6 +261,9 @@ SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], this_extern
 
 // final_result=amibase.optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, this_external);
 std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], this_external,pp);
+
+std::cout<<"This result returned "<<this_result<<std::endl;
+
 std::complex<double> imag(0.,1.0);
  // internal_state &state, ext_vars &ext_var
 std::complex<double> A_prod=eval_spectral_product(R_array[0][0], state, ext_var,this_external);
@@ -396,6 +412,8 @@ void NewAmiCalc::collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t 
 	// clear the array 
 pa.clear();
 pa.resize(gprod.size());	
+
+std::cout<<"Collecting spectral poles"<<std::endl;
 	
 int size=gprod[0].eps_.size();
 
@@ -410,19 +428,22 @@ for(int i=0; i<gprod.size(); i++){
 	
 }
 
+std::cout<<"Pole indices found with size "<<pole_indices.size()<<std::endl;
+
 // once we have a set of G's that need to be treated we can decide what to do
 
 // Challenge - in order to optimally use delta's we need to decide how to associate each pole with an delta(xi) and make sure we can find a pole for each of these G's.  
 // Try 1: Lets assume that we can find one set that works for the all delta case, and use that for the intermediates. 
 
 // first assign poles to anything with a single epsilon 
-std::vector<int> used(size,0);
+// std::vector<int> used(size,0);
 
 for(int i=0; i< pole_indices.size(); i++){
 	
-	if(std::count(gprod[pole_indices[i]].eps_.begin(),gprod[pole_indices[i]].eps_.end(),0) == size-1){
+	// if(std::count(gprod[pole_indices[i]].eps_.begin(),gprod[pole_indices[i]].eps_.end(),0) == size-1){
 		
 		for(int xb=0; xb<size; xb++){
+			// if(used[xb]==1){continue;}
 			AmiBase::pole_struct this_pole;
 			bool result=false;
 			
@@ -430,16 +451,21 @@ for(int i=0; i< pole_indices.size(); i++){
 			result=find_spectral_pole(xb, gprod[pole_indices[i]], this_pole);
 			if(result){
 				// used[xb]=1;
+				std::cout<<"Found a pole for xb="<<xb<<std::endl;
 				pa[pole_indices[i]].push_back(this_pole);
-				
+				// continue; // only need one pole for each xb choice so move to next 
 			}
 			
 		}
 		
-	}
-	
-	
+	// }
 }
+// now assign poles indescriminatedly
+
+
+
+
+
 
 	
 	

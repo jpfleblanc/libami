@@ -388,6 +388,9 @@ solution_set sol_;
 // Spectral Representation
 bool find_spectral_pole(int xb, AmiBase::g_struct &g, AmiBase::pole_struct &pole);
 void collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t &pa);
+
+// std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var);
+
 std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list,  internal_state &state, ext_vars &ext_var);
 
 void get_pp_comb(int length, std::vector< std::vector<int> > &ppv);
