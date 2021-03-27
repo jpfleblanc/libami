@@ -252,10 +252,10 @@ AmiBase::Pi_t Unique_poles;
 //
 
 // Experimental Spectral Representation 
-std::vector<std::vector<int>> INT_XI_VEC; // which should have size of the epsilon of R0_ (R0_.size()). Entries of 1 mean it is an independent xi. 0 means it is dependent. 
-std::vector< std::vector< AmiBase::pole_struct >> XI_MAP_VEC;
+// std::vector<std::vector<int>> INT_XI_VEC; // which should have size of the epsilon of R0_ (R0_.size()). Entries of 1 mean it is an independent xi. 0 means it is dependent. 
+// std::vector< std::vector< AmiBase::pole_struct >> XI_MAP_VEC;
 
-std::complex<double> SPECTRAL_PREFACTOR; // this will contain (-i pi)^(Ndeltas) As well as any integral bounds normalization...
+// std::complex<double> SPECTRAL_PREFACTOR; // this will contain (-i pi)^(Ndeltas) As well as any integral bounds normalization...
 
 	
 };
@@ -391,7 +391,9 @@ void collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t &pa);
 
 // std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var);
 
-std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list,  internal_state &state, ext_vars &ext_var);
+std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list,  internal_state &state, ext_vars &ext_var, double &xi_cut);
+
+void evaluate_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars, internal_state &state, external_variable_list &ext_var_list, std::vector<double> &xi_list, double &xi_cut);
 
 void get_pp_comb(int length, std::vector< std::vector<int> > &ppv);
 std::vector<int> toBinary(int n,int length);

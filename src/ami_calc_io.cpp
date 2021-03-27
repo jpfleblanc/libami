@@ -58,6 +58,7 @@ while (std::getline(infile_stream, line))
 	 ss >> realW>>imagW;
 	 std::complex<double> freq(realW,imagW);
 	 line_variables.external_freq_[0]=freq;
+	 line_variables.gamma_=imagW;
 	 
 	 line_variables.external_k_list_.push_back(line_variables.dummy_k_);
 	 

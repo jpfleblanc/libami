@@ -122,7 +122,7 @@ for(int i=0; i< pole_list.size(); i++){
 
 
 
-std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var){
+std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var, double &xi_cut){
 	
 	
 
@@ -135,14 +135,14 @@ if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
 std::complex<double> final_result;
 
 
- std::cout<<"Evaluating Result in spectral notation : ";
+ // std::cout<<"Evaluating Result in spectral notation : ";
 
 int dim=parms.N_INT_;
 
 
 for(int opt_term=0; opt_term<Rref.size(); opt_term++){
 
-std::cout<<"On opt term "<<opt_term<<std::endl;
+// std::cout<<"On opt term "<<opt_term<<std::endl;
 
 // first look at what is in the opt_term and now iterate over the different combinations of delta functions 
 int ndelta=0;
@@ -152,7 +152,7 @@ std::vector<int> delta_indices;
 // std::cout<<"Unique
 
 for(int i=0; i< Rref[opt_term].size(); i++){
-std::cout<<"For opt_term the number of pole choices is "<<Unique_poles[Rref[opt_term][i].first].size()<<std::endl;
+// std::cout<<"For opt_term the number of pole choices is "<<Unique_poles[Rref[opt_term][i].first].size()<<std::endl;
 if( Unique_poles[Rref[opt_term][i].first].size()!=0){
 ndelta++;
 delta_indices.push_back(i);
@@ -164,10 +164,10 @@ delta_indices.push_back(i);
 std::vector<std::vector<int>> pp_v;
 get_pp_comb(ndelta,pp_v);
 
-std::cout<<"ppv size is "<<pp_v.size()<<" for ndelta="<<ndelta<<std::endl;
+// std::cout<<"ppv size is "<<pp_v.size()<<" for ndelta="<<ndelta<<std::endl;
 
 for(int delta_term=0; delta_term< pp_v.size(); delta_term++){
-	std::cout<<"On delta_term "<<delta_term<<std::endl;
+	// std::cout<<"On delta_term "<<delta_term<<std::endl;
 	
 	
 	std::vector<int> pp;
@@ -182,6 +182,7 @@ for(int delta_term=0; delta_term< pp_v.size(); delta_term++){
 	// now pp should be same length as Rref and tell which are deltas and which are not 
 
 	int ndelta = count(pp.begin(), pp.end(), 0);// need this later for prefactor 
+	int n_xi_int=R_array[0][0].size()-ndelta;
 
 // Next we need to manipulate this_external to address the mapping - which has not been figured out yet!
 
@@ -262,13 +263,13 @@ SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], this_extern
 // final_result=amibase.optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, this_external);
 std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], this_external,pp);
 
-std::cout<<"This result returned "<<this_result<<std::endl;
+// std::cout<<"This result returned "<<this_result<<std::endl;
 
 std::complex<double> imag(0.,1.0);
  // internal_state &state, ext_vars &ext_var
 std::complex<double> A_prod=eval_spectral_product(R_array[0][0], state, ext_var,this_external);
-std::cout<<"A_prod is "<<A_prod<<std::endl;
-final_result=final_result+this_result*std::pow(-imag*M_PI, ndelta)*A_prod;
+// std::cout<<"A_prod is "<<A_prod<<std::endl;
+final_result=final_result+this_result*A_prod*std::pow(-imag*M_PI, ndelta)*std::pow(2.0*xi_cut,n_xi_int);
 
 
 // if(double_check!=final_result){
@@ -319,12 +320,12 @@ for(int i=0; i< R0.size(); i++){
 
 std::complex<double> this_E=eval_epsilon(state.t_list_[i], state.tp_list_[i], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);	
 
-std::cout<<"Evaluating A for i="<<i<<std::endl;
+// std::cout<<"Evaluating A for i="<<i<<std::endl;
 
 // double gamma=0.1;
 std::complex<double> this_A=external.gamma_/(std::pow(external_xi.energy_[i] - this_E,2) + std::pow(external.gamma_,2))/M_PI;
 
-std::cout<<this_A<<" "<<external_xi.energy_[i]<<" "<<this_E<<" "<<external.gamma_<<" "<<std::pow(external_xi.energy_[i] - this_E,2)<<std::endl;
+// std::cout<<this_A<<" "<<external_xi.energy_[i]<<" "<<this_E<<" "<<external.gamma_<<" "<<std::pow(external_xi.energy_[i] - this_E,2)<<std::endl;
 
 
 output=output*this_A;
@@ -418,7 +419,7 @@ void NewAmiCalc::collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t 
 pa.clear();
 pa.resize(gprod.size());	
 
-std::cout<<"Collecting spectral poles"<<std::endl;
+// std::cout<<"Collecting spectral poles"<<std::endl;
 	
 int size=gprod[0].eps_.size();
 
@@ -433,7 +434,7 @@ for(int i=0; i<gprod.size(); i++){
 	
 }
 
-std::cout<<"Pole indices found with size "<<pole_indices.size()<<std::endl;
+// std::cout<<"Pole indices found with size "<<pole_indices.size()<<std::endl;
 
 // once we have a set of G's that need to be treated we can decide what to do
 
@@ -456,7 +457,7 @@ for(int i=0; i< pole_indices.size(); i++){
 			result=find_spectral_pole(xb, gprod[pole_indices[i]], this_pole);
 			if(result){
 				// used[xb]=1;
-				std::cout<<"Found a pole for xb="<<xb<<std::endl;
+				// std::cout<<"Found a pole for xb="<<xb<<std::endl;
 				pa[pole_indices[i]].push_back(this_pole);
 				// continue; // only need one pole for each xb choice so move to next 
 			}
@@ -504,6 +505,78 @@ pole=pole_out;
 return true; 	
 	
 }
+
+
+void NewAmiCalc::evaluate_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars, internal_state &state, external_variable_list &ext_var_list, std::vector<double> &xi_list, double &xi_cut){
+
+Re_results.clear(); 
+Im_results.clear();
+Re_results.resize(ami_eval_vars.size(),0);
+Im_results.resize(ami_eval_vars.size(),0);
+
+// std::cout<<"Evaluating ext parameters with xi_list"<<std::endl;
+// std::cout<<"(";
+// for(int i=0; i< xi_list.size(); i++){
+	// std::cout<<xi_list[i]<<",";
+// }
+// std::cout<<")"<<std::endl;
+
+
+for(int i=0; i<ami_eval_vars.size(); i++){
+
+ami_eval_vars[i].frequency_.back()=ami_eval_vars[i].frequency_.back().real();	
+
+if(ami_eval_vars[i].energy_.size()!=xi_list.size()){
+throw std::runtime_error("Mismatch in sizes");
+}	
+
+for(int j=0; j<ami_eval_vars[i].energy_.size(); j++){
+ami_eval_vars[i].energy_[j]=xi_list[j];
+}
+
+// for(int j=0; j<ami_eval_vars[i].energy_.size(); j++){
+	// std::cout<<ami_eval_vars[i].energy_[j];
+// }
+// std::cout<<std::endl;
+
+
+// for(int j=0; j<ami_eval_vars[i].frequency_.size(); j++){
+	// std::cout<<ami_eval_vars[i].frequency_[j];
+// }
+// std::cout<<std::endl;
+
+// print_complex_array(ami_eval_vars[i].energy_);
+// print_complex_array(ami_eval_vars[i].frequency_);
+
+// std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+
+// std::complex<double> spec_calc_result=evaluate_spectral(test_amiparms,ggm[2][0].ss_vec[0].R_, ggm[2][0].ss_vec[0].P_, ggm[2][0].ss_vec[0].S_,  external, unique, unique_poles, rref, eval_list, this_state, extern_list[0]);
+// std::cout<<"Calling evaluate function"<<std::endl;
+std::complex<double> calc_result=evaluate_spectral(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique,AMI.Unique_poles, AMI.Rref, AMI.Eval_list, state, ext_var_list[i], xi_cut);
+
+// std::cout<<"Got result "<<calc_result<<std::endl;
+
+// std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+
+
+// TODO: this seems really dangerous...
+// if(calc_result.imag()==0 && std::abs(calc_result.real())>1 ){
+	// if(flatten_warning){std::cerr<<"WARNING: Calculation returning large values - Flattening "<< calc_result <<std::endl; flatten_warning=false;}
+// calc_result=0.0;
+// }		
+
+Re_results[i]=calc_result.real();
+Im_results[i]=calc_result.imag();	
+}	
+	
+// std::cout<<"Eval complete"<<std::endl;	
+}	
+
+
+
+
+
+
 /* 
 // TODO do this for the OPT notation 
 void AmiCalc::produce_spectral_solutions(AmiCalc::solution_set &ss, AmiCalc::solution_set_vec_t &ssv){
