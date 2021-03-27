@@ -267,7 +267,8 @@ std::cout<<"This result returned "<<this_result<<std::endl;
 std::complex<double> imag(0.,1.0);
  // internal_state &state, ext_vars &ext_var
 std::complex<double> A_prod=eval_spectral_product(R_array[0][0], state, ext_var,this_external);
-final_result=final_result+this_result*std::pow(-imag*M_PI, ndelta);
+std::cout<<"A_prod is "<<A_prod<<std::endl;
+final_result=final_result+this_result*std::pow(-imag*M_PI, ndelta)*A_prod;
 
 
 // if(double_check!=final_result){
@@ -318,8 +319,12 @@ for(int i=0; i< R0.size(); i++){
 
 std::complex<double> this_E=eval_epsilon(state.t_list_[i], state.tp_list_[i], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);	
 
+std::cout<<"Evaluating A for i="<<i<<std::endl;
+
 // double gamma=0.1;
 std::complex<double> this_A=external.gamma_/(std::pow(external_xi.energy_[i] - this_E,2) + std::pow(external.gamma_,2))/M_PI;
+
+std::cout<<this_A<<" "<<external_xi.energy_[i]<<" "<<this_E<<" "<<external.gamma_<<" "<<std::pow(external_xi.energy_[i] - this_E,2)<<std::endl;
 
 
 output=output*this_A;

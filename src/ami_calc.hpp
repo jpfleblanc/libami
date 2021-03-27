@@ -138,7 +138,7 @@ BETA_=beta;
 MU_=mu;
 
 H_=0;
-gamma_=0.1;
+gamma_=0.01;
 	
 }
 
@@ -155,7 +155,7 @@ BETA_=beta;
 MU_=mu;
 
 H_=H;
-gamma_=0.1;
+gamma_=0.01;
 	
 }
 
@@ -192,7 +192,7 @@ AmiBase::frequency_t external_freq_;
 double BETA_;
 double H_;
 std::complex<double> MU_;
-double gamma_;
+double gamma_=0.01;
 };
 
 typedef std::vector< ext_vars> external_variable_list;
