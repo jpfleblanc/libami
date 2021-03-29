@@ -395,6 +395,8 @@ std::complex<double> evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &
 
 void evaluate_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars, internal_state &state, external_variable_list &ext_var_list, std::vector<double> &xi_list, double &xi_cut);
 
+
+void evaluate_simple_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars,   std::vector<double> &xi_list);
 std::complex<double> evaluate_simple_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list);
 std::complex<double> eval_spectral_product(std::vector<std::complex<double>> &Ei, std::vector<double> &xi, double &gamma);
 

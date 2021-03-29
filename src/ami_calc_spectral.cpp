@@ -570,7 +570,38 @@ return true;
 }
 
 
-void NewAmiCalc::evaluate_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars, internal_state &state, external_variable_list &ext_var_list, std::vector<double> &xi_list, double &xi_cut){
+void NewAmiCalc::evaluate_simple_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars,   std::vector<double> &xi_list){
+
+Re_results.clear(); 
+Im_results.clear();
+Re_results.resize(ami_eval_vars.size(),0);
+Im_results.resize(ami_eval_vars.size(),0);
+
+// std::cout<<"Evaluating ext parameters with xi_list"<<std::endl;
+// std::cout<<"(";
+// for(int i=0; i< xi_list.size(); i++){
+	// std::cout<<xi_list[i]<<",";
+// }
+// std::cout<<")"<<std::endl;
+
+
+for(int i=0; i<ami_eval_vars.size(); i++){
+
+// std::complex<double> NewAmiCalc::evaluate_simple_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list)
+
+std::complex<double> calc_result=evaluate_simple_spectral(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list,  xi_list);
+// graph.ami.evaluate_simple_spectral(test_amiparms,ggm[2][0].ss_vec[0].R_, ggm[2][0].ss_vec[0].P_, ggm[2][0].ss_vec[0].S_,  external, unique, rref, eval_list, XI_LIST);
+
+// double norm=std::pow(2.0*xi_cut,xi_list.size()
+
+Re_results[i]=calc_result.real();
+Im_results[i]=calc_result.imag();	
+}	
+	
+// std::cout<<"Eval complete"<<std::endl;	
+}	
+
+void NewAmiCalc::evaluate_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars, internal_state &state,  external_variable_list &ext_var_list, std::vector<double> &xi_list, double &xi_cut){
 
 Re_results.clear(); 
 Im_results.clear();
