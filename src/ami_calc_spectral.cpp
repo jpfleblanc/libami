@@ -120,7 +120,63 @@ for(int i=0; i< pole_list.size(); i++){
 	
 }
 
+std::complex<double> NewAmiCalc::evaluate_simple_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list){
+	
+std::complex<double> A_prod=eval_spectral_product(external.energy_, xi_list, external.gamma_);
 
+// std::cout<<"Aprod is "<<A_prod<<" with gamma"<<external.gamma_<<std::endl;
+
+// now duplicate the external and set energy to xi and evaluate the normal function 
+
+AmiBase::ami_vars this_external=external;
+
+// std::cout<<"Evaluating with energies"<<std::endl;
+for(int i=0; i< this_external.energy_.size(); i++){
+ 
+this_external.energy_[i]=xi_list[i];	
+	// std::cout<<this_external.energy_[i]<<" ";
+	
+	
+}
+// std::cout<<std::endl;
+
+
+// std::cout<<"Evaluating with xi"<<std::endl;
+// for(int i=0; i< this_external.energy_.size(); i++){
+
+// this_external.energy_[i]=-xi_list[i];	
+	// std::cout<<xi_list[i]<<" ";
+	
+	
+// }
+// std::cout<<std::endl;
+
+// evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list)
+
+std::complex<double> normal=amibase.evaluate(	parms, R_array, P_array, S_array, this_external,unique_g, Rref, Eval_list);
+	
+	
+return A_prod*normal;	
+	
+	
+}
+
+
+std::complex<double> NewAmiCalc::eval_spectral_product(std::vector<std::complex<double>> &Ei, std::vector<double> &xi, double &gamma){
+	
+std::complex<double> output(1,0);
+
+// the energies are the negative of the epsilon values 
+for(int i=0; i< Ei.size(); i++){
+	// std::cout<<"On i="<<i<<std::endl;
+std::complex<double> this_A=gamma/(std::pow(-xi[i] - Ei[i],2) + std::pow(gamma,2))/M_PI;	
+output=output*this_A;
+}
+	
+
+return output;	
+	
+}
 
 std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var, double &xi_cut){
 	
@@ -181,7 +237,8 @@ for(int delta_term=0; delta_term< pp_v.size(); delta_term++){
 	}
 	// now pp should be same length as Rref and tell which are deltas and which are not 
 
-	int ndelta = count(pp.begin(), pp.end(), 0);// need this later for prefactor 
+	int ndelta = count(pp.begin(), pp.end(), 0);// need this later for prefactor
+  // if(ndelta!=1){continue;}	
 	int n_xi_int=R_array[0][0].size()-ndelta;
 
 // Next we need to manipulate this_external to address the mapping - which has not been figured out yet!
@@ -269,6 +326,7 @@ std::complex<double> imag(0.,1.0);
  // internal_state &state, ext_vars &ext_var
 std::complex<double> A_prod=eval_spectral_product(R_array[0][0], state, ext_var,this_external);
 // std::cout<<"A_prod is "<<A_prod<<std::endl;
+// std::cout<<"ndelta and vals"<<ndelta<<" "<<std::pow(-imag*M_PI, ndelta)*std::pow(2.0*xi_cut,n_xi_int)<<std::endl;
 final_result=final_result+this_result*A_prod*std::pow(-imag*M_PI, ndelta)*std::pow(2.0*xi_cut,n_xi_int);
 
 
@@ -292,6 +350,7 @@ return final_result;
 	
 	
 }
+
 
 std::complex<double> NewAmiCalc::eval_spectral_product(AmiBase::g_prod_t &R0,  internal_state &state, ext_vars &external, AmiBase::ami_vars &external_xi){
 	
@@ -318,11 +377,13 @@ for(int i=0; i< R0.size(); i++){
 	
 // k_vector_t this_k=construct_k(R0[i].alpha_, k_list);	
 
-std::complex<double> this_E=eval_epsilon(state.t_list_[i], state.tp_list_[i], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);	
+std::complex<double> this_E=-eval_epsilon(state.t_list_[i], state.tp_list_[i], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);	
 
-// std::cout<<"Evaluating A for i="<<i<<std::endl;
+// std::cout<<"Evaluating A for i="<<i<<" and gamma "<<external.gamma_<<std::endl;
 
 // double gamma=0.1;
+// std::complex<double> this_A=external.gamma_/(std::pow(external_xi.energy_[i] - this_E,2) + std::pow(external.gamma_,2))/M_PI;
+
 std::complex<double> this_A=external.gamma_/(std::pow(external_xi.energy_[i] - this_E,2) + std::pow(external.gamma_,2))/M_PI;
 
 // std::cout<<this_A<<" "<<external_xi.energy_[i]<<" "<<this_E<<" "<<external.gamma_<<" "<<std::pow(external_xi.energy_[i] - this_E,2)<<std::endl;
@@ -359,7 +420,7 @@ for(int i=0; i< unique_g.size(); i++){
 AmiBase::g_prod_t this_term;
 this_term.push_back(unique_g[i]);
 
-unique_vals.push_back(amibase.eval_gprod(parms,this_term,external)*external.prefactor); // This removes the overall prefactor for each g. we then add that back later 
+unique_vals.push_back(amibase.eval_gprod(parms,this_term,external)/external.prefactor); // This removes the overall prefactor for each g. we then add that back later . recent change should not matter. this prefactor is +-1 not to be confused with the prefactor from 
 		
 }
 
@@ -493,12 +554,14 @@ pole_out.index_=xb;
 
 // rather than check for xb just flip all the signs then set the xb one to zero 
 for(int i=0; i< pole_out.eps_.size(); i++){
-	pole_out.eps_[i]=-pole_out.eps_[i];
+	if(i==xb){continue;} // skip flipping sign of xb 
+	pole_out.eps_[i]=-pole_out.eps_[i]*pole_out.eps_[xb];
+}
+
+for(int i=0; i< pole_out.alpha_.size(); i++){
+	pole_out.alpha_[i]=-pole_out.alpha_[i]*pole_out.eps_[xb];
 }
 pole_out.eps_[xb]=0;
-for(int i=0; i< pole_out.alpha_.size(); i++){
-	pole_out.alpha_[i]=-pole_out.alpha_[i];
-}
 
 pole=pole_out;
 

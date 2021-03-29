@@ -122,6 +122,7 @@ energy_t energy_;
 frequency_t frequency_;
 double prefactor;
 double BETA_;
+double gamma_=0;
 
 };
 
