@@ -133,7 +133,7 @@ AmiBase::ami_vars this_external=external;
 // std::cout<<"Evaluating with energies"<<std::endl;
 for(int i=0; i< this_external.energy_.size(); i++){
  
-this_external.energy_[i]=xi_list[i];	
+this_external.energy_[i]=-xi_list[i];	
 	// std::cout<<this_external.energy_[i]<<" ";
 	
 	
@@ -169,7 +169,7 @@ std::complex<double> output(1,0);
 // the energies are the negative of the epsilon values 
 for(int i=0; i< Ei.size(); i++){
 	// std::cout<<"On i="<<i<<std::endl;
-std::complex<double> this_A=gamma/(std::pow(-xi[i] - Ei[i],2) + std::pow(gamma,2))/M_PI;	
+std::complex<double> this_A=gamma/(std::pow(xi[i] +Ei[i],2) + std::pow(gamma,2))/M_PI;	
 output=output*this_A;
 }
 	
