@@ -202,10 +202,10 @@ for(int i=0; i< gprod_external.energy_.size(); i++){
 gprod_external.energy_[i]=-xi_list[i];	
 	
 }
+ 
 
 
-
-std::complex<double> final_result;
+std::complex<double> final_result(0,0);
 int dim=parms.N_INT_;
 
 
@@ -338,12 +338,17 @@ std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, uni
 
 
 std::complex<double> imag(0.,1.0);
+
+// std::cout<<"Ndelta is "<<ndelta<<std::endl;
  
 	
 std::complex<double> A_prod=eval_spectral_product(external.energy_, this_xi_list, external.gamma_);
 
-final_result=final_result+this_result*A_prod*std::pow(-imag*M_PI, ndelta);
+// std::cout<<"This term gives "<<this_result*A_prod*std::pow(-imag*M_PI, ndelta)<<std::endl;
 
+// std::cout<<"Sum is "<< final_result<<std::endl;
+final_result+=this_result*A_prod*std::pow(-imag*M_PI, ndelta);
+// std::cout<<"Sum is "<< final_result<<std::endl;
 
 } // end delta_term 
 
@@ -759,8 +764,19 @@ Im_results.resize(ami_eval_vars.size(),0);
 for(int i=0; i<ami_eval_vars.size(); i++){
 
 // std::complex<double> NewAmiCalc::evaluate_simple_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list)
+std::complex<double> calc_result(0,0);
+if(AMI.Unique_poles.size()==0)
+{
+calc_result=evaluate_simple_spectral(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list,  xi_list);
+}
+else{
+	
+ami_eval_vars[i].frequency_.back()=ami_eval_vars[i].frequency_.back().real();	
+calc_result=evaluate_spectral_v2(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list,  xi_list,AMI.Unique_poles);
 
-std::complex<double> calc_result=evaluate_simple_spectral(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list,  xi_list);
+}
+
+
 // graph.ami.evaluate_simple_spectral(test_amiparms,ggm[2][0].ss_vec[0].R_, ggm[2][0].ss_vec[0].P_, ggm[2][0].ss_vec[0].S_,  external, unique, rref, eval_list, XI_LIST);
 
 // double norm=std::pow(2.0*xi_cut,xi_list.size()
