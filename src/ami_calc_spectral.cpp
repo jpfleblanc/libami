@@ -1,5 +1,6 @@
 #include "ami_calc.hpp"
 
+//TODO: when constructing the spectral representation need to reset all the energies so that everything is a simple-pole 
 
 
 	std::vector<int> NewAmiCalc::toBinary(int n,int length)
@@ -42,7 +43,7 @@ ppv.push_back(toBinary(n,length));
 	
 }
 
-
+// TODO: Possible place for error due to negative in energy 
 std::complex<double> NewAmiCalc::get_xb_from_pole( AmiBase::pole_struct pole, AmiBase::ami_vars external){
 
 std::complex<double> output(0,0);
@@ -106,6 +107,7 @@ if(!found){ throw std::runtime_error("Failed to find a pole combination: in rema
 
 // at this point should have a list of poles in pole_list.  now we want to recursively reassign values to this_external based on replacing the values in the pole.index_ (xb) with the appropriate value 
 
+// the minus is already in this external 
 this_external=external;
 
 for(int i=0; i< pole_list.size(); i++){
@@ -119,6 +121,9 @@ for(int i=0; i< pole_list.size(); i++){
 	return;
 	
 }
+
+
+
 
 std::complex<double> NewAmiCalc::evaluate_simple_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list){
 	
@@ -177,6 +182,183 @@ output=output*this_A;
 return output;	
 	
 }
+
+
+std::complex<double> NewAmiCalc::evaluate_spectral_v2(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list, AmiBase::Pi_t &Unique_poles){
+	
+
+if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
+	throw std::runtime_error("Called the evaluate spectral function without optimization");
+	
+}	
+
+
+AmiBase::ami_vars gprod_external=external;
+// AmiBase::ami_vars aprod_external=external;
+
+
+for(int i=0; i< gprod_external.energy_.size(); i++){
+ 
+gprod_external.energy_[i]=-xi_list[i];	
+	
+}
+
+
+
+std::complex<double> final_result;
+int dim=parms.N_INT_;
+
+
+for(int opt_term=0; opt_term<Rref.size(); opt_term++){
+
+// first look at what is in the opt_term and now iterate over the different combinations of delta functions 
+int ndelta=0;
+
+std::vector<int> delta_indices;
+
+// std::cout<<"Unique
+
+for(int i=0; i< Rref[opt_term].size(); i++){
+// std::cout<<"For opt_term the number of pole choices is "<<Unique_poles[Rref[opt_term][i].first].size()<<std::endl;
+if( Unique_poles[Rref[opt_term][i].first].size()!=0){
+ndelta++;
+delta_indices.push_back(i);
+}	
+	
+	
+}
+// these are the delta combinations to be applied to delta_indices 
+std::vector<std::vector<int>> pp_v;
+get_pp_comb(ndelta,pp_v);
+
+// std::cout<<"ppv size is "<<pp_v.size()<<" for ndelta="<<ndelta<<std::endl;
+
+for(int delta_term=0; delta_term< pp_v.size(); delta_term++){
+	// std::cout<<"On delta_term "<<delta_term<<std::endl;
+	
+	
+	std::vector<int> pp;
+	pp.resize(Rref[opt_term].size(),1);
+	// expand the pp_comb to include the extra Rref entries 
+	// lets define 1 to be normal, and zero to be a delta 
+	for(int i=0; i< delta_indices.size(); i++){
+		
+		pp[delta_indices[i]]=pp_v[delta_term][i];
+		
+	}
+	// now pp should be same length as Rref and tell which are deltas and which are not 
+
+	int ndelta = count(pp.begin(), pp.end(), 0);// need this later for prefactor
+  // if(ndelta!=1){continue;}	
+	int n_xi_int=R_array[0][0].size()-ndelta;
+
+// Next we need to manipulate this_external to address the mapping - which has not been figured out yet!
+
+
+// std::cout<<"dim="<<dim<< std::endl;
+AmiBase::SorF_t SorF_result;
+
+AmiBase::ami_vars remapped_gprod_external; //=external;
+// AmiBase::ami_vars remapped_aprod_external;
+
+remap_external( gprod_external, remapped_gprod_external, Unique_poles, pp);
+
+std::vector<double> this_xi_list(xi_list.size());
+
+// push the remapping onto the xi's 
+for(int i=0; i< gprod_external.energy_.size(); i++){
+ 
+this_xi_list[i]=-remapped_gprod_external.energy_[i].real();// TODO: is there any situation in which this would NOT be real?	
+	
+}
+
+
+// remap_external( aprod_external, remapped_aprod_external, Unique_poles, pp);
+
+
+// now we have the external value for this pp combination.  so generate everything as done before 
+// EXCEPT - exclude the delta G's 
+// add a prefactor (-i pi)^(ndelta)
+
+
+// QUestion why evaluate gprod if some are not allowed to be there...
+// This part probably doesn't work since even for no integral would need to return Aprod*gprod
+
+if(dim==0){
+	
+	throw std::runtime_error("This part not working yet");
+// std::complex<double> gprod;
+
+// gprod=amibase.eval_gprod(parms, R_array[0][0], remapped_gprod_external);
+
+// return gprod;
+
+}
+
+if (dim==1){
+AmiBase::SorF_t SF_left, SF_right;
+AmiBase::SorF_t S_double_left, S_double_right;	
+	
+SF_left=amibase.dot(S_array[0], amibase.fermi(parms,P_array[0], remapped_gprod_external));	
+
+SorF_result=SF_left;
+	
+}
+
+for (int i=0; i< dim-1; i++){
+
+AmiBase::SorF_t SF_left, SF_right;
+AmiBase::SorF_t S_double_left, S_double_right;
+
+// need line that converts the Si_t from integers to doubles? So that the dot operator has doubles both left and right entries.
+
+
+
+if(i==0){
+// do dot operation
+SF_left=amibase.dot(S_array[i], amibase.fermi(parms,P_array[i], remapped_gprod_external));
+ // std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+}
+else {SF_left=SorF_result;}
+
+// do dot
+
+SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], remapped_gprod_external));
+
+ SorF_result=amibase.cross(SF_left,SF_right);
+ 
+
+
+
+}
+ 
+
+
+std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], remapped_gprod_external,pp);
+
+
+std::complex<double> imag(0.,1.0);
+ 
+	
+std::complex<double> A_prod=eval_spectral_product(external.energy_, this_xi_list, external.gamma_);
+
+final_result=final_result+this_result*A_prod*std::pow(-imag*M_PI, ndelta);
+
+
+} // end delta_term 
+
+}// end opt_term loop 
+
+
+
+
+return final_result;
+
+	
+	
+}
+
+
 
 std::complex<double> NewAmiCalc::evaluate_spectral(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g, AmiBase::Pi_t &Unique_poles, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, internal_state &state, ext_vars &ext_var, double &xi_cut){
 	
@@ -313,11 +495,6 @@ SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], this_extern
  
 
 
-
-// std::cout<<"*R for dim="<<dim<< std::endl;
-// final_result=star(parms, SorF_result, R_array[dim], external);
-
-// final_result=amibase.optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, this_external);
 std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], this_external,pp);
 
 // std::cout<<"This result returned "<<this_result<<std::endl;
@@ -325,16 +502,10 @@ std::complex<double> this_result=optimized_spectral_star(parms, SorF_result, uni
 std::complex<double> imag(0.,1.0);
  // internal_state &state, ext_vars &ext_var
 std::complex<double> A_prod=eval_spectral_product(R_array[0][0], state, ext_var,this_external);
-// std::cout<<"A_prod is "<<A_prod<<std::endl;
-// std::cout<<"ndelta and vals"<<ndelta<<" "<<std::pow(-imag*M_PI, ndelta)*std::pow(2.0*xi_cut,n_xi_int)<<std::endl;
+
 final_result=final_result+this_result*A_prod*std::pow(-imag*M_PI, ndelta)*std::pow(2.0*xi_cut,n_xi_int);
 
 
-// if(double_check!=final_result){
-	// std::cout<<"Double checking got"<<std::endl;
-	// std::cout<<double_check<<" "<<final_result<<std::endl;
-	
-// }
 
 
 } // end delta_term 
@@ -456,7 +627,7 @@ bool verbose=0;
 	
 
 	output+=term;
-	
+	// There is only one term processed at a time! 
 
 
 	
