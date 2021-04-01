@@ -184,6 +184,17 @@ return output;
 }
 
 
+int NewAmiCalc::random_int( int min, int max){
+
+std::uniform_int_distribution<int> int_dist(min,max);
+
+return int_dist(nac_rand_gen);
+
+}
+
+
+// TODO: The pair evaluation works for cases where there is no delta.  when there is a delta I don't have a symbolic representation.  probably whichever xi relates to the delta, should NOT flip its sign but just the signs of the others. 
+
 std::complex<double> NewAmiCalc::evaluate_spectral_v2(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list, AmiBase::Pi_t &Unique_poles){
 	
 
@@ -210,6 +221,36 @@ int dim=parms.N_INT_;
 
 
 for(int opt_term=0; opt_term<Rref.size(); opt_term++){
+//
+// TO try to reduce the variance, pick a random opt_term unique g. and look at its epsilons
+int rand_choice=random_int(0,Rref[opt_term].size()-1);
+
+std::vector<double> xi_pair=xi_list;
+AmiBase::ami_vars gprod_external_pair=gprod_external;
+
+for(int i=0; i< unique_g[Rref[opt_term][rand_choice].first].eps_.size(); i++){
+	
+if	(unique_g[Rref[opt_term][rand_choice].first].eps_[i]!=0){
+	
+	gprod_external_pair.energy_[i]=-gprod_external_pair.energy_[i];
+	xi_pair[i]=-xi_pair[i];
+	
+}
+		
+}
+
+// std::cout<<"Xi list is "<<std::endl;
+// for(int i=0; i< xi_list.size(); i++){
+// std::cout<<xi_list[i]<<" ";
+// }
+// std::cout<<std::endl;
+
+// std::cout<<"Xi pair list is "<<std::endl;
+// for(int i=0; i< xi_pair.size(); i++){
+// std::cout<<xi_pair[i]<<" ";
+// }
+// std::cout<<std::endl;
+	
 
 // first look at what is in the opt_term and now iterate over the different combinations of delta functions 
 int ndelta=0;
@@ -257,19 +298,23 @@ for(int delta_term=0; delta_term< pp_v.size(); delta_term++){
 
 // std::cout<<"dim="<<dim<< std::endl;
 AmiBase::SorF_t SorF_result;
+AmiBase::SorF_t SorF_result_pair;
 
 AmiBase::ami_vars remapped_gprod_external; //=external;
 // AmiBase::ami_vars remapped_aprod_external;
+AmiBase::ami_vars remapped_gprod_pair;
 
 remap_external( gprod_external, remapped_gprod_external, Unique_poles, pp);
+remap_external( gprod_external_pair, remapped_gprod_pair, Unique_poles, pp);
 
 std::vector<double> this_xi_list(xi_list.size());
+std::vector<double> this_xi_pair(xi_pair.size());
 
 // push the remapping onto the xi's 
 for(int i=0; i< gprod_external.energy_.size(); i++){
  
 this_xi_list[i]=-remapped_gprod_external.energy_[i].real();// TODO: is there any situation in which this would NOT be real?	
-	
+this_xi_pair[i]=-remapped_gprod_pair.energy_[i].real();	
 }
 
 
@@ -344,10 +389,80 @@ std::complex<double> imag(0.,1.0);
 	
 std::complex<double> A_prod=eval_spectral_product(external.energy_, this_xi_list, external.gamma_);
 
-// std::cout<<"This term gives "<<this_result*A_prod*std::pow(-imag*M_PI, ndelta)<<std::endl;
+//// REPEAT FOR THE PAIR
+
+
+if(dim==0){
+	
+	throw std::runtime_error("This part not working yet");
+// std::complex<double> gprod;
+
+// gprod=amibase.eval_gprod(parms, R_array[0][0], remapped_gprod_external);
+
+// return gprod;
+
+}
+
+if (dim==1){
+AmiBase::SorF_t SF_left, SF_right;
+AmiBase::SorF_t S_double_left, S_double_right;	
+	
+SF_left=amibase.dot(S_array[0], amibase.fermi(parms,P_array[0], remapped_gprod_pair));	
+
+SorF_result_pair=SF_left;
+	
+}
+
+for (int i=0; i< dim-1; i++){
+
+AmiBase::SorF_t SF_left, SF_right;
+AmiBase::SorF_t S_double_left, S_double_right;
+
+// need line that converts the Si_t from integers to doubles? So that the dot operator has doubles both left and right entries.
+
+
+
+if(i==0){
+// do dot operation
+SF_left=amibase.dot(S_array[i], amibase.fermi(parms,P_array[i], remapped_gprod_pair));
+ // std::cout<<"S["<<i<<"].f(P["<<i<<"])";
+}
+else {SF_left=SorF_result;}
+
+// do dot
+
+SF_right=amibase.dot(S_array[i+1], amibase.fermi(parms,P_array[i+1], remapped_gprod_pair));
+
+ SorF_result_pair=amibase.cross(SF_left,SF_right);
+ 
+
+
+
+}
+ 
+
+
+std::complex<double> this_pair_result=optimized_spectral_star(parms, SorF_result, unique_g, Rref[opt_term],Eval_list[opt_term], remapped_gprod_pair,pp);
+
+
+// std::complex<double> imag(0.,1.0);
+
+// std::cout<<"Ndelta is "<<ndelta<<std::endl;
+ 
+	
+std::complex<double> A_prod_pair=eval_spectral_product(external.energy_, this_xi_pair, external.gamma_);
+/////// end repeat
+
+
+
+
+
+
+
+// std::cout<<"This term gives "<<this_result*A_prod*std::pow(-imag*M_PI, ndelta)<<" and "<< this_pair_result*A_prod_pair*std::pow(-imag*M_PI, ndelta)<< " avg="<<(this_result*A_prod+this_pair_result*A_prod_pair)/2.0*std::pow(-imag*M_PI, ndelta)<<std::endl;
 
 // std::cout<<"Sum is "<< final_result<<std::endl;
-final_result+=this_result*A_prod*std::pow(-imag*M_PI, ndelta);
+final_result+=(this_result*A_prod+this_pair_result*A_prod_pair)/2.0*std::pow(-imag*M_PI, ndelta);
 // std::cout<<"Sum is "<< final_result<<std::endl;
 
 } // end delta_term 

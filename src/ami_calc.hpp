@@ -45,6 +45,14 @@ public:
 
 AmiBase amibase;
 
+// random stuff
+		std::random_device rd;
+    std::mt19937 nac_rand_gen;
+		int random_int(int min, int max);
+    
+		
+
+
 // momenta - since these are used to generate epsilon - typically not a part of AmiBase
 typedef std::vector< double> k_vector_t;
 typedef std::vector< k_vector_t> k_vect_list_t;
@@ -415,5 +423,12 @@ std::complex<double> eval_spectral_product(AmiBase::g_prod_t &R0,  internal_stat
 
 
 private:
+
+public:
+
+NewAmiCalc(){
+            nac_rand_gen.seed(rd());
+            
+        }
 
 };
