@@ -195,7 +195,7 @@ return int_dist(nac_rand_gen);
 
 // TODO: The pair evaluation works for cases where there is no delta.  when there is a delta I don't have a symbolic representation.  probably whichever xi relates to the delta, should NOT flip its sign but just the signs of the others. 
 
-std::complex<double> NewAmiCalc::evaluate_spectral_v2(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list, AmiBase::Pi_t &Unique_poles){
+std::complex<double> NewAmiCalc::evaluate_spectral_v2(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list, AmiBase::Pi_t &Unique_poles, double &xi_cut){
 	
 
 if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
@@ -462,7 +462,7 @@ std::complex<double> A_prod_pair=eval_spectral_product(external.energy_, this_xi
 // std::cout<<"This term gives "<<this_result*A_prod*std::pow(-imag*M_PI, ndelta)<<" and "<< this_pair_result*A_prod_pair*std::pow(-imag*M_PI, ndelta)<< " avg="<<(this_result*A_prod+this_pair_result*A_prod_pair)/2.0*std::pow(-imag*M_PI, ndelta)<<std::endl;
 
 // std::cout<<"Sum is "<< final_result<<std::endl;
-final_result+=(this_result*A_prod+this_pair_result*A_prod_pair)/2.0*std::pow(-imag*M_PI, ndelta);
+final_result+=(this_result*A_prod+this_pair_result*A_prod_pair)/2.0*std::pow(-imag*M_PI/(2.0*xi_cut), ndelta);
 // std::cout<<"Sum is "<< final_result<<std::endl;
 
 } // end delta_term 
@@ -861,7 +861,7 @@ return true;
 }
 
 
-void NewAmiCalc::evaluate_simple_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars,   std::vector<double> &xi_list){
+void NewAmiCalc::evaluate_simple_spectral_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, ami_vars_list &ami_eval_vars,   std::vector<double> &xi_list, double &xi_cut){
 
 Re_results.clear(); 
 Im_results.clear();
@@ -887,7 +887,7 @@ calc_result=evaluate_simple_spectral(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  am
 else{
 	
 ami_eval_vars[i].frequency_.back()=ami_eval_vars[i].frequency_.back().real();	
-calc_result=evaluate_spectral_v2(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list,  xi_list,AMI.Unique_poles);
+calc_result=evaluate_spectral_v2(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list,  xi_list,AMI.Unique_poles, xi_cut);
 
 }
 

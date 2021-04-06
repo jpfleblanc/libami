@@ -193,7 +193,7 @@ AmiBase::g_prod_t construct_example(){
 AmiBase::g_prod_t g;
 
 // Setting up G array
-// defining alpha's
+// defining alpha's /// std::vector<int>
 int alpha1[]={1,0,0};
 int alpha2[]={1,1,0};
 int alpha3[]={0,1,1};

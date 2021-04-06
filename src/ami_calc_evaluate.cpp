@@ -10,36 +10,18 @@ Re_results.resize(ami_eval_vars.size(),0);
 Im_results.resize(ami_eval_vars.size(),0);
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
-// std::cout<<"Evaluating with ami_vars "<<std::endl;
-// std::cout<<ami_eval_vars[i].BETA_<<" "<<ami_eval_vars[i].prefactor<<std::endl;
-
-// ami_eval_vars[i].prefactor=1;
-
-	// for(int j=0; j< ami_eval_vars[i].energy_.size(); j++){
-		// std::cout<<ami_eval_vars[i].energy_[j]<<" ";
-	// }
-	// std::cout<<std::endl;
-	
-	
-	// for(int j=0; j< ami_eval_vars[i].frequency_.size(); j++){
-		// std::cout<<ami_eval_vars[i].frequency_[j]<<" ";
-	// }
-	// std::cout<<std::endl;
-	
-
-// print_complex_array(ami_eval_vars[i].energy_);
-// print_complex_array(ami_eval_vars[i].frequency_);
-
 // std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
 
 std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
 
+// if(std::abs(calc_result.real())>1  || std::abs(calc_result.imag())>1 ){
+// std::cout<<"Large value returned at ext var "<<i<<std::endl;
+// std::cout<<calc_result<<std::endl;
 
-// TODO: this seems really dangerous...
-// if(calc_result.imag()==0 && std::abs(calc_result.real())>1 ){
-	// if(flatten_warning){std::cerr<<"WARNING: Calculation returning large values - Flattening "<< calc_result <<std::endl; flatten_warning=false;}
-// calc_result=0.0;
-// }		
+// std::complex<double> softened=soften_divergence(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+	
+// }
+
 
 Re_results[i]=calc_result.real();
 Im_results[i]=calc_result.imag();	
@@ -49,7 +31,80 @@ Im_results[i]=calc_result.imag();
 }	
 
 
+
+
+
 // TODO does this need to be the full AMI_MATRIX?
+
+std::complex<double> NewAmiCalc::soften_divergence(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list){
+
+// first check if any unique g has  no alphas in it.  if so save it's epsilon.  And we will generate a state with negative of that energy. 
+// since we don't have momenta, lets assume that there is a transformation that maps epsilon->-epsilon 
+
+// first check indep variables.  then check dependent ones?
+// could flip the signs of the independent energies only as a first attempt. but without knowing the state can't really do this...
+int index;
+bool found=false;
+for(int i=0; i< unique_g.size(); i++){
+	
+	int size=unique_g[i].alpha_.size();
+	
+	int zeros=count(unique_g[i].alpha_.begin(), unique_g[i].alpha_.end(), 0);
+	
+	if(size==zeros){
+		
+		std::cout<<"Found zero alphas on unique g "<<i<<std::endl;
+		found=true;
+		index=i;
+		break;
+	}
+	
+	
+}
+
+// now I know I want to flip the energies of unique_g
+
+std::cout<<"Current energies are "<<std::endl;
+for(int i=0 ; i< external.energy_ .size(); i++){
+std::cout<<external.energy_[i]<<" ";
+}
+
+std::cout<<std::endl;
+
+k_vect_list_t k_vec;
+for(int i=0 ; i< external.energy_ .size(); i++){
+
+k_vector_t this_k;
+
+double kx=std::acos(-external.energy_[i].real()/4.0);
+double ky=kx;
+
+this_k.push_back(kx);
+this_k.push_back(ky);
+
+k_vec.push_back(this_k);
+
+}
+
+
+std::cout<<"Current restored "<<std::endl;
+for(int i=0 ; i< external.energy_ .size(); i++){
+	double val=-2.0*(std::cos(k_vec[i][0])+std::cos(k_vec[i][1]));
+std::cout<<val<<" ";
+}
+std::cout<<std::endl;
+
+
+
+
+
+
+
+
+
+
+
+}	
 
 
 void NewAmiCalc::evaluate_solutions(std::vector<std::complex<double>> &results, solution_set &AMI, ami_vars_list &ami_eval_vars){

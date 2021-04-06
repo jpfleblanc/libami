@@ -182,22 +182,54 @@ for(int i=0; i< Eval_list.size(); i++){
 // std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 	
 	output+=term;
+	/* 
+	if(std::real(output)>1e3){
+		verbose=1;
+		
+		std::cout<<"In optimized star K[]*R"<<std::endl;
+std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+
+std::cout<<"This term has a list of G's with unique indexes "<<std::endl;
+	for(int j=0; j< pair_vec.size(); j++){
+	std::cout<<pair_vec[j].first<<" ";
+		
+	}
+	std::cout<<std::endl;	
 	
-	// if(std::real(output)>1e5){
-		// verbose=1;
+
+std::cout<<"Debugging Energy values "<<std::endl;
+
+for(int i=0; i< external.energy_.size(); i++){
+	
+	std::cout<<external.energy_[i]<<std::endl;
+	
+}
+
+
+std::cout<<"Debugging Unique G's "<<std::endl;
+for(int i=0; i<unique_vals.size(); i++){
+	std::cout<<i<<std::endl;
+	print_g_struct_info(unique_g[i]);
+	
+}
+
+std::cout<<"Debugging unique values "<<std::endl;
+for(int i=0; i<unique_vals.size(); i++){
+	std::cout<<i<<" "<<unique_vals[i]<<std::endl;
+	
+}	
 		
-		// std::cout<<"In optimized star K[]*R"<<std::endl;
-// std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 		
 		
-	// }
+		
+	} */
 
 
 	
 }
 
 
-// if(verbose){
+// if(verbose){std::cout<<"Exiting star ----------------------"<<std::endl;}
 	
 
 // std::cout<<"Debugging Unique G's "<<std::endl;
@@ -742,6 +774,7 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // if(alphadenom==zero){
 	// return zero;
 	// double val=E_REG*sgn(epsdenom.real());
+	// alphadenom+=val*im;
 // alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*sgn(epsdenom.imag())*im;
 // alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*im;
 // std::cout<<"Added ereg in gprod_eval "<<alphadenom<<std::endl;
