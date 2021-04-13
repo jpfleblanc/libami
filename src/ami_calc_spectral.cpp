@@ -193,6 +193,15 @@ return int_dist(nac_rand_gen);
 }
 
 
+double NewAmiCalc::random_real(double min, double max){ // produce real number from 0 to max 
+
+std::uniform_real_distribution<double> rand_dist;
+
+return rand_dist(nac_rand_gen)*(max-min)+min;
+
+}
+
+
 // TODO: The pair evaluation works for cases where there is no delta.  when there is a delta I don't have a symbolic representation.  probably whichever xi relates to the delta, should NOT flip its sign but just the signs of the others. 
 
 std::complex<double> NewAmiCalc::evaluate_spectral_v2(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list, AmiBase::Pi_t &Unique_poles, double &xi_cut){

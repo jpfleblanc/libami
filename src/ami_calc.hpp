@@ -49,7 +49,8 @@ AmiBase amibase;
 		std::random_device rd;
     std::mt19937 nac_rand_gen;
 		int random_int(int min, int max);
-    
+		double random_real(double min, double max);
+		
 		
 
 
@@ -422,6 +423,11 @@ std::complex<double> optimized_spectral_star(AmiBase::ami_parms &parms, AmiBase:
 std::complex<double> eval_spectral_product(AmiBase::g_prod_t &R0,  internal_state &state, ext_vars &external, AmiBase::ami_vars &external_xi);
 
 std::complex<double> soften_divergence(AmiBase::ami_parms &parms, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array, AmiBase::ami_vars &external,AmiBase::g_prod_t &unique_g,  AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list);
+
+bool get_mirror_state(AmiBase::g_prod_t &R0, AmiBase::g_struct &unique_g, internal_state &state, ext_vars &external, internal_state &mirror_state);
+
+void construct_ami_mirror_vars_list(solution_set &AMI, internal_state &state, ext_vars &external, NewAmiCalc::ami_vars_list &vars_list);
+void evaluate_mirror_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, internal_state &state, external_variable_list &external);
 
 
 private:

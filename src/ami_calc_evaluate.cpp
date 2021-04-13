@@ -31,6 +31,274 @@ Im_results[i]=calc_result.imag();
 }	
 
 
+void NewAmiCalc::evaluate_mirror_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, internal_state &state, external_variable_list &external){
+
+Re_results.clear(); 
+Im_results.clear();
+Re_results.resize(external.size(),0);
+Im_results.resize(external.size(),0);
+for(int i=0; i<external.size(); i++){	
+
+// std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
+NewAmiCalc::ami_vars_list vars_list;
+	// graph.ami.construct_ami_vars_list(GG_AMI_MATRIX[ord][num][safest_graph[ord][num]].R0_,GG_AMI_MATRIX[ord][num][safest_graph[ord][num]].prefactor_, graph.current_state, extern_list, vars_list);
+construct_ami_mirror_vars_list(AMI, state, external[i], vars_list); 
+
+std::vector<std::complex<double>> calc_results;
+calc_results.resize(vars_list.size());
+std::complex<double> calc_result(0,0);
+double norm=vars_list.size();
+
+for(int j=0; j< vars_list.size(); j++){
+
+
+calc_results[j]=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  vars_list[j], AMI.Unique, AMI.Rref, AMI.Eval_list );
+
+// if(vars_list.size()>1){
+std::cout<<"on mirror "<<j<<" of norm="<<norm<< std::endl;
+std::cout<<"Returned value "<< calc_results[j]<<std::endl;
+// }
+// std::cout<<"Var list size is "<<vars_list.size()<<std::endl;
+calc_result+=calc_results[j]/norm;//double(vars_list.size());
+}
+
+
+
+// if(std::abs(calc_result.real())>1  || std::abs(calc_result.imag())>1 ){
+// std::cout<<"Large value returned at ext var "<<i<<std::endl;
+// std::cout<<calc_result<<std::endl;
+
+// std::complex<double> softened=soften_divergence(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+	
+// }
+
+
+
+Re_results[i]=calc_result.real();
+Im_results[i]=calc_result.imag();	
+}	
+	
+// std::cout<<"Eval complete"<<std::endl;	
+}	
+
+// normalization issue if the number of mirror cases is not constant
+void NewAmiCalc::construct_ami_mirror_vars_list(solution_set &AMI, internal_state &state, ext_vars &external, NewAmiCalc::ami_vars_list &vars_list){
+	
+// first just put the one ami_vars in place for the regular case 	
+vars_list.push_back(construct_ami_vars(AMI.R0_, AMI.prefactor_, state, external));	
+	
+// internal_state ranstate=state;
+
+// for(int i=0; i< ranstate.internal_k_list_.size(); i++){
+
+// ranstate.internal_k_list_[i][0]=random_real(0,2.0*M_PI);
+// ranstate.internal_k_list_[i][1]=random_real(0,2.0*M_PI);
+	
+// }
+
+
+// vars_list.push_back(construct_ami_vars(AMI.R0_, AMI.prefactor_, ranstate, external));
+
+	
+// for each Unique_g generate a sign flipped state ?  Then for each Rref make sure that one of the states is relevant? There will always be an odd number of G's for self energy diagrams and so flipping all will always guarantee a sign change 	
+for(int i=0; i< AMI.Unique.size(); i++){
+
+internal_state mirror_state;	
+bool success=get_mirror_state(AMI.R0_, AMI.Unique[i], state,external, mirror_state);
+
+if(success){
+vars_list.push_back(construct_ami_vars(AMI.R0_, AMI.prefactor_, mirror_state, external));
+}
+	
+	
+}
+
+if(vars_list.size()==1){
+	
+internal_state ranstate=state;
+
+for(int i=0; i< ranstate.internal_k_list_.size(); i++){
+
+ranstate.internal_k_list_[i][0]=random_real(0,2.0*M_PI);
+ranstate.internal_k_list_[i][1]=random_real(0,2.0*M_PI);
+	
+}
+
+
+vars_list.push_back(construct_ami_vars(AMI.R0_, AMI.prefactor_, ranstate, external));
+
+}
+	
+	
+}
+
+bool NewAmiCalc::get_mirror_state(AmiBase::g_prod_t &R0, AmiBase::g_struct &unique_g, internal_state &state, ext_vars &external, internal_state &mirror_state){
+	
+// std::cout<<"Looking for mirror state"<<std::endl;	
+	
+	// check if unique_g is actually the external leg 
+bool is_ext=false;	
+if(unique_g.alpha_.back()!=0 && unique_g.eps_.back()!=0){
+is_ext=true;
+for(int i=0; i< unique_g.alpha_.size()-1; i++){
+	
+if(unique_g.alpha_[i]!=0){
+is_ext=false;
+}	
+	
+}
+
+for(int i=0; i< unique_g.eps_.size()-1; i++){
+	
+if(unique_g.eps_[i]!=0){
+is_ext=false;
+}	
+	
+}
+
+}	
+
+if(is_ext){return false;}//it is an external line so can't do anything
+	
+
+// std::cout<<"Got here"<<std::endl;
+
+AmiBase::energy_t energy=construct_energy(R0, state, external);
+
+
+// std::cout<<"Energies are "<<std::endl;
+// for(int i=0; i< energy.size(); i++){
+	// std::cout<<energy[i]<<" ";	
+// }
+// std::cout<<std::endl;
+
+
+std::vector<int> indep_index;
+std::vector<int> indep_alpha_index;
+// collect list of indep alphas(epsilons actually)
+for(int i=0; i< R0.size(); i++){
+
+int ac=0;
+int alpha_ind=-1;
+for(int a=0; a< R0[i].alpha_.size()-1; a++){
+
+if(R0[i].alpha_[a]!=0){
+ac++;
+alpha_ind=a;
+}	
+	
+}
+
+if(ac==1){
+	
+indep_alpha_index.push_back(alpha_ind);
+// indep_index.push_back(i);	// this is the wrong index need to know what epsilon this is 
+
+for(int j=0; j< R0[i].eps_.size(); j++){
+	if(R0[i].eps_[j]!=0){
+		
+	
+		indep_index.push_back(j);
+		
+	}
+}
+
+}
+	
+}
+
+// std::cout<<"Independent indexes are "<<std::endl;
+
+// for(int i=0; i< indep_index.size(); i++){
+// std::cout<<indep_index[i]<<" "<<indep_alpha_index[i]<<std::endl;	
+	
+	
+// }
+
+
+double target_val=0;
+
+// find an indep_index inside unique_g 
+int ind;
+int alpha_ind;
+bool found=false;
+
+
+
+for(int i=0; i< indep_index.size(); i++){
+
+if(unique_g.eps_[indep_index[i]]!=0){
+ind=indep_index[i];
+alpha_ind=indep_alpha_index[i];
+found=true;
+break;
+}	
+	
+}
+// int tries=0;
+// do{
+// tries++;
+// int r=random_int(0, indep_index.size()-1);
+
+// ind=indep_index[r];
+// alpha_ind=indep_alpha_index[r];
+
+// if(unique_g.eps_[ind]!=0){
+	// found=true;
+// }
+// }while(!found && tries<10);
+
+// std::cout<<"Indexes are "<<ind<<" "<<alpha_ind<<std::endl;
+
+// std::cout<<"Assigning target val"<<std::endl;
+
+if(!found){throw std::runtime_error("Never found an independent epsilon");}
+
+for( int i=0; i< energy.size(); i++){
+	// target_val-=unique_g.eps_[i]*energy[i];
+	if(i!=ind){
+		target_val-=(2.0*unique_g.eps_[i]*energy[i]).real();
+	}
+}
+
+// std::cout<<"External frequency is "<<external.external_freq_[0].real()<<std::endl;
+target_val-=2.0*external.external_freq_[0].real()*unique_g.alpha_.back();
+
+target_val=target_val*unique_g.eps_[ind]; // this flips the sign if necessary
+
+target_val-=unique_g.eps_[ind]*(energy[ind]).real();
+
+// then subtract twice the 
+
+// in principle this is now my target.  I want to manipulate epsilon_ind to get this value 
+// std::cout<<"Found target of "<< target_val<<std::endl;
+
+// if target is from -1 to 1 then can find a k that flips this 
+if(std::abs(target_val)<2.0){
+
+mirror_state=state;
+
+mirror_state.internal_k_list_[alpha_ind][0]=std::acos( -target_val/4.0 );
+mirror_state.internal_k_list_[alpha_ind][1]=state.internal_k_list_[alpha_ind][0];
+
+
+AmiBase::energy_t this_energy=construct_energy(R0, mirror_state, external);
+
+// std::cout<<"Mirrored energies are "<<std::endl;
+// for(int i=0; i< this_energy.size(); i++){
+	// std::cout<<this_energy[i]<<" ";	
+// }
+// std::cout<<std::endl;
+
+
+return true;
+
+}	
+	
+	return false;
+	
+}
+
 
 
 
