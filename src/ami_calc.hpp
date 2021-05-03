@@ -106,6 +106,16 @@ internal_freq_size_=k_length;
 
 k_vect_list_t internal_k_list_;
 int order_;
+int group_;
+int num_;
+int ext_;
+
+std::complex<double> current_value, proposed_value, last_value, measure_value;
+int sample_count_=0;
+int norm_count_=0;
+double norm_=0;
+bool physical=true;
+
 int dim_;
 
 int internal_freq_size_;
