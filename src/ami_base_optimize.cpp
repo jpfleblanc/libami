@@ -1,5 +1,6 @@
 #include "ami_base.hpp"
 
+//TODO: Is this complete?
 void AmiBase::derivative_opt(g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
 	
 R_ref_t nRref;

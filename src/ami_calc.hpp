@@ -380,7 +380,8 @@ bool density_warning=true;
 void read_hf(std::string pgrid_filename, std::string ptoi_filename, std::string sigma_filename);
 std::vector<int> ptoi;
 std::vector<double> pgrid, sigma_hf;
-double hf_mu, hf_kstep;
+double hf_mu=0;
+double hf_kstep;
 double rs;
 
 double get_hf_sigma(double kk);

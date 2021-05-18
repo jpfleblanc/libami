@@ -559,7 +559,7 @@ if(disp==AmiBase::fp){
 
 for(int i=0; i<k.size();i++){
 		// std::cout<<"i is "<<i<<" ki is "<<k[i]<<std::endl;
-	output+=std::pow(k[i],2);	
+	output+=std::pow(k[i],2);//hf_mu;	
 		
 	}
 }
