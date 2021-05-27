@@ -525,6 +525,12 @@ if(pole.alpha_[i]!=0){
 }
 }
 
+// may 27 2021: possible oversight. 
+// When using real frequencies as an external variable then the external frequency does not change fermi/bose statistics. 
+
+if(ext_freq_type==matsubara){
+
+
 // handle external based on graph type 
 if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiBase::Pi_phuu && parms.TYPE_!=AmiBase::Pi_phud  && parms.TYPE_ !=AmiBase::doubleocc && parms.TYPE_!=AmiBase::Pi_ppuu && parms.TYPE_!=AmiBase::Pi_ppud && parms.TYPE_!=AmiBase::FORCE){
 
@@ -542,6 +548,8 @@ eta++;
 // std::cout<<"Incrementing eta since this is a bosonic integral for "<< pole.index_<<std::endl;
 }	
 	
+}
+
 }
 
 // END TODO
@@ -589,11 +597,11 @@ return zero;	// TODO: need to test this might be an approximation
 }
 E+=E_REG;	
 }else{
-	if(sgn(E.real())!=0){
-	E+=E_REG*sgn(E.real());}
-	else{
-		E+=E_REG;
-	}
+	// if(sgn(E.real())!=0){
+	// E+=E_REG*sgn(E.real());}
+	// else{
+		// E+=E_REG;
+	// }
 }
 
 // july 23rd adding back in a different regulator 
@@ -630,6 +638,8 @@ int m=pole.der_;
 // std::cout<<m<<" "<<sigma<<" "<<beta<<" "<<E<<std::endl;
 output=fermi_bose(m,sigma,beta,E);
 
+// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+
 
 /*
 if(pole.der_==0){
@@ -660,6 +670,8 @@ output=-1.0*output;
 
 // std::cout<<"Evaluated Fermi derivative function and got "<<output<< " at energy "<< E <<" with der="<<pole.der_<<" and sigma="<<sigma<<std::endl;
 
+// std::cout<<"Fermi Pole Term evaluated to "<< output << " at energy "<< E<<" with der="<<pole.der_<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+
 return output;
 }
 
@@ -669,7 +681,20 @@ std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta, std::
 std::complex<double> output,term;
 output=0.0;
 
+
+
+/* if(sigma==-1){
+	// E=std::complex<double>(std::abs(E.real()), E.imag());
+	if(E.real()<0 && E.imag()==0){
+		std::complex<double> zero(0,0);
+		return zero;
+	}
+	
+} */
+
 if(m==0){
+	
+	
 output=1.0/(sigma*std::exp(beta*(E))+1.0);
 // return output;
 }else{  // compute m'th derivative
@@ -702,8 +727,17 @@ std::complex<double> output(0,0);
 // std::cout<<"Evaluating energies"<<std::endl;
 for (int i=0; i< pole.eps_.size(); i++){
 // std::cout<<"Pole "<<double(pole.eps_[i])<<" external e is "<< external.energy_[i]<<" mult is "<<double(pole.eps_[i])*external.energy_[i];
-output+= double(pole.eps_[i])*external.energy_[i];
+output-= double(pole.eps_[i])*external.energy_[i];
 
+}
+
+if(ext_freq_type==real){
+	for(int i=0; i< pole.alpha_.size(); i++){
+	
+	output+=double(pole.alpha_[i])*external.frequency_[i];
+	
+	}
+	
 }
 
 

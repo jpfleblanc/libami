@@ -185,6 +185,40 @@ return g_new;
 
 
 /**
+* Manipulates a Pole_struct to replace residue variable 'z' with complex pole. 
+*
+*/
+AmiBase::pole_struct AmiBase::update_Z_pole(AmiBase::pole_struct p_in, AmiBase::pole_struct pole){
+
+AmiBase::pole_struct p_new;
+
+for (int i=0; i< p_in.alpha_.size(); i++){
+
+if (i != pole.index_){
+p_new.alpha_.push_back( p_in.alpha_[i] + p_in.alpha_[pole.index_]*pole.alpha_[i]   );
+}
+else{
+p_new.alpha_.push_back(0);
+}
+
+}
+
+
+for (int i=0; i< p_in.eps_.size(); i++){
+p_new.eps_.push_back( p_in.eps_[i] + p_in.alpha_[pole.index_]*pole.eps_[i]   );
+}
+
+
+if ( p_new.alpha_.size() != p_in.alpha_.size()){std::cerr<<"Error: Something may be wrong. Alphas of G and pole not the same size" <<std::endl; }
+
+
+return p_new;
+
+}
+
+
+
+/**
 
 * Simple function to scan through `g_prod_t` and collect an std::vector of poles with respect to index.
 
@@ -233,7 +267,27 @@ break;
 
 }
 
-if (duplicate==false){
+// added may 26 2021
+// extra check if the pole is only a fermionic frequency
+/* 
+bool non_zero=false;
+int zcount=std::count(pole.eps_.begin(), pole.eps_.end(),0);
+if( zcount<pole.eps_.size()){
+	
+	non_zero=true;
+}
+
+if(zcount==pole.eps_.size()){
+	if(pole.alpha_.back()!=0){
+		non_zero=true;
+	}
+	
+} */
+
+
+
+// if (!duplicate && non_zero ){
+if (!duplicate){
 pole_array.push_back(pole);
 }
 

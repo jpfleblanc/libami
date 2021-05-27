@@ -490,6 +490,21 @@ std::cout<<std::endl;
 }
 
 
+
+void AmiBase::print_pole_struct_info(pole_struct g){
+
+std::cout<<"Eps=(";
+print_epsilon_info(g.eps_);
+std::cout<<")";
+std::cout<<std::endl;
+std::cout<<"Alpha=(";
+print_alpha_info(g.alpha_);
+std::cout<<")";
+std::cout<<std::endl;
+
+}
+
+
 void AmiBase::print_epsilon_info(AmiBase::epsilon_t eps){
 
 

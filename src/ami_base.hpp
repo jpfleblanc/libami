@@ -104,6 +104,10 @@ typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, 
 typedef enum {hubbard,coulomb} int_type;
 typedef enum {tb, fp, hf} disp_type;
 
+typedef enum {matsubara, real} ext_type;
+
+ext_type ext_freq_type=matsubara;
+
 
 /// the ami_vars struct if the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
 
@@ -252,6 +256,34 @@ typedef std::vector<Pi_t> P_t;
 typedef std::vector<Si_t> S_t;
 
 // typedefs for evaluation
+// Terms experimental 
+struct term{
+	
+	term(){
+		
+	}
+	
+term(double s, pole_array_t p, g_prod_t g){
+sign=s;
+p_list=p;
+g_list=g;
+}	
+
+double sign=1;
+pole_array_t p_list;
+g_prod_t g_list;	
+	
+};
+
+typedef std::vector< term > terms;
+
+void construct(int N_INT, g_prod_t R0, terms &terms_out);
+void integrate_step(int index, terms &in_terms, terms &out_terms);
+
+void split_term(term &this_term, pole_struct this_pole, term &innert_part, term &active_part);
+void terms_general_residue(term &this_term, pole_struct this_pole, terms &out_terms);
+
+void take_term_derivative(term &in_term, pole_struct &pole, terms &out_terms);
 
 /*
 Though perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
@@ -273,6 +305,7 @@ g_prod_t simple_residue(g_prod_t G_in, pole_struct pole);
 
 // Testing Priority: 1 - updating G with a given pole is an essential function - if it fails nothing will work 
 g_struct update_G_pole(g_struct g_in,pole_struct pole);
+pole_struct update_Z_pole(AmiBase::pole_struct p_in, AmiBase::pole_struct pole);
 
 // Functions for signs
 sign_t find_signs(int index, g_prod_t &R);
@@ -441,6 +474,7 @@ bool g_struct_equiv(g_struct &g1, g_struct &g2, int &sign);
 void print_g_struct_info(g_struct g);
 void print_epsilon_info(epsilon_t eps);
 void print_alpha_info(alpha_t alpha);
+void print_pole_struct_info(pole_struct g);
 ////
 
 // experimental
