@@ -727,16 +727,16 @@ std::complex<double> output(0,0);
 // std::cout<<"Evaluating energies"<<std::endl;
 for (int i=0; i< pole.eps_.size(); i++){
 // std::cout<<"Pole "<<double(pole.eps_[i])<<" external e is "<< external.energy_[i]<<" mult is "<<double(pole.eps_[i])*external.energy_[i];
-output-= double(pole.eps_[i])*external.energy_[i];
+output+= double(pole.eps_[i])*external.energy_[i];
 
 }
 
 if(ext_freq_type==real){
-	for(int i=0; i< pole.alpha_.size(); i++){
+	// for(int i=0; i< pole.alpha_.size(); i++){
 	
-	output+=double(pole.alpha_[i])*external.frequency_[i];
+	output+=double(pole.alpha_.back())*external.frequency_.back().real();
 	
-	}
+	// }
 	
 }
 
