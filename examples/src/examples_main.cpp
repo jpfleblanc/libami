@@ -23,9 +23,9 @@ std::cout<<"----"<<std::endl;
 
 
 
-// std::cout<<"---- Running 9th order example -----"<<std::endl;	
-// example9();
-// std::cout<<"----"<<std::endl;
+std::cout<<"---- Running 9th order example -----"<<std::endl;	
+example9();
+std::cout<<"----"<<std::endl;
 		
 	
 	
@@ -106,11 +106,20 @@ std::cout<<"Optimized result was "<< opt_calc_result<<std::endl;
 std::cout<<"Optimization returned "<<unique.size()<<" unique Green's functions and took "<<d3.count()<<" microseconds"<<std::endl;
 std::cout<<"Evaluation took "<< d4.count()<<" microseconds"<<std::endl;	
 
+
 std::cout<<"Constructing AMI term by term "<<std::endl;
+
+auto t6=std::chrono::high_resolution_clock::now();
 
 AmiBase::terms amiterms;
 
 ami.construct(N_INT, R0, amiterms);
+
+auto t7=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff5=t7-t6;
+std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
+std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
@@ -200,12 +209,19 @@ std::cout<<"Optimization returned "<<unique.size()<<" unique Green's functions a
 std::cout<<"Evaluation took "<< d4.count()<<" microseconds"<<std::endl;	
 	
 
-
 std::cout<<"Constructing AMI term by term "<<std::endl;
+
+auto t6=std::chrono::high_resolution_clock::now();
 
 AmiBase::terms amiterms;
 
 ami.construct(N_INT, R0, amiterms);
+
+auto t7=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff5=t7-t6;
+std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
+std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
@@ -214,7 +230,6 @@ std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;
 	
 	
 }
-	
 	
 	
 	
@@ -297,12 +312,19 @@ std::cout<<"Evaluation took "<< d4.count()<<" microseconds"<<std::endl;
 	
 	
 	
-	
 std::cout<<"Constructing AMI term by term "<<std::endl;
+
+auto t6=std::chrono::high_resolution_clock::now();
 
 AmiBase::terms amiterms;
 
 ami.construct(N_INT, R0, amiterms);
+
+auto t7=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff5=t7-t6;
+std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
+std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
@@ -361,7 +383,60 @@ std::cout<<"Result was "<< calc_result<<std::endl;
 std::cout<<"Construction took "<<d.count()<<" microseconds"<<std::endl;
 std::cout<<"Evaluation took "<< d2.count()<<" microseconds"<<std::endl;	
 
+/* 
 
+auto t3=std::chrono::high_resolution_clock::now();
+
+AmiBase::g_prod_t unique;
+AmiBase::R_ref_t rref;
+AmiBase::ref_eval_t eval_list;
+
+ami.factorize_Rn(R_array.back(), unique, rref, eval_list);
+
+auto t4=std::chrono::high_resolution_clock::now();	
+	
+std::complex<double> opt_calc_result=ami.evaluate(test_amiparms,R_array, P_array, S_array,  avars, unique, rref, eval_list);	
+auto t5=std::chrono::high_resolution_clock::now();	
+
+
+std::chrono::duration<double> diff3=t4-t3;
+std::chrono::duration<double> diff4=t5-t4;
+
+std::chrono::microseconds d3=std::chrono::duration_cast<std::chrono::microseconds>(diff3);
+std::chrono::microseconds d4=std::chrono::duration_cast<std::chrono::microseconds>(diff4);	
+
+
+std::cout<<"Optimized result was "<< opt_calc_result<<std::endl;	
+	
+std::cout<<"Optimization returned "<<unique.size()<<" unique Green's functions and took "<<d3.count()<<" microseconds"<<std::endl;
+std::cout<<"Evaluation took "<< d4.count()<<" microseconds"<<std::endl;	
+	
+	 */
+
+
+
+
+std::cout<<"Constructing AMI term by term "<<std::endl;
+
+auto t6=std::chrono::high_resolution_clock::now();
+
+AmiBase::terms amiterms;
+
+ami.construct(N_INT, R0, amiterms);
+
+auto t7=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff5=t7-t6;
+std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
+std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
+
+std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
+
+for(int i=0; i<R_array.size(); i++){
+std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
+	
+	
+}
 	
 }
 

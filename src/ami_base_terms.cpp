@@ -68,6 +68,7 @@ out_terms.push_back(new_term);
 terms new_terms;	
 terms_general_residue(in_terms[t_index], poles[i], new_terms);
 
+// print_terms(new_terms);
 // put new terms in the list 
 out_terms.insert(out_terms.end(), new_terms.begin(), new_terms.end());
 	
@@ -88,10 +89,15 @@ out_terms.insert(out_terms.end(), new_terms.begin(), new_terms.end());
 }
 
 void AmiBase::print_term(term &t){
-std::cout<<"Single Term is"<<std::endl;
+std::cout<<"--- Term is ---"<<std::endl;
 		for(int j=0; j< t.g_list.size(); j++){
 		print_g_struct_info(t.g_list[j]);
 		}
+		std::cout<<"--poles--"<<std::endl;
+		for(int j=0; j<t.p_list.size(); j++){
+			print_pole_struct_info(t.p_list[j]);
+		}
+		
 		std::cout<<"-------------"<<std::endl;	
 	
 }
@@ -101,9 +107,7 @@ void AmiBase::print_terms(terms &t){
 	for(int i=0; i<t.size(); i++){
 		
 		std::cout<<"Term:"<<i<<std::endl;
-		for(int j=0; j< t[i].g_list.size(); j++){
-		print_g_struct_info(t[i].g_list[j]);
-		}
+		print_term(t[i]);
 		std::cout<<"-------------"<<std::endl;
 	}
 	
@@ -151,15 +155,21 @@ W.sign=starting_sign;
 terms int_terms;
 int_terms.push_back(W);
 
+// std::cout<<"Int terms before derivative "<<std::endl;
+// print_terms(int_terms);
+
 
 for (int m=0; m< this_pole.multiplicity_-1; m++){
 	terms temp_terms;
 	for(int i=0; i< int_terms.size(); i++){
+		// std::cout<<"On derivative loop "<<m<<" "<<i<<std::endl;
 	
 	take_term_derivative(int_terms[i], this_pole, temp_terms);
 	
 	
 	}
+	// std::cout<<"On term "<<std::endl;
+	// print_term(int_t
 	
 	int_terms=temp_terms;
 	
@@ -179,6 +189,10 @@ for( int i=0 ;i< int_terms.size(); i++){
 		
 		
 	}
+	
+	// for every term have to put the pole list back 
+	
+	int_terms[i].p_list.insert(int_terms[i].p_list.end(), this_term.p_list.begin(), this_term.p_list.end());
 	
 	
 	//TODO: Test if enabling this changes anything 
@@ -207,14 +221,20 @@ out_terms=int_terms;
 }
 
 void AmiBase::take_term_derivative(term &in_term, pole_struct &pole, terms &out_terms){
-	out_terms.clear();
+	// out_terms.clear();
 	
 terms fd_terms;
 terms gd_terms;
 
+// std::cout<<"Taking derivative of term "<<std::endl;
+// std::cout<<"Current term is "<<std::endl;
+
+// print_term(in_term);
+
+// We don't have a list. we just have one always. 
 // first we take the derivative of the product of p_list f's 
 
-
+/*  // This was a function to take derivatives of chains of f functions. we just have one always 
 for( int one=0; one< in_term.p_list.size(); one++){
 	term temp;
 	temp.g_list=in_term.g_list;
@@ -237,7 +257,24 @@ for( int one=0; one< in_term.p_list.size(); one++){
 	fd_terms.push_back(temp);
 	
 	
+} */
+
+for( int one=0; one< in_term.p_list.size(); one++){
+	term temp;
+	temp.g_list=in_term.g_list;
+	temp.p_list=in_term.p_list;
+	
+	
+	temp.p_list[one].der_++;
+		
+	
+	fd_terms.push_back(temp);
+	
+	
 }
+
+
+
 
 // now do the gprod terms 
 
@@ -274,11 +311,16 @@ for(int i=0; i< in_term.g_list.size(); i++){
 }
 
 // std::cout<<"At end of derivative gd and fd terms are sizes "<<gd_terms.size()<<" "<<fd_terms.size()<<std::endl;
+// std::cout<<"GD terms "<<std::endl;
+// print_terms(gd_terms);
+// std::cout<<"FD terms"<< std::endl;
+// print_terms(fd_terms);
 	
 out_terms.insert(out_terms.end(), fd_terms.begin(), fd_terms.end());
 
 out_terms.insert(out_terms.end(), gd_terms.begin(), gd_terms.end());
-	
+
+// std::cout<<"Out terms has size "<<out_terms.size()<<std::endl;	
 	
 	
 }
