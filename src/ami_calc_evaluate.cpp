@@ -503,7 +503,8 @@ if(not_molecule){
 // result[j]=eval_epsilon(state.t_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
 result[j]=eval_epsilon(state.t_list_[j], state.tp_list_[j], construct_k(R0[i].alpha_ , k_list) , R0[i].species_, external.MU_, external.H_, state.disp_);
 }else{
-	
+
+// std::cout<<"Assigning energy to result "<<j<<" "<<R0[i].species_<<std::endl;	
 result[j]=-global_hii[R0[i].species_];	
 }
 

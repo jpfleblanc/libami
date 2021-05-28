@@ -2,6 +2,8 @@
 
 
 void AmiBase::construct(int N_INT, g_prod_t R0, terms &terms_out){
+
+terms_out.clear();
 	
 pole_array_t p;	
 term start_term(1.0,p,R0);
@@ -13,13 +15,15 @@ terms next_terms;
 
 
 for(int index=0; index<N_INT; index++){
-
+std::cout<<"On step "<<index<<std::endl;
+std::cout<<"Term count is "<<these_terms.size()<<std::endl;
 integrate_step(index, these_terms, next_terms);
 these_terms=next_terms;	
 	
 }
 	
-	
+// put new terms in the list 
+terms_out.insert(terms_out.end(), these_terms.begin(), these_terms.end());	
 	
 	
 }
@@ -32,6 +36,13 @@ for (int t_index=0; t_index< in_terms.size(); t_index++){
 
 pole_array_t poles;
 poles=find_poles(index, in_terms[t_index].g_list);
+
+std::cout<<"Found n_poles="<<poles.size()<<std::endl;
+for(int i=0; i<poles.size(); i++){
+	
+	std::cout<<"Pole "<<i<<" M="<<poles[i].multiplicity_<<std::endl;
+	
+}
 
 // for each pole 
 
@@ -87,7 +98,10 @@ term W;
 W.g_list=reduce_gprod(active_part.g_list,this_pole);
 W.p_list=active_part.p_list;
 // add the pole to the p-list here 
-W.p_list.push_back(this_pole);
+// this is not necessary - the variables external do not enter into derivatives. 
+// TODO: test if enabling this changes anything
+// W.p_list.push_back(this_pole);
+
 W.sign=starting_sign;
 // the W 
 
@@ -120,11 +134,13 @@ for( int i=0 ;i< int_terms.size(); i++){
 		
 	}
 	
-	for(int j=0; j< int_terms[i].p_list.size(); j++){
 	
-	int_terms[i].p_list[j]=update_Z_pole(int_terms[i].p_list[j], this_pole);
+	//TODO: Test if enabling this changes anything 
+	// for(int j=0; j< int_terms[i].p_list.size(); j++){
 	
-	}
+	// int_terms[i].p_list[j]=update_Z_pole(int_terms[i].p_list[j], this_pole);
+	
+	// }
 	
 	// for every term need to put back the innert parts 
 	

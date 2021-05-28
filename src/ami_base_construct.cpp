@@ -269,20 +269,20 @@ break;
 
 // added may 26 2021
 // extra check if the pole is only a fermionic frequency
-/* 
-bool non_zero=false;
-int zcount=std::count(pole.eps_.begin(), pole.eps_.end(),0);
-if( zcount<pole.eps_.size()){
+ 
+// bool non_zero=false;
+// int zcount=std::count(pole.eps_.begin(), pole.eps_.end(),0);
+// if( zcount<pole.eps_.size()){
 	
-	non_zero=true;
-}
+	// non_zero=true;
+// }
 
-if(zcount==pole.eps_.size()){
-	if(pole.alpha_.back()!=0){
-		non_zero=true;
-	}
+// if(zcount==pole.eps_.size()){
+	// if(pole.alpha_.back()!=0){
+		// non_zero=true;
+	// }
 	
-} */
+// } 
 
 
 

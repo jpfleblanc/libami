@@ -528,7 +528,7 @@ if(pole.alpha_[i]!=0){
 // may 27 2021: possible oversight. 
 // When using real frequencies as an external variable then the external frequency does not change fermi/bose statistics. 
 
-if(ext_freq_type==matsubara){
+// if(ext_freq_type==matsubara){
 
 
 // handle external based on graph type 
@@ -550,7 +550,7 @@ eta++;
 	
 }
 
-}
+// }
 
 // END TODO
 
@@ -683,14 +683,14 @@ output=0.0;
 
 
 
-/* if(sigma==-1){
+ // if(sigma==-1){
 	// E=std::complex<double>(std::abs(E.real()), E.imag());
-	if(E.real()<0 && E.imag()==0){
-		std::complex<double> zero(0,0);
-		return zero;
-	}
+	// if(E.real()<0 ){
+		// std::complex<double> zero(0,0);
+		// return zero;
+	// }
 	
-} */
+// } 
 
 if(m==0){
 	
@@ -726,19 +726,20 @@ std::complex<double> output(0,0);
 
 // std::cout<<"Evaluating energies"<<std::endl;
 for (int i=0; i< pole.eps_.size(); i++){
-// std::cout<<"Pole "<<double(pole.eps_[i])<<" external e is "<< external.energy_[i]<<" mult is "<<double(pole.eps_[i])*external.energy_[i];
+// std::cout<<"Pole "<<double(pole.eps_[i])<<" external e is "<< external.energy_[i]<<" mult is "<<double(pole.eps_[i])*external.energy_[i]<<std::endl;
 output+= double(pole.eps_[i])*external.energy_[i];
 
 }
-
+/* 
 if(ext_freq_type==real){
-	// for(int i=0; i< pole.alpha_.size(); i++){
+	for(int i=0; i< pole.alpha_.size(); i++){
 	
-	output+=double(pole.alpha_.back())*external.frequency_.back().real();
+	output+=double(pole.alpha_.back())*external.frequency_.back();
 	
-	// }
+	// std::cout<<"Real part "<<pole.alpha_.back()<<" "<< external.frequency_.back()<<std::endl;
+	}
 	
-}
+} */
 
 
 // std::cout<<"Output is "<<output<<std::endl;
