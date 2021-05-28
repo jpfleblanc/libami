@@ -15,8 +15,10 @@ terms next_terms;
 
 
 for(int index=0; index<N_INT; index++){
-std::cout<<"On step "<<index<<std::endl;
-std::cout<<"Term count is "<<these_terms.size()<<std::endl;
+// std::cout<<"On step "<<index<<std::endl;
+// std::cout<<"Term count is "<<these_terms.size()<<std::endl;
+// print_terms(these_terms);
+
 integrate_step(index, these_terms, next_terms);
 these_terms=next_terms;	
 	
@@ -37,12 +39,12 @@ for (int t_index=0; t_index< in_terms.size(); t_index++){
 pole_array_t poles;
 poles=find_poles(index, in_terms[t_index].g_list);
 
-std::cout<<"Found n_poles="<<poles.size()<<std::endl;
-for(int i=0; i<poles.size(); i++){
+// std::cout<<"On term "<<t_index<<" Found n_poles="<<poles.size()<<std::endl;
+// for(int i=0; i<poles.size(); i++){
 	
-	std::cout<<"Pole "<<i<<" M="<<poles[i].multiplicity_<<std::endl;
+	// std::cout<<"Pole "<<i<<" M="<<poles[i].multiplicity_<<std::endl;
 	
-}
+// }
 
 // for each pole 
 
@@ -76,8 +78,34 @@ out_terms.insert(out_terms.end(), new_terms.begin(), new_terms.end());
 
 
 }	
+
+// std::cout<<"Out terms now contains "<<out_terms.size()<<std::endl;
+
 }
 	
+	
+	
+}
+
+void AmiBase::print_term(term &t){
+std::cout<<"Single Term is"<<std::endl;
+		for(int j=0; j< t.g_list.size(); j++){
+		print_g_struct_info(t.g_list[j]);
+		}
+		std::cout<<"-------------"<<std::endl;	
+	
+}
+
+void AmiBase::print_terms(terms &t){
+	
+	for(int i=0; i<t.size(); i++){
+		
+		std::cout<<"Term:"<<i<<std::endl;
+		for(int j=0; j< t[i].g_list.size(); j++){
+		print_g_struct_info(t[i].g_list[j]);
+		}
+		std::cout<<"-------------"<<std::endl;
+	}
 	
 	
 }
@@ -88,19 +116,34 @@ out_terms.clear();
 
 // split this_term into p_list that contains alpha[this_pole.index]!=0  and similarly for g_list. then make W_array from that 
 
-term innert_part, active_part;
-split_term(this_term, this_pole, innert_part,active_part);
+// term innert_part, active_part;
+// split_term(this_term, this_pole, innert_part,active_part);
+
+// std::cout<<"This pole is attached to "<<this_pole.which_g_.size()<<" greens functions and has multiplicity "<< this_pole.multiplicity_<<std::endl;
+
+// std::cout<<"Innert part has "<<innert_part.g_list.size()<<std::endl;
+// print_term(innert_part);
+
+// std::cout<<"Active part has "<<active_part.g_list.size()<<std::endl;
+// print_term(active_part);
+
+
 
 double starting_sign;
-starting_sign=get_starting_sign(active_part.g_list,this_pole);
+starting_sign=get_starting_sign(this_term.g_list,this_pole);
 
 term W;
-W.g_list=reduce_gprod(active_part.g_list,this_pole);
-W.p_list=active_part.p_list;
+W.g_list=reduce_gprod(this_term.g_list,this_pole);
+
+// std::cout<<"W part has "<<std::endl;
+// print_term(W);
+
 // add the pole to the p-list here 
 // this is not necessary - the variables external do not enter into derivatives. 
 // TODO: test if enabling this changes anything
-// W.p_list.push_back(this_pole);
+// W.p_list=active_part.p_list;
+
+W.p_list.push_back(this_pole);
 
 W.sign=starting_sign;
 // the W 
@@ -124,6 +167,9 @@ for (int m=0; m< this_pole.multiplicity_-1; m++){
 
 // now we have all of the terms and their derivatives. so now it is safe to sub in the poles 
 
+// std::cout<<"Int terms contains "<<int_terms.size()<<std::endl;
+// print_terms(int_terms);
+
 for( int i=0 ;i< int_terms.size(); i++){
 	
 	for(int j=0; j< int_terms[i].g_list.size(); j++){
@@ -144,8 +190,8 @@ for( int i=0 ;i< int_terms.size(); i++){
 	
 	// for every term need to put back the innert parts 
 	
-	int_terms[i].g_list.insert(int_terms[i].g_list.end(), innert_part.g_list.begin(), innert_part.g_list.end());
-	int_terms[i].p_list.insert(int_terms[i].p_list.end(), innert_part.p_list.begin(), innert_part.p_list.end());
+	// int_terms[i].g_list.insert(int_terms[i].g_list.end(), innert_part.g_list.begin(), innert_part.g_list.end());
+	// int_terms[i].p_list.insert(int_terms[i].p_list.end(), innert_part.p_list.begin(), innert_part.p_list.end());
 	
 	
 }
@@ -227,6 +273,7 @@ for(int i=0; i< in_term.g_list.size(); i++){
 	
 }
 
+// std::cout<<"At end of derivative gd and fd terms are sizes "<<gd_terms.size()<<" "<<fd_terms.size()<<std::endl;
 	
 out_terms.insert(out_terms.end(), fd_terms.begin(), fd_terms.end());
 

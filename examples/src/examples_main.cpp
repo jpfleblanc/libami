@@ -23,9 +23,9 @@ std::cout<<"----"<<std::endl;
 
 
 
-std::cout<<"---- Running 9th order example -----"<<std::endl;	
-example9();
-std::cout<<"----"<<std::endl;
+// std::cout<<"---- Running 9th order example -----"<<std::endl;	
+// example9();
+// std::cout<<"----"<<std::endl;
 		
 	
 	
@@ -294,6 +294,24 @@ std::cout<<"Optimized result was "<< opt_calc_result<<std::endl;
 	
 std::cout<<"Optimization returned "<<unique.size()<<" unique Green's functions and took "<<d3.count()<<" microseconds"<<std::endl;
 std::cout<<"Evaluation took "<< d4.count()<<" microseconds"<<std::endl;	
+	
+	
+	
+	
+std::cout<<"Constructing AMI term by term "<<std::endl;
+
+AmiBase::terms amiterms;
+
+ami.construct(N_INT, R0, amiterms);
+
+std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
+
+for(int i=0; i<R_array.size(); i++){
+std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
+	
+	
+}
+	
 	
 }
 

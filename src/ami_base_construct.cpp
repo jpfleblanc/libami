@@ -68,6 +68,14 @@ pole_array_t poles;
 poles=find_poles(int_index, R_array[array_index][j]);  
 
 
+// std::cout<<"In standard AMI Found n_poles="<<poles.size()<<std::endl;
+// for(int i=0; i<poles.size(); i++){
+	
+	// std::cout<<"Pole "<<i<<" M="<<poles[i].multiplicity_<<std::endl;
+	
+// }
+
+
 pole_array_t cor_poles;
 sign_t col_signs;
 

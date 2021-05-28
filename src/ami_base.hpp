@@ -284,7 +284,9 @@ void split_term(term &this_term, pole_struct this_pole, term &innert_part, term 
 void terms_general_residue(term &this_term, pole_struct this_pole, terms &out_terms);
 
 void take_term_derivative(term &in_term, pole_struct &pole, terms &out_terms);
+void print_terms(terms &t);
 
+void print_term(term &t);
 /*
 Though perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
 */
