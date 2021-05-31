@@ -50,6 +50,7 @@ set(LIB_FILES
   ./src/ami_base_construct.cpp 
 	./src/ami_base_optimize.cpp 
 	./src/ami_base_terms.cpp
+	./src/ami_base_terms_evaluate.cpp
   ./src/ami_calc_io.cpp
   ./src/ami_calc_evaluate.cpp
 	./src/ami_calc_spectral.cpp

@@ -134,7 +134,7 @@ out_terms.clear();
 
 
 double starting_sign;
-starting_sign=get_starting_sign(this_term.g_list,this_pole);
+starting_sign=get_starting_sign(this_term.g_list,this_pole)*this_term.sign;
 
 term W;
 W.g_list=reduce_gprod(this_term.g_list,this_pole);
@@ -263,6 +263,7 @@ for( int one=0; one< in_term.p_list.size(); one++){
 	term temp;
 	temp.g_list=in_term.g_list;
 	temp.p_list=in_term.p_list;
+	temp.sign=in_term.sign;
 	
 	
 	temp.p_list[one].der_++;

@@ -278,6 +278,11 @@ g_prod_t g_list;
 typedef std::vector< term > terms;
 
 void construct(int N_INT, g_prod_t R0, terms &terms_out);
+std::complex<double> evaluate(ami_parms &parms, terms ami_terms, ami_vars &external);
+std::complex<double> evaluate_term(ami_parms &parms, term ami_term, ami_vars &external);
+std::complex<double> eval_fprod(ami_parms &parms,pole_array_t &p_list, ami_vars &external);
+
+
 void integrate_step(int index, terms &in_terms, terms &out_terms);
 
 void split_term(term &this_term, pole_struct this_pole, term &innert_part, term &active_part);

@@ -121,13 +121,18 @@ std::chrono::duration<double> diff5=t7-t6;
 std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
 std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
-std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
+std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
-for(int i=0; i<R_array.size(); i++){
-std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
+std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+
+std::cout<<"Term result was "<< term_val<<std::endl;
+
+
+// for(int i=0; i<R_array.size(); i++){
+// std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
 	
 	
-}
+// }
 	
 	
 	
@@ -223,13 +228,20 @@ std::chrono::duration<double> diff5=t7-t6;
 std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
 std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
-std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
-for(int i=0; i<R_array.size(); i++){
-std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
+
+
+std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
+
+std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+
+std::cout<<"Term result was "<< term_val<<std::endl;
+
+// for(int i=0; i<R_array.size(); i++){
+// std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
 	
 	
-}
+// }
 	
 	
 	
@@ -326,13 +338,12 @@ std::chrono::duration<double> diff5=t7-t6;
 std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
 std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
-std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
+std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
-for(int i=0; i<R_array.size(); i++){
-std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
-	
-	
-}
+std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+
+std::cout<<"Term result was "<< term_val<<std::endl;
+
 	
 	
 }
@@ -430,13 +441,12 @@ std::chrono::duration<double> diff5=t7-t6;
 std::chrono::microseconds d5=std::chrono::duration_cast<std::chrono::microseconds>(diff5);
 std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
-std::cout<<"Result has num_terms="<<amiterms.size()<<std::endl; //" compared to standard "<<R_array[N_INT].size()<<std::endl;
+std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
-for(int i=0; i<R_array.size(); i++){
-std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
-	
-	
-}
+std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+
+std::cout<<"Term result was "<< term_val<<std::endl;
+
 	
 }
 
