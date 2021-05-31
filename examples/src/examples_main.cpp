@@ -123,10 +123,19 @@ std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
+
+
+auto t8=std::chrono::high_resolution_clock::now();
+
 std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+auto t9=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff6=t9-t8;
+std::chrono::microseconds d6=std::chrono::duration_cast<std::chrono::microseconds>(diff6);
+
 
 std::cout<<"Term result was "<< term_val<<std::endl;
-
+std::cout<<"evaluation took "<<d6.count()<<" microseconds"<<std::endl;
 
 // for(int i=0; i<R_array.size(); i++){
 // std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
@@ -233,9 +242,19 @@ std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
+
+auto t8=std::chrono::high_resolution_clock::now();
+
 std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+auto t9=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff6=t9-t8;
+std::chrono::microseconds d6=std::chrono::duration_cast<std::chrono::microseconds>(diff6);
+
 
 std::cout<<"Term result was "<< term_val<<std::endl;
+std::cout<<"evaluation took "<<d6.count()<<" microseconds"<<std::endl;
+
 
 // for(int i=0; i<R_array.size(); i++){
 // std::cout<<"R["<<i<<"]->"<<R_array[i].size()<<std::endl;	
@@ -340,9 +359,18 @@ std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
+
+auto t8=std::chrono::high_resolution_clock::now();
+
 std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+auto t9=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff6=t9-t8;
+std::chrono::microseconds d6=std::chrono::duration_cast<std::chrono::microseconds>(diff6);
+
 
 std::cout<<"Term result was "<< term_val<<std::endl;
+std::cout<<"evaluation took "<<d6.count()<<" microseconds"<<std::endl;
 
 	
 	
@@ -443,9 +471,18 @@ std::cout<<"Construction took "<<d5.count()<<" microseconds"<<std::endl;
 
 std::cout<<"Result has num_terms="<<amiterms.size()<<" compared to standard "<<R_array[N_INT].size()<<std::endl;
 
+
+auto t8=std::chrono::high_resolution_clock::now();
+
 std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);
+auto t9=std::chrono::high_resolution_clock::now();
+
+std::chrono::duration<double> diff6=t9-t8;
+std::chrono::microseconds d6=std::chrono::duration_cast<std::chrono::microseconds>(diff6);
+
 
 std::cout<<"Term result was "<< term_val<<std::endl;
+std::cout<<"evaluation took "<<d6.count()<<" microseconds"<<std::endl;
 
 	
 }
