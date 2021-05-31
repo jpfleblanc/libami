@@ -7,6 +7,10 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
 
+if (NOT BUILD_DOC)
+	set(BUILD_DOC OFF)
+endif()
+
 
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -80,6 +84,7 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
         FILES_MATCHING PATTERN "*.hpp" # select header files
 )
 
+if(BUILD_DOC)
 add_subdirectory("doc")
 
 
@@ -156,6 +161,8 @@ if(DOXYGEN_FOUND)
   )
 endif(DOXYGEN_FOUND)
 
+
+endif(BUILD_DOC)
 
 
 
