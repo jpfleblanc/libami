@@ -565,6 +565,9 @@ if(pole.alpha_[i]!=0){
 
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
+
+// if(std::abs(E.real())<E_REG){return std::complex<double>(0,0);}
+
 // std::cout<<"Energy is "<<E<<std::endl;
 
 // if(eta%2==0){
@@ -595,7 +598,7 @@ if(drop_bosonic_diverge){
 // std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
 return zero;	// TODO: need to test this might be an approximation 
 }
-E+=E_REG;	
+// E+=E_REG;	
 }else{
 	// if(sgn(E.real())!=0){
 	// E+=E_REG*sgn(E.real());}

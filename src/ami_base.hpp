@@ -108,6 +108,8 @@ typedef enum {matsubara, real} ext_type;
 
 ext_type ext_freq_type=matsubara;
 
+bool drop_matsubara_poles=false;
+
 
 /// the ami_vars struct if the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
 
@@ -292,6 +294,10 @@ void take_term_derivative(term &in_term, pole_struct &pole, terms &out_terms);
 void print_terms(terms &t);
 
 void print_term(term &t);
+
+
+
+
 /*
 Though perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
 */
@@ -486,6 +492,11 @@ void print_pole_struct_info(pole_struct g);
 
 // experimental
 void derivative_opt(g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
+
+
+// term optimization
+
+void factorize_terms(terms &ami_terms, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 
 
 private:
