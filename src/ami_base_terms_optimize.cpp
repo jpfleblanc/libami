@@ -13,4 +13,19 @@ return;
 	
 }
 
+void AmiBase::convert_terms_to_ri(terms &ami_terms, Ri_t &Ri){
+
+Ri.clear();
+	
+for(int i=0; i<ami_terms.size(); i++){
+	
+Ri.push_back(ami_terms[i].g_list);	
+	
+	
+}
+
+	
+	return;
+	
+}
 

@@ -68,14 +68,6 @@ pole_array_t poles;
 poles=find_poles(int_index, R_array[array_index][j]);  
 
 
-// std::cout<<"In standard AMI Found n_poles="<<poles.size()<<std::endl;
-// for(int i=0; i<poles.size(); i++){
-	
-	// std::cout<<"Pole "<<i<<" M="<<poles[i].multiplicity_<<std::endl;
-	
-// }
-
-
 pole_array_t cor_poles;
 sign_t col_signs;
 
@@ -278,48 +270,17 @@ break;
 // added may 26 2021
 // extra check if the pole is only a fermionic frequency
  
-bool non_zero=false;
+bool non_zero=false; 
+if(drop_matsubara_poles){ 
 int zcount=std::count(pole.eps_.begin(), pole.eps_.end(),0);
 if( zcount<pole.eps_.size()){
 	
 	non_zero=true;
 }
+}else{
+	non_zero=true;
+}
 
-// if(!non_zero){
-	
-	// std::cout<<"Dropped a pole because of new logic"<<std::endl;
-// }
-
-// if(zcount==pole.eps_.size()){
-	// if(pole.alpha_.back()!=0){
-		// non_zero=true;
-	// }
-	
-// } 
-
-// if(drop_matsubara_poles){
-	// bool non_zero=false;
-// int zcount=std::count(pole.eps_.begin(), pole.eps_.end(),0);
-// if( zcount<pole.eps_.size()){
-	
-	// non_zero=true;
-// }
-
-// if(zcount==pole.eps_.size()){
-	// if(pole.alpha_.back()!=0){
-		// non_zero=true;
-	// }
-	
-// } 
-
-
- // if (!duplicate && non_zero ){
-// if (!duplicate){
-// pole_array.push_back(pole);
-// }
-
-
-// }else{
 
 if(non_zero){
 	
@@ -460,10 +421,10 @@ S_array.push_back(temp_sign_array);
 
 
 
-// TODO: the word 'evaluate' here is misleading, since it is a part of the construction 
+
 /**
  *
- * Void function takes a product of Green's functions - an element of an `Ri_t` object - and evaluates the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
+ * Void function takes a product of Green's functions - an element of an `Ri_t` object - and obtains the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
  * @param[in] G_in : Product of green's functions
  * @param[in] pole : Pole to evaluate residue
  * @param[in] Ri_out : Resultant `g_prod_t` 

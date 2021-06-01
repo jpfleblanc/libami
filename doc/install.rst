@@ -20,9 +20,7 @@ In short:
 
 	+ CMake >= 3.18
 
-	+ HDF5 library >=1.8
-
-	+ Boost >= 1.68.0
+	Optional:
 
 	+ Doxygen >= 1.9.0
 
@@ -31,7 +29,7 @@ In short:
 	+ Breathe >= 4.20.0 (You can install it by `pip` as well.)
 
 3. Building:
-	Open `compile.sh` file in any editor, and change the file path.
+	An example cmake command is in the `compile.sh`.  Open the file in any editor, and change relevant file paths.
 	Use a standard `CMake` procedure:
 
 		::
@@ -69,8 +67,9 @@ In short, use a standard `CMake`-based approach:
 Libami is documented using doxygen and Sphinx.  Documentation can be built using 
 
 	::
-	$make LibAMI-docs
-	$make Sphinx 
+	
+		$make LibAMI-docs
+		$make Sphinx 
 
 
 

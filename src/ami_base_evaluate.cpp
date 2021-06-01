@@ -117,7 +117,7 @@ std::complex<double> term;
 
 
 std::vector< std::complex<double>> unique_vals;
-
+// std::cout<<"External prefactor is "<<external.prefactor<<std::endl;
 for(int i=0; i< unique_g.size(); i++){
 // we pretend each G is a g_prod and use the same function as the normal star operation for evaluating products of G's 
 g_prod_t this_term;
@@ -158,7 +158,7 @@ for(int i=0; i< Eval_list.size(); i++){
 	
 	std::complex<double> ksum(0,0);
 	for(int j=0; j< Eval_list[i].size(); j++){
-		
+		// std::cout<<j<<" "<<K[0][Eval_list[i][j].first]<<" "<<double(Eval_list[i][j].second)<<std::endl;
 		ksum+=K[0][Eval_list[i][j].first]*double(Eval_list[i][j].second);
 		
 	}
@@ -182,79 +182,10 @@ for(int i=0; i< Eval_list.size(); i++){
 // std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 	
 	output+=term;
-	/* 
-	if(std::real(output)>1e3){
-		verbose=1;
-		
-		std::cout<<"In optimized star K[]*R"<<std::endl;
-std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
-
-std::cout<<"This term has a list of G's with unique indexes "<<std::endl;
-	for(int j=0; j< pair_vec.size(); j++){
-	std::cout<<pair_vec[j].first<<" ";
-		
-	}
-	std::cout<<std::endl;	
 	
-
-std::cout<<"Debugging Energy values "<<std::endl;
-
-for(int i=0; i< external.energy_.size(); i++){
-	
-	std::cout<<external.energy_[i]<<std::endl;
 	
 }
 
-
-std::cout<<"Debugging Unique G's "<<std::endl;
-for(int i=0; i<unique_vals.size(); i++){
-	std::cout<<i<<std::endl;
-	print_g_struct_info(unique_g[i]);
-	
-}
-
-std::cout<<"Debugging unique values "<<std::endl;
-for(int i=0; i<unique_vals.size(); i++){
-	std::cout<<i<<" "<<unique_vals[i]<<std::endl;
-	
-}	
-		
-		
-		
-		
-	} */
-
-
-	
-}
-
-
-// if(verbose){std::cout<<"Exiting star ----------------------"<<std::endl;}
-	
-
-// std::cout<<"Debugging Unique G's "<<std::endl;
-// for(int i=0; i<unique_vals.size(); i++){
-	// std::cout<<i<<std::endl;
-	// print_g_struct_info(unique_g[i]);
-	
-// }
-
-// std::cout<<"Debugging unique values "<<std::endl;
-// for(int i=0; i<unique_vals.size(); i++){
-	// std::cout<<i<<" "<<unique_vals[i]<<std::endl;
-	
-// }	
-
-// std::cout<<"Debugging Energy values "<<std::endl;
-
-// for(int i=0; i< external.energy_.size(); i++){
-	
-	// std::cout<<external.energy_[i]<<std::endl;
-	
-// }
-
-	
-// }
 
 
 
@@ -265,6 +196,14 @@ return output;
 
 
 
+ /**
+ * This is a primary AMI symbolic evaluation function.  It takes a solution defined by S, P, and R arrays and the external parameters and returns a `complex<double>` restult. 
+ * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
+ * @param[in] R_array: Input `R_t` 
+ * @param[in] P_array : Input `P_t`
+ * @param[in] S_array : Input `S_t`
+ * @param[in] external : Input `ami_vars` containing point to evaluate. 
+*/
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
 
@@ -299,9 +238,6 @@ for (int i=0; i< dim-1; i++){
 
 SorF_t SF_left, SF_right;
 SorF_t S_double_left, S_double_right;
-
-// need line that converts the Si_t from integers to doubles? So that the dot operator has doubles both left and right entries.
-
 
 
 if(i==0){
@@ -345,9 +281,6 @@ return final_result;
 
 std::complex<double> AmiBase::star(ami_parms &parms, SorF_t K, Ri_t R, ami_vars external){
 
-// std::cout<<"Size of left is "<< K.size() <<std::endl;
-// std::cout<<"Size of left array is "<< K[0].size() <<std::endl;
-// std::cout<<"Size of right is "<< R.size() <<std::endl;
 
 std::complex<double> output=0;
 std::complex<double> term;
@@ -367,26 +300,11 @@ for( int i=0; i< K[0].size(); i++)
 gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
 
-// if(i==0){t0=term;}
-// if(i==10){t10=term;}
-
-//std::isnan(std::real(term))
-
-// if(abs(term)<1){
 output+= term;
-// }
-// if( true ){output+= term;
 
-// std::cout<<"Term apparently is finite? "<< term << std::endl;
-// }
-// if(std::real(term)>10){
-// print_g_prod_info(R[i]);
-// }
-// if(term.real() > 100 || term.imag()>100 ){
 // std::cout<<"In star K[]*R"<<std::endl;
 // std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 // print_output=true;
-// }
  // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
 }
@@ -418,8 +336,7 @@ std::vector<std::complex<double> > line;
 line.reserve(Si[i].size());
 for(int j=0; j< Si[i].size(); j++){
 
-// std::cout<<"Dot term "<<std::endl;
-// std::cout<<Si[i][j]<<" "<<fermi[i][j]<<std::endl;
+
 line.push_back(Si[i][j]*fermi[i][j]);
 
 }
@@ -433,11 +350,6 @@ return output;
 }
 
 AmiBase::SorF_t AmiBase::cross(SorF_t left, SorF_t right){
-// should check that size() of left==1 or else this won't work. Throw an error.
-// also, left[0].size()==right.size()
-
-// std::cout<<"Size of left is "<< left.size() <<std::endl;
-// std::cout<<"left[0] and right is "<< left[0].size()<< " "<< right.size() <<std::endl;
 
 SorF_t output;
 
@@ -453,8 +365,6 @@ line.push_back(left[0][i]*right[i][rj]);
 }
 }
 
-
-// std::cout<<"Lengths are "<< line.size()<<std::endl;
 
 output.push_back(line);
 
@@ -514,7 +424,7 @@ double E_REG=parms.E_REG_;
 // 2) simply replace eta=eta + 1*stat_map[i] 
 //
 
-// alternate fix.  parms.TYPE_ is 0 for sigma, 1 for Pi etc.  So if parms.TYPE_==1 and pole.alpha_.back()==1, don't add one. else add one to eta.
+// alternate fix.  parms.TYPE_ is 0 for sigma, 1 for Pi etc.  So if parms.TYPE_==1 and pole.alpha_.back()==1 (or -1), don't add one. else add one to eta.
 
 // TODO: should this be improved somehow? Should frequencies know their stat type?
 // handle all but one external
@@ -525,10 +435,6 @@ if(pole.alpha_[i]!=0){
 }
 }
 
-// may 27 2021: possible oversight. 
-// When using real frequencies as an external variable then the external frequency does not change fermi/bose statistics. 
-
-// if(ext_freq_type==matsubara){
 
 
 // handle external based on graph type 
@@ -550,18 +456,8 @@ eta++;
 	
 }
 
-// }
-
 // END TODO
 
-
-/* 
-for (int i=0; i< pole.alpha_.size(); i++){
-//eta+= pole.alpha_[i];
-if(pole.alpha_[i]!=0){
-	eta++;
-}
-} */
 
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
@@ -588,9 +484,6 @@ std::complex<double> im(0,1);
 // E+=E_REG*sgn(E.real());
 // }	
 
-// TEST - always add the regulator
-// TODO: changed on may 18 2020 for molecules - should instead reconstruct ami solutions 
-// std::cout<<"DB is "<<drop_bosonic_diverge<<std::endl;
 
 if(E==zero && sigma==-1  ){  // && pole.der_==0    Not sure if pole derivative plays any role
 	// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
@@ -644,26 +537,6 @@ output=fermi_bose(m,sigma,beta,E);
 // std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 
 
-/*
-if(pole.der_==0){
-output=1.0/(sigma*std::exp(beta*(E))+1.0);
-// return output;
-}else{  // compute m'th derivative
-
-for( int k=0; k<m+1; k++){
-	// std::cout<<"On k'th derivative "<<k<<std::endl;
-	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
-	output+= term;
-	// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
-}
-
-// TODO: double check that this multiplication is general 
-output=output*std::pow(beta,m)*(-1.0);
-
-// output=0.0;
-}
-*/
-
 // TODO I'm not sure this is correct for doubleocc 
 // if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  should generalize this
 if(parms.TYPE_==AmiBase::doubleocc){
@@ -678,7 +551,7 @@ output=-1.0*output;
 return output;
 }
 
-// this computes the mth order derivative of the fermi or bose distribution functions at beta, for energy E. sigma=1.0 for fermi and -1.0 for bose. 
+/// This computes the mth order derivative of the fermi or bose distribution functions at beta, for energy E. sigma=1.0 for fermi and -1.0 for bose. 
 std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta, std::complex<double> E){
 
 std::complex<double> output,term;
@@ -727,25 +600,12 @@ std::complex<double> AmiBase::get_energy_from_pole( pole_struct pole, ami_vars e
 
 std::complex<double> output(0,0);
 
-// std::cout<<"Evaluating energies"<<std::endl;
+// Evaluating energies for pole
 for (int i=0; i< pole.eps_.size(); i++){
-// std::cout<<"Pole "<<double(pole.eps_[i])<<" external e is "<< external.energy_[i]<<" mult is "<<double(pole.eps_[i])*external.energy_[i]<<std::endl;
+
 output+= double(pole.eps_[i])*external.energy_[i];
 
 }
-/* 
-if(ext_freq_type==real){
-	for(int i=0; i< pole.alpha_.size(); i++){
-	
-	output+=double(pole.alpha_.back())*external.frequency_.back();
-	
-	// std::cout<<"Real part "<<pole.alpha_.back()<<" "<< external.frequency_.back()<<std::endl;
-	}
-	
-} */
-
-
-// std::cout<<"Output is "<<output<<std::endl;
 
 return output;
 
@@ -809,6 +669,7 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // }
 }
 
+// For safety this is disabled.  No regulator whatsoever. 
 // if(alphadenom==zero){
 	// return zero;
 	// double val=E_REG*sgn(epsdenom.real());
@@ -836,10 +697,9 @@ return output;
 }
 
 
-// Using notation to match 10.1103/PhysRevB.101.075113 
-// They produced coefficients to the fermi functions and put them in a table. 
-// We derivated a general expression for those coefficients - we believe this to be general but have only checked up to 6th order I think 
-// TODO: Precomputing these might be a smart thing to do 
+/// Using notation to match 10.1103/PhysRevB.101.075113 
+/// They produced coefficients to the fermi functions and put them in a table. 
+/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order I think 
 double AmiBase::frk(int r, int k){
 double output=0.0;
 

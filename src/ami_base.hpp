@@ -55,7 +55,7 @@ class AmiBase
 	
 public:
 
-/// Not to be underappreciated - returns the sign of a value - or zero if it is uniquely zero. 
+/// Returns the sign of a value - or zero if it is uniquely zero. 
 template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
@@ -67,7 +67,8 @@ int factorial(int n);
 // AmiVars
 
 bool drop_bosonic_diverge=false; // if set to true, then E_REG not needed because bosonic divergences will simply be set to zero.  Rigorously this may not be correct. 
-bool drop_der=false; // if set to true, then E_REG not needed because bosonic divergences will simply be set to zero.  Rigorously this may not be correct. 
+bool drop_der=false; // if set to true, then E_REG not needed because bosonic divergences will simply be set to zero.  Rigorously this may not be correct.
+bool drop_matsubara_poles=false; // if set to true, ignores matsubara poles with zero energy 
 
 
 // External list of energies and frequencies 
@@ -108,11 +109,9 @@ typedef enum {matsubara, real} ext_type;
 
 ext_type ext_freq_type=matsubara;
 
-bool drop_matsubara_poles=false;
 
 
 /// the ami_vars struct if the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
-
 struct ami_vars{
 
 ami_vars(energy_t eps, frequency_t freq){
@@ -128,16 +127,14 @@ energy_t energy_;
 frequency_t frequency_;
 double prefactor;
 double BETA_;
+
+///Experimental parameter for spectral representation 
 double gamma_=0;
 
 };
 
 
-// TODO: does ami_parms need TYPE_, int_type_, dispersion_ etc? 
-// TODO: Define new objects that satisfy the requirements of TYPE_ etc 
-// TODO: is E_REG used during construction?  I think not. 
-
-/// Parameters for the construction phase of AMI.
+/// Parameters for AMI construction/evaluation.
 struct ami_parms{
 ami_parms(int N_INT,  double E_REG){
 N_INT_=N_INT;
@@ -169,10 +166,8 @@ ami_parms(){}
 
 int N_INT_;
 int N_EXT_=1;
-double E_REG_;// does E_Reg belong here? 
+double E_REG_;
 
-
-// these should be replaced with something more specific to AMI 
 graph_type TYPE_;
 int_type int_type_;
 disp_type dispersion_;
@@ -214,13 +209,12 @@ alpha_t alpha_;
 stat_type stat_;
 species_t species_;
 
-// Experimental Spectral representation
+/// Experimental Spectral representation
 int pp=-1;  // pp=0 means this G represents a principle part integral. pp=1 it is a delta function. else it is inert 
 
 };
 
 /// Pole structure. Equivalent to `g_struct`, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
-
 struct pole_struct{
 
 epsilon_t eps_; 
@@ -245,20 +239,19 @@ typedef std::vector<g_prod_t> g_prod_array_t;
 
 
 
-// S, P , R at each step
+/// S, P , R at each integration step
 
 typedef std::vector<g_prod_t> Ri_t;
 typedef std::vector<pole_array_t> Pi_t;
 typedef std::vector<sign_t> Si_t;
 
-// final output arrays
-
+/// final output S, P, R arrays. See 
 typedef std::vector<Ri_t> R_t; 
 typedef std::vector<Pi_t> P_t;
 typedef std::vector<Si_t> S_t;
 
 // typedefs for evaluation
-// Terms experimental 
+/// Terms Structure for term-by-term evaluation.  Conceptually simpler than SPR construction.
 struct term{
 	
 	term(){
@@ -279,21 +272,32 @@ g_prod_t g_list;
 
 typedef std::vector< term > terms;
 
+/// Construct terms 
 void construct(int N_INT, g_prod_t R0, terms &terms_out);
+/// Evaluate Terms 
 std::complex<double> evaluate(ami_parms &parms, terms ami_terms, ami_vars &external);
+/// Evaluate a single Term 
 std::complex<double> evaluate_term(ami_parms &parms, term ami_term, ami_vars &external);
+/// Evaluate the numerator of a term - product of fermi/bose functions. 
 std::complex<double> eval_fprod(ami_parms &parms,pole_array_t &p_list, ami_vars &external);
 
-
+/// Integrates a single matsubara index 
 void integrate_step(int index, terms &in_terms, terms &out_terms);
 
 void split_term(term &this_term, pole_struct this_pole, term &innert_part, term &active_part);
+
+/// Primary residue function for temr construction 
 void terms_general_residue(term &this_term, pole_struct this_pole, terms &out_terms);
-
+/// Derivative for term construction 
 void take_term_derivative(term &in_term, pole_struct &pole, terms &out_terms);
-void print_terms(terms &t);
 
+/// Screen IO for debugging 
+void print_terms(terms &t);
+/// Screen IO for debugging
 void print_term(term &t);
+
+/// Convert terms to Ri structure for optimization 
+void convert_terms_to_ri(terms &ami_terms, Ri_t &Ri);
 
 
 
@@ -348,16 +352,13 @@ SorF_t cross(SorF_t left, SorF_t right);
 SorF_t dot(Si_t Si, SorF_t fermi);
 
 // Testing Priority: 2 should be easy to test 
-/// Blurb about pole 
-// if I give a pole.eps_ ad an external.energy_ of different sizes 
-// if .eps_.size() > energy_.size() it will crash
-// if the two sizes are not equal. 
-// Q: is checking this worthwhile?  Is it slow?
+/// Given a set of external energies, beta, and frequencies, will evaluate the energy of a pole_struct 
 std::complex<double> get_energy_from_pole(pole_struct pole, ami_vars external);
 
-/// Blurb about g
+/// Given a set of external energies, beta, and frequencies, will evaluate the energy of a g_struct 
 std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
 
+/// Evaluates a product of green's functions 
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
 /* math example 
@@ -413,29 +414,23 @@ g_prod_t reduce_gprod(g_prod_t G_in, pole_struct pole);
 
 // derivatives of fermi functions
 /**
-In order to take arbitrary derivatives of fermi functions - we need to know the prefactor.  It is given in general by this function.  TODO: This could be replaced with an algorithmic differentiation tool. 
-
-
+In order to take arbitrary derivatives of fermi functions - we need to know the prefactor.  The fermi/bose function is given in general by the function: 
 \f[
 
-\sum\limits_{k=0}^{m} frk(m,k)*std::pow(sigma,k) *std::pow(-1.0, k+1)*(1.0/(sigma*std::exp(beta*(E))+1.0)/std::pow(sigma +std::exp(-beta*(E)), k))
+\sum\limits_{k=0}^{m} f_{rk}(m,k) \sigma^k (-1.0)^{k+1} \frac{1}{\sigma e^{\beta E}+1.0} \frac{1}{[\sigma + e^{-\beta E}]^k}
+\f]
 
-
-frk function itself returns 
-for(int m=0; m< k+1; m++){
-	
-output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));	
-
-}
+The frk function itself returns 
+\f[
+f_{rk}(m,k)=\sum\limits_{m=0}^{k+1} binomialCoeff(k,m) m^r (-1)^{k-m}
 \f]
 
 */
 double frk(int r, int k);
 
 
-/*
-Recursive construction of fermi_bose derivatives 
-*/
+
+///Recursive construction of fermi_bose derivatives 
 std::complex<double> fermi_bose(int m, double sigma, double beta, std::complex<double> E);
 
 
@@ -497,6 +492,7 @@ void derivative_opt(g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 // term optimization
 
 void factorize_terms(terms &ami_terms, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
+std::complex<double> evaluate(ami_parms &parms, terms ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 
 
 private:

@@ -13,6 +13,7 @@ Welcome to the frontpage of LibAMI's documentation!
    :maxdepth: 2
    
    install
+   examples
    docs
    support
    Referencing

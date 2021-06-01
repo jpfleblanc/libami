@@ -267,6 +267,10 @@ bool AmiBase::pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign){
 
 
 void AmiBase::factorize_Rn(Ri_t &Rn, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
+unique_g.clear();
+Rref.clear();
+Eval_list.clear();
+
 //i is the entry of Rn	
 
 // R_ref_t Rref;
