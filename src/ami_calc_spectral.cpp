@@ -68,12 +68,13 @@ return output;
 
 }
 
-void NewAmiCalc::remap_external(AmiBase::ami_vars &external,AmiBase::ami_vars &this_external,AmiBase::Pi_t &Unique_poles, std::vector<int> &pp){
-
+void NewAmiCalc::remap_external(AmiBase::ami_vars &external,AmiBase::ami_vars &this_external,AmiBase::Pi_t &Unique_poles, std::vector<int> &pp, std::vector<int> &used){
+	
+used.clear();
 // given pp - for each zero in pp, need to select from Unique_poles one of the possible poles. it doesn't matter so long as they are different indices 
 
 AmiBase::pole_array_t pole_list;
-std::vector<int> used;
+// std::vector<int> used;
 
 for(int i=0; i< pp.size(); i++){
 	
@@ -110,12 +111,34 @@ if(!found){ throw std::runtime_error("Failed to find a pole combination: in rema
 // the minus is already in this external 
 this_external=external;
 
+// std::cout<<"Energies "<<std::endl;
+// for(int m=0; m< this_external.energy_.size(); m++){
+	
+	// std::cout<<m<<": "<< this_external.energy_[m]<<std::endl;
+	
+// }
+
 for(int i=0; i< pole_list.size(); i++){
+	
+	// std::cout<<"Replacing xb "<<pole_list[i].index_<<" using pole "<<std::endl;
+	// amibase.print_pole_struct_info(pole_list[i]);
 	
 	std::complex<double> this_xb_val=get_xb_from_pole(pole_list[i],this_external);
 	this_external.energy_[pole_list[i].index_]=this_xb_val;
 	
+	// std::cout<<"returned xb value of "<< this_xb_val<<std::endl;
+	
+	
 }
+
+
+// std::cout<<"Remapped Energies "<<std::endl;
+// for(int m=0; m< this_external.energy_.size(); m++){
+	
+	// std::cout<<m<<": "<< this_external.energy_[m]<<std::endl;
+	
+// }
+
 	
 		
 	return;
@@ -174,7 +197,9 @@ std::complex<double> output(1,0);
 // the energies are the negative of the epsilon values 
 for(int i=0; i< Ei.size(); i++){
 	// std::cout<<"On i="<<i<<std::endl;
+	// std::cout<<"xi="<< xi[i]<<" Ei="<<Ei[i]<<std::endl;
 std::complex<double> this_A=gamma/(std::pow(xi[i] +Ei[i],2) + std::pow(gamma,2))/M_PI;	
+// std::cout<<"Returned "<< this_A<<std::endl;
 output=output*this_A;
 }
 	
@@ -262,7 +287,7 @@ if	(unique_g[Rref[opt_term][rand_choice].first].eps_[i]!=0){
 	
 
 // first look at what is in the opt_term and now iterate over the different combinations of delta functions 
-int ndelta=0;
+int ndelta_count=0;
 
 std::vector<int> delta_indices;
 
@@ -271,7 +296,7 @@ std::vector<int> delta_indices;
 for(int i=0; i< Rref[opt_term].size(); i++){
 // std::cout<<"For opt_term the number of pole choices is "<<Unique_poles[Rref[opt_term][i].first].size()<<std::endl;
 if( Unique_poles[Rref[opt_term][i].first].size()!=0){
-ndelta++;
+ndelta_count++;
 delta_indices.push_back(i);
 }	
 	
@@ -279,7 +304,7 @@ delta_indices.push_back(i);
 }
 // these are the delta combinations to be applied to delta_indices 
 std::vector<std::vector<int>> pp_v;
-get_pp_comb(ndelta,pp_v);
+get_pp_comb(ndelta_count,pp_v);
 
 // std::cout<<"ppv size is "<<pp_v.size()<<" for ndelta="<<ndelta<<std::endl;
 
@@ -313,8 +338,10 @@ AmiBase::ami_vars remapped_gprod_external; //=external;
 // AmiBase::ami_vars remapped_aprod_external;
 AmiBase::ami_vars remapped_gprod_pair;
 
-remap_external( gprod_external, remapped_gprod_external, Unique_poles, pp);
-remap_external( gprod_external_pair, remapped_gprod_pair, Unique_poles, pp);
+std::vector<int> used;
+
+remap_external( gprod_external, remapped_gprod_external, Unique_poles, pp, used);
+remap_external( gprod_external_pair, remapped_gprod_pair, Unique_poles, pp,used);
 
 std::vector<double> this_xi_list(xi_list.size());
 std::vector<double> this_xi_pair(xi_pair.size());
@@ -560,7 +587,8 @@ AmiBase::SorF_t SorF_result;
 
 AmiBase::ami_vars this_external; //=external;
 
-remap_external( external, this_external, Unique_poles, pp);
+std::vector<int> used;
+remap_external( external, this_external, Unique_poles, pp, used);
 // now we have the external value for this pp combination.  so generate everything as done before 
 // EXCEPT - exclude the delta G's 
 // add a prefactor (-i pi)^(ndelta)

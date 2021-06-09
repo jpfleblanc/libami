@@ -1,4 +1,5 @@
 #include "ami_base.hpp"
+#include "ami_calc.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -17,7 +18,8 @@ void example4();
 void example4hm();
 void example9();
 
-
+void example2_spec();
+AmiBase::ami_vars construct_spec_example();
 
 /// Various functions
 

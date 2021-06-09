@@ -275,9 +275,9 @@ typedef std::vector< term > terms;
 /// Construct terms 
 void construct(int N_INT, g_prod_t R0, terms &terms_out);
 /// Evaluate Terms 
-std::complex<double> evaluate(ami_parms &parms, terms ami_terms, ami_vars &external);
+std::complex<double> evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external);
 /// Evaluate a single Term 
-std::complex<double> evaluate_term(ami_parms &parms, term ami_term, ami_vars &external);
+std::complex<double> evaluate_term(ami_parms &parms, term &ami_term, ami_vars &external);
 /// Evaluate the numerator of a term - product of fermi/bose functions. 
 std::complex<double> eval_fprod(ami_parms &parms,pole_array_t &p_list, ami_vars &external);
 
@@ -492,7 +492,7 @@ void derivative_opt(g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 // term optimization
 
 void factorize_terms(terms &ami_terms, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
-std::complex<double> evaluate(ami_parms &parms, terms ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
+std::complex<double> evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 
 
 private:

@@ -93,6 +93,7 @@ std::cout<<"--- Term is ---"<<std::endl;
 		for(int j=0; j<t.p_list.size(); j++){
 			print_pole_struct_info(t.p_list[j]);
 		}
+		std::cout<<"Sign ="<<t.sign<<std::endl;
 		
 		std::cout<<"-------------"<<std::endl;	
 	

@@ -31,6 +31,7 @@ set(LIB_FILES
   ./src/ami_calc_io.cpp
   ./src/ami_calc_evaluate.cpp
 	./src/ami_calc_spectral.cpp
+	./src/ami_calc_terms_spectral.cpp
   )
 
 ADD_LIBRARY(amibase SHARED ${LIB_FILES})

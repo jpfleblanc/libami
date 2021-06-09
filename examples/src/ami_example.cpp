@@ -251,6 +251,28 @@ return external;
 }
 
 
+AmiBase::ami_vars construct_spec_example(){
+
+
+
+// energy_t energy={-4,1,-1};
+AmiBase::energy_t energy={-0.2, 0.35, -0.44 };
+
+AmiBase::frequency_t frequency;
+
+for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
+
+frequency.push_back(std::complex<double>(0,M_PI));
+
+AmiBase::ami_vars external(energy, frequency);
+
+external.BETA_=1.0;
+
+return external;
+
+}
+
+
 
 
 

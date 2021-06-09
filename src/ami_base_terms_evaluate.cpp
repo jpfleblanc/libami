@@ -1,9 +1,9 @@
 #include "ami_base.hpp"
 
 
+// problem. seem to be getting the same result from the spectral problem when external frequency is zero as for the apparently finite frequency direct calculation
 
-
-std::complex<double> AmiBase::evaluate(ami_parms &parms, terms ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
+std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
 	
 
 if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
@@ -66,7 +66,10 @@ return output;
 	
 }
 
-std::complex<double> AmiBase::evaluate(ami_parms &parms, terms ami_terms, ami_vars &external){
+
+
+
+std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external){
 
 std::complex<double> output(0,0);
 
@@ -83,7 +86,7 @@ return output;
 	
 }
 
-std::complex<double> AmiBase::evaluate_term(ami_parms &parms, term ami_term, ami_vars &external){
+std::complex<double> AmiBase::evaluate_term(ami_parms &parms, term &ami_term, ami_vars &external){
 
 std::complex<double> gprod;
 
@@ -97,7 +100,7 @@ std::complex<double> output(0,0);
 
 output=ami_term.sign*gprod*fprod;
 
-// std::cout<<"Term gave "<< ami_term.sign*fprod<<" "<< gprod<<" "<<output<<std::endl;
+std::cout<<"Term gave "<< ami_term.sign*fprod<<" "<< gprod<<" "<<output<<std::endl;
 
 return output;
 

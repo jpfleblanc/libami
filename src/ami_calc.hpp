@@ -50,6 +50,7 @@ AmiBase amibase;
     std::mt19937 nac_rand_gen;
 		int random_int(int min, int max);
 		double random_real(double min, double max);
+		void randomize_xi(std::vector<double> &xi, int length, double max);
 		
 		
 
@@ -383,6 +384,7 @@ std::vector<double> pgrid, sigma_hf;
 double hf_mu=0;
 double hf_kstep;
 double rs;
+double max_k_hf=16;
 
 double get_hf_sigma(double kk);
 double hf_energy(double kk);
@@ -424,7 +426,7 @@ std::complex<double> eval_spectral_product(std::vector<std::complex<double>> &Ei
 
 void get_pp_comb(int length, std::vector< std::vector<int> > &ppv);
 std::vector<int> toBinary(int n,int length);
-void remap_external(AmiBase::ami_vars &external,AmiBase::ami_vars &this_external,AmiBase::Pi_t &Unique_poles, std::vector<int> &pp);
+void remap_external(AmiBase::ami_vars &external,AmiBase::ami_vars &this_external,AmiBase::Pi_t &Unique_poles, std::vector<int> &pp, std::vector<int> &used);
 
 std::complex<double> get_xb_from_pole( AmiBase::pole_struct pole, AmiBase::ami_vars external);
 
@@ -439,6 +441,19 @@ bool get_mirror_state(AmiBase::g_prod_t &R0, AmiBase::g_struct &unique_g, intern
 
 void construct_ami_mirror_vars_list(solution_set &AMI, internal_state &state, ext_vars &external, NewAmiCalc::ami_vars_list &vars_list);
 void evaluate_mirror_solutions(std::vector<double> &Re_results, std::vector<double> &Im_results, solution_set &AMI, internal_state &state, external_variable_list &external);
+
+
+// terms spectral functions
+std::complex<double> evaluate_terms_simple_spectral(AmiBase::ami_parms &parms, AmiBase::terms ami_terms, AmiBase::ami_vars &external, AmiBase::g_prod_t &unique_g, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list);
+
+std::complex<double> evaluate_terms_spectral(AmiBase::ami_parms &parms, AmiBase::terms ami_terms, AmiBase::ami_vars &external, AmiBase::g_prod_t &unique_g, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<double> &xi_list,  AmiBase::Pi_t &Unique_poles, double &xi_cut);
+
+std::complex<double> evaluate_OPT_spectral_term(AmiBase::ami_parms &parms, AmiBase::terms &ami_terms, AmiBase::ami_vars &external,  AmiBase::g_prod_t &unique_g, AmiBase::R_ref_t &Rref,AmiBase::ref_eval_t &Eval_list, std::vector<int> &pp);
+
+std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiBase::term &ami_term, AmiBase::ami_vars &external, std::vector<double> &xi_list, double &xi_cut);
+
+
+double delta_scale( std::vector<double> xi_list, double xi_cut, std::vector<int> &used);
 
 
 private:

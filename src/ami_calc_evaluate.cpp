@@ -697,10 +697,15 @@ double NewAmiCalc::hf_energy(double kk){
 // std::cout<<"HF q arguement is "<<kk<<std::endl;
 double E_kk;
 double mass=0.5;
-double bolv=get_hf_sigma(kk);
+
 double amu=hf_mu;
-	
+
+if(kk< max_k_hf){
+double bolv=get_hf_sigma(kk);	
 E_kk=(0.5*(kk*kk/mass)+bolv-amu);//*1.91916*1.91916;
+}else{
+	E_kk=(0.5*(kk*kk/mass)-amu);
+}
 
 // std::cout<<"Returning "<<E_kk<< " for kk, amu "<< kk<<" "<<amu<<std::endl;
 	
