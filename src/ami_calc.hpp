@@ -404,6 +404,8 @@ sol_=s;
 ext_vars ext_vars_;
 solution_set sol_;
 	
+int ord, num,gnum;	
+	
 };
 
 
