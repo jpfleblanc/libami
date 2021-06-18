@@ -12,7 +12,57 @@
 #include <chrono>
 #include <random>
 
- 
+AmiBase::g_prod_t construct_simple_example(){
+	
+
+AmiBase::g_prod_t g;
+
+
+// Setting up G array
+// defining alpha's
+
+AmiBase::alpha_t alpha_1={1};
+
+//defining epsilon's
+AmiBase::epsilon_t epsilon_1={1};
+
+
+AmiBase::g_struct g1(epsilon_1,alpha_1);
+
+
+
+AmiBase::g_prod_t R0;
+
+R0.push_back(g1);
+
+
+return R0;	
+
+	
+	
+}
+
+AmiBase::ami_vars ext_example_simple(double w, double gamma){
+
+
+
+// energy_t energy={-4,1,-1};
+AmiBase::energy_t energy={-1};
+
+AmiBase::frequency_t frequency;
+
+// for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
+
+frequency.push_back(std::complex<double>(w,gamma));
+
+AmiBase::ami_vars external(energy, frequency);
+
+external.BETA_=1.0;
+
+return external;
+
+}
+
 
 
 AmiBase::g_prod_t construct_multipole_example(){

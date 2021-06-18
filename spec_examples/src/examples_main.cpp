@@ -7,24 +7,31 @@ int main(int argc, char** argv)
 {
 	
 
-std::cout<<"---- Running 2nd order example -----"<<std::endl;	
-example2();
+// std::cout<<"---- Running 2nd order example -----"<<std::endl;	
+// example2();
+// std::cout<<"----"<<std::endl;
+
+
+std::cout<<"---- Running simplest spectral example -----"<<std::endl;	
+example_simple_spec();
 std::cout<<"----"<<std::endl;
+
+
 
 // std::cout<<"---- Running 2nd order spectral example -----"<<std::endl;	
 // example2_spec();
 // std::cout<<"----"<<std::endl;
 
 	
-std::cout<<std::endl;
-std::cout<<"---- Running 4th order multipole example -----"<<std::endl;	
-example4();
-std::cout<<"----"<<std::endl;
+// std::cout<<std::endl;
+// std::cout<<"---- Running 4th order multipole example -----"<<std::endl;	
+// example4();
+// std::cout<<"----"<<std::endl;
 
-std::cout<<std::endl;
-std::cout<<"---- Running 4th order higher multipole example -----"<<std::endl;	
-example4hm();
-std::cout<<"----"<<std::endl;
+// std::cout<<std::endl;
+// std::cout<<"---- Running 4th order higher multipole example -----"<<std::endl;	
+// example4hm();
+// std::cout<<"----"<<std::endl;
 
 
 // std::cout<<std::endl;
@@ -32,6 +39,17 @@ std::cout<<"----"<<std::endl;
 // example9();
 // std::cout<<"----"<<std::endl;
 		
+	
+	
+}
+
+
+void example_simple_spec(){
+
+AmiBase ami;
+
+AmiBase::g_prod_t R0=construct_simple_example();	
+AmiBase::ami_vars avars=ext_example_simple();
 	
 	
 }
