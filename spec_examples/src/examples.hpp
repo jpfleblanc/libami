@@ -20,6 +20,7 @@ void example9();
 
 void example2_spec();
 void example_simple_spec();
+void example_simple_nospec();
 AmiBase::g_prod_t construct_simple_example();
 AmiBase::ami_vars ext_example_simple(double w, double gamma);
 

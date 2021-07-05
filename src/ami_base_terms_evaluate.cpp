@@ -100,7 +100,7 @@ std::complex<double> output(0,0);
 
 output=ami_term.sign*gprod*fprod;
 
-std::cout<<"Term gave "<< ami_term.sign*fprod<<" "<< gprod<<" "<<output<<std::endl;
+// std::cout<<"Term gave "<< ami_term.sign*fprod<<" "<< gprod<<" "<<output<<std::endl;
 
 return output;
 

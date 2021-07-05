@@ -491,13 +491,13 @@ if(drop_bosonic_diverge){
 // std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
 return zero;	// TODO: need to test this might be an approximation 
 }
-// E+=E_REG;	
+E+=E_REG;	
 }else{
-	// if(sgn(E.real())!=0){
-	// E+=E_REG*sgn(E.real());}
-	// else{
-		// E+=E_REG;
-	// }
+	if(sgn(E.real())!=0){
+	E+=E_REG*sgn(E.real());}
+	else{
+		E+=E_REG;
+	}
 }
 
 // july 23rd adding back in a different regulator 

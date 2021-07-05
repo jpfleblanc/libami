@@ -7,16 +7,19 @@ int main(int argc, char** argv)
 {
 	
 
+
 // std::cout<<"---- Running 2nd order example -----"<<std::endl;	
 // example2();
 // std::cout<<"----"<<std::endl;
 
 
-std::cout<<"---- Running simplest spectral example -----"<<std::endl;	
-example_simple_spec();
+std::cout<<"---- Running simplest example with no spectral representation -----"<<std::endl;	
+example_simple_nospec();
 std::cout<<"----"<<std::endl;
 
-
+std::cout<<"---- Running simplest example with spectral representation -----"<<std::endl;	
+example_simple_spec();
+std::cout<<"----"<<std::endl;
 
 // std::cout<<"---- Running 2nd order spectral example -----"<<std::endl;	
 // example2_spec();
@@ -45,11 +48,108 @@ std::cout<<"----"<<std::endl;
 
 
 void example_simple_spec(){
+	
+std::ofstream file;
+file.open("simple_spec_outfile.dat",  std::ofstream::out );	
+	
+
+AmiBase ami;
+NewAmiCalc amicalc;
+
+AmiBase::g_prod_t R0=construct_simple_example();	
+
+std::vector< std::complex<double>> results;
+
+//simplified storage type 
+AmiBase::terms amiterms;
+double E_REG=0;
+int N_INT=0;
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
+// Construct solution for problem defined in R0
+ami.construct(N_INT, R0, amiterms);
+
+// std::cout<<"Terms is of length "<<amiterms.size()<<std::endl;
+
+double xi_cut=10;
+double steps=100;
+
+for(double w=-8; w<8; w=w+0.1){
+
+AmiBase::ami_vars avars=ext_example_simple(w, 0.0);
+
+avars.gamma_=0.1;
+
+std::vector<double> xi_list;
+
+xi_list.resize(amiterms[0].g_list.size());
+
+double xstep=xi_cut/33331;
+
+std::complex<double> sums(0,0);
+int count=0;
+
+for(double this_x=-xi_cut; this_x<xi_cut; this_x+=xstep){ 
+
+xi_list[0]=this_x;
+//Evaluate term-by-term solution at one xi value 
+// std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiBase::term &ami_term, AmiBase::ami_vars &external, std::vector<double> &xi_list, double &xi_cut);
+
+std::complex<double> term_val=amicalc.evaluate_sp_term(test_amiparms, amiterms[0], avars, xi_list, xi_cut);	
+
+sums+= term_val*xstep;
+std::cout<<"w x and term "<< w<<" "<<this_x<<" "<< term_val.real()<<" "<< term_val.imag()<<std::endl;
+
+}
+results.push_back(sums);	
+file<< w <<" "<< sums.real()<<" "<< sums.imag()<<std::endl;	
+	
+}	
+
+file.close();
+
+	
+	
+}
+
+
+void example_simple_nospec(){
+	
+std::ofstream file;
+file.open("simple_nospec_outfile.dat",  std::ofstream::out );	
+	
 
 AmiBase ami;
 
 AmiBase::g_prod_t R0=construct_simple_example();	
-AmiBase::ami_vars avars=ext_example_simple();
+
+std::vector< std::complex<double>> results;
+
+//simplified storage type 
+AmiBase::terms amiterms;
+double E_REG=0;
+int N_INT=0;
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
+// Construct solution for problem defined in R0
+ami.construct(N_INT, R0, amiterms);
+
+// std::cout<<"Terms is of length "<<amiterms.size()<<std::endl;
+
+for(double w=-8; w<8; w=w+0.1){
+
+AmiBase::ami_vars avars=ext_example_simple(w, 0.2);
+
+//Evaluate term-by-term solution 
+std::complex<double> term_val=ami.evaluate(test_amiparms, amiterms, avars);	
+
+// std::cout<<"Returned value of "<<term_val<<std::endl;
+	results.push_back(term_val);
+	
+file<< w <<" "<< term_val.real()<<" "<< term_val.imag()<<std::endl;	
+	
+}	
+
+file.close();
+
 	
 	
 }
