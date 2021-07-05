@@ -80,7 +80,7 @@ if(DOXYGEN_FOUND)
   # this target will only be built if specifically asked to.
   # run "make LibAMI-docs" to create the doxygen documentation
   doxygen_add_docs(
-    LibAMI-docs
+    DOCS
     ${PROJECT_SOURCE_DIR}/src
     COMMENT "Generate API-documents for LibAMI."
   )
