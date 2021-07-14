@@ -62,6 +62,7 @@ add_test(pole_equiv_fun test/pole_equiv)
 
 
 if(BUILD_DOC)
+message("Adding doc subdirectory")
 add_subdirectory("doc")
 
 #########################################################
