@@ -68,7 +68,7 @@ Libami is documented using doxygen and Sphinx.  Documentation can be built using
 
 	::
 	
-		$make LibAMI-docs
+		$make DOCS
 		$make Sphinx 
 
 
