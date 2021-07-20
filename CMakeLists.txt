@@ -76,7 +76,7 @@ if(DOXYGEN_FOUND)
   )
   # doxygen settings can be set here, prefixed with "DOXYGEN_"
   set(DOXYGEN_EXTRACT_PRIVATE YES)
-  set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/LibAMI-docs")
+  set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/DOCS")
   set(DOXYGEN_GENERATE_LATEX YES)
   set(DOXYGEN_GENERATE_XML YES)
   # this target will only be built if specifically asked to.
