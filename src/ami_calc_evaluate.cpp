@@ -417,11 +417,14 @@ AmiBase::ami_vars NewAmiCalc::construct_ami_vars(AmiBase::g_prod_t &R0, double p
 
 AmiBase::energy_t energy=construct_energy(R0, state, external);
 
+// std::cout<<"Got here"<<std::endl;
+
 // the state 'order_' is actually just the internal k-length - or number of independent variables 
 AmiBase::frequency_t frequency;
-frequency.reserve(state.order_+1);
+int size=state.internal_k_list_.size();
+frequency.reserve(size+1);
 
-for(int i=0;i<state.order_;i++){ frequency.push_back(std::complex<double>(0,0));}
+for(int i=0;i<size;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 // TODO : this doesn't work with multiple external frequencies 
 // if(external.external_freq_.size()!=0){
