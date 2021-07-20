@@ -46,6 +46,11 @@ SorF_t S_double_left, S_double_right;
 SF_left=dot(S_array[0], fermi(parms,P_array[0], external));	
 
 SorF_result=SF_left;
+
+// std::cout<<"For dim=1 K contains "<<std::endl;
+// for( int x=0; x< SorF_result[0].size(); x++){
+// std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
+// }
 	
 }
 
@@ -93,6 +98,8 @@ std::complex<double> final_result;
 
 final_result=optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, external);
 
+
+// std::cout<<"In AMI result got "<<final_result<<std::endl;
 
 // if(double_check!=final_result){
 	// std::cout<<"Double checking got"<<std::endl;
