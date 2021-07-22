@@ -1,6 +1,7 @@
 
 #pragma once
 #include "ami_base.hpp"
+#include "ami_calc.hpp"
  
 #include <string> 
 #include <sstream> 
@@ -43,6 +44,7 @@ class AmiSpec
 public:
 
 AmiBase amibase;
+NewAmiCalc ami;
 
 double xi_cutoff=10;
 
@@ -96,6 +98,9 @@ ami_sp_term(){}
 A_prod_t aprod_;
 AmiBase::term ami_term_;
 delta_prod_t dprod_;
+
+bool root=true;
+int delta_count=0;
 	
 };
 
@@ -104,9 +109,17 @@ typedef std::vector<ami_sp_term> sp_terms;
 
 
 
-std::complex<double> A_eval(A_struct &A, std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
+std::complex<double> A_eval(std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
+
+std::complex<double> get_A(A_struct &A, double this_x, NewAmiCalc::k_vector_t k);
+std::complex<double> eval_tb(NewAmiCalc::k_vector_t k, std::complex<double> mu);
+
+
 std::complex<double> get_X(X_t &Xsym, xi_t &xi);
 std::complex<double> get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &eps);
+
+void generate_sp_terms(ami_term &start_term, sp_terms &new_sp_terms);
+void reduce_deltas(ami_sp_term &term);
 
 
 AmiSpec(double xc);
