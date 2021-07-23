@@ -455,7 +455,7 @@ return final_out;
 
 
 
-NewAmiCalc::k_vector_t NewAmiCalc::construct_k(AmiBase::alpha_t alpha, NewAmiCalc::k_vect_list_t &k){
+NewAmiCalc::k_vector_t NewAmiCalc::construct_k(AmiBase::alpha_t &alpha, NewAmiCalc::k_vect_list_t &k){
 	
 NewAmiCalc::k_vector_t kout(k[0].size(),0);	
 

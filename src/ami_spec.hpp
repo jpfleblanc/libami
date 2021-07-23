@@ -112,13 +112,17 @@ typedef std::vector<ami_sp_term> sp_terms;
 std::complex<double> A_eval(std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
 
 std::complex<double> get_A(A_struct &A, double this_x, NewAmiCalc::k_vector_t k);
-std::complex<double> eval_tb(NewAmiCalc::k_vector_t k, std::complex<double> mu);
+std::complex<double> eval_Aprod(A_prod_t &Ap, xi_t &xi, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
+std::complex<double> eval_tb(double t, double tp, NewAmiCalc::k_vector_t &k, std::complex<double> &mu);
 
 
 std::complex<double> get_X(X_t &Xsym, xi_t &xi);
 std::complex<double> get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &eps);
+std::complex<double> get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X);
 
-void generate_sp_terms(ami_term &start_term, sp_terms &new_sp_terms);
+std::complex<double> construct_energy(AmiBase::alpha_t &alpha, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
+
+void generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms);
 void reduce_deltas(ami_sp_term &term);
 
 

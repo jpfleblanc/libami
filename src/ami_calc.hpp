@@ -110,6 +110,7 @@ int order_;
 int group_;
 int num_;
 int ext_;
+int term_ind_;
 
 std::complex<double> current_value, proposed_value, last_value, measure_value;
 int sample_count_=0;
@@ -269,6 +270,10 @@ AmiBase::R_ref_t Rref;
 AmiBase::ref_eval_t Eval_list;
 AmiBase::Pi_t Unique_poles;
 
+// Term construction 
+
+AmiBase::terms ami_terms_;
+
 //
 
 // Experimental Spectral Representation 
@@ -361,7 +366,7 @@ AmiBase::energy_t construct_energy(AmiBase::g_prod_t &R0, internal_state &state,
 
 
 // THis can probably stay
-k_vector_t construct_k(AmiBase::alpha_t alpha, k_vect_list_t &k);
+k_vector_t construct_k(AmiBase::alpha_t &alpha, k_vect_list_t &k);
 
 // These should live outside of ami - construct energy should be an external function
 std::complex<double> eval_epsilon(hopping_t t, hopping_t tp, NewAmiCalc::k_vector_t k, species_t spin, std::complex<double> mu, double H, AmiBase::disp_type disp);
