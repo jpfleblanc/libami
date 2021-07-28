@@ -80,7 +80,7 @@ AmiBase::species_t species_;
 typedef std::vector<A_struct> A_prod_t;
 
 
-typedef AmiBase::pole_struct delta_t;
+typedef AmiBase::g_struct delta_t;
 typedef std::vector< delta_t > delta_prod_t;
 typedef AmiBase::energy_t xi_t;
 
@@ -122,7 +122,9 @@ std::complex<double> get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &
 
 std::complex<double> construct_energy(AmiBase::alpha_t &alpha, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
 
-void generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms);
+void generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms, AmiBase::g_prod_t &R0);
+void R0_to_Aprod(AmiBase::g_prod_t &R0, A_prod_t &Ap);
+
 void reduce_deltas(ami_sp_term &term);
 
 

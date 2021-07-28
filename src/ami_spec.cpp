@@ -77,10 +77,88 @@ return output;
 	
 }
 
-void AmiSpec::generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms){
+void AmiSpec::generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms, AmiBase::g_prod_t &R0){
+	
+// first lets identify which G's have external frequencies - 
+AmiBase::g_prod_t innert;
+AmiBase::g_prod_t nert;
+
+// std::vector<int> pole_indices;
+// ami_term.g_list
+for(int i=0; i<start_term.g_list.size(); i++){
+	
+	if(start_term.g_list[i].alpha_.back()!=0){
+		nert.push_back(start_term.g_list[i]);
+	}else{
+		innert.push_back(start_term.g_list[i]);
+	}
+	
+}	
+
+// Next we want to create the product of ( a +d)*(b+d)*(c+d)... So we want to specify how many deltas are in each one
+int max_deltas=nert.size();
+
+std::vector<std::vector<int>> pp_v;
+ami.get_pp_comb(max_deltas,pp_v);	
+
+sp_terms new_terms;
+new_terms.resize(pp_v.size()); // one new term for each combination in pp_v 
+
+for(int i=0; i< pp_v.size(); i++){
+	std::cout<<"Term:";
+	for(int m=0; m< pp_v[i].size(); m++){
+	std::cout<<pp_v[i][m]<<" ";
+	
+	}
+	std::cout<<std::endl;
+}
+
+for(int i=0; i< pp_v.size(); i++){
+	for(int m=0; m< pp_v[i].size(); m++){
+	
+	if(pp_v[i][m]==0){
+				
+		new_terms[i].dprod_.push_back(nert[m]);
+		new_terms[i].delta_count++;
+	}
+	
+	if(pp_v[i][m]==1){
+	
+	new_terms[i].ami_term_.g_list.push_back(nert[m]);
+	}
+	
+	}
+	
+}
+
+// Generate the A product from R0
+
+A_prod_t this_Ap;
+R0_to_Aprod(R0, this_Ap);
+
+// now attach the innert G's to each new term 
+
+for(int i=0; i< new_terms.size(); i++){
+	
+new_terms[i].ami_term_.g_list.insert(new_terms[i].ami_term_.g_list.end(), innert.begin(), innert.end());
+new_terms[i].ami_term_.p_list= start_term.p_list;
+new_terms[i].aprod_=this_Ap;
+		
+}
+
+// no update to the sign needed - the delta_count will tell about prefactors when evaluating
+// each ami_term.p_list is unchanged from the original 
+// What is missing is how to handle the A_prod_t - which at least at the start is defined by R0. and the same for every term. 
+
+
+
+new_sp_terms=new_terms;	
 	
 	
 	
+}
+
+void AmiSpec::R0_to_Aprod(AmiBase::g_prod_t &R0, A_prod_t &Ap){
 	
 	
 	

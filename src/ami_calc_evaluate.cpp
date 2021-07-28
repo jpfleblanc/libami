@@ -11,8 +11,15 @@ Im_results.resize(ami_eval_vars.size(),0);
 for(int i=0; i<ami_eval_vars.size(); i++){	
 
 // std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i]);
-
-std::complex<double> calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+std::complex<double> calc_result;
+if(AMI.R_.size()!=0){
+calc_result=amibase.evaluate(AMI.ami_parms_, AMI.R_, AMI.P_, AMI.S_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+}else{
+	if(AMI.ami_terms_.size()!=0){
+		calc_result=amibase.evaluate(AMI.ami_parms_, AMI.ami_terms_,  ami_eval_vars[i], AMI.Unique, AMI.Rref, AMI.Eval_list );
+	}
+	
+}
 
 // if(std::abs(calc_result.real())>1  || std::abs(calc_result.imag())>1 ){
 // std::cout<<"Large value returned at ext var "<<i<<std::endl;
