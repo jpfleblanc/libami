@@ -39,6 +39,7 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, NewAmiCalc::k_v
 	
 	std::complex<double> output(1,0);
 	
+	// A(Sigma, X, E)  : Sigma: self-energy, X: is frequency, E: energy from k_vector 
 	for(int i=0; i< Ap.size(); i++){
 		
 		std::complex<double> this_X=get_X( Ap[i].x_, xi);
@@ -60,6 +61,7 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, NewAmiCalc::k_v
 	
 }
 
+//TODO: connor please do this part :)
 std::complex<double> AmiSpec::get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X){
 	
 	
