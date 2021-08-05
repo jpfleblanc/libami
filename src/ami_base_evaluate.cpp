@@ -422,6 +422,19 @@ double beta=external.BETA_;
 double E_REG=parms.E_REG_;
 // std::cout<<"Evaluating with energy regulator of "<< E_REG<<std::endl;
 
+std::complex<double> freq_shift(0,0);
+if(is_real_external){
+
+	if(pole.alpha_.back()!=0){
+		
+		freq_shift=external.frequency_.back()*(double)pole.alpha_.back();
+		pole.alpha_.back()=0;
+		
+	}
+	
+	
+}
+
 
 // In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered. 
 
@@ -468,6 +481,8 @@ eta++;
 
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
+
+E=E+freq_shift;
 
 // if(std::abs(E.real())<E_REG){return std::complex<double>(0,0);}
 

@@ -61,6 +61,7 @@ x_=x;
 species_=0;
 }
 
+
 /// uninitialized variant
 A_struct(){
 } 

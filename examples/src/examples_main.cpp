@@ -7,24 +7,29 @@ int main(int argc, char** argv)
 {
 	
 
-std::cout<<"---- Running 2nd order example -----"<<std::endl;	
-example2();
-std::cout<<"----"<<std::endl;
+// std::cout<<"---- Running Ibsal example -----"<<std::endl;	
+example_debug();
+// std::cout<<"----"<<std::endl;	
+	
+
+// std::cout<<"---- Running 2nd order example -----"<<std::endl;	
+// example2();
+// std::cout<<"----"<<std::endl;
 
 // std::cout<<"---- Running 2nd order spectral example -----"<<std::endl;	
 // example2_spec();
 // std::cout<<"----"<<std::endl;
 
 	
-std::cout<<std::endl;
-std::cout<<"---- Running 4th order multipole example -----"<<std::endl;	
-example4();
-std::cout<<"----"<<std::endl;
+// std::cout<<std::endl;
+// std::cout<<"---- Running 4th order multipole example -----"<<std::endl;	
+// example4();
+// std::cout<<"----"<<std::endl;
 
-std::cout<<std::endl;
-std::cout<<"---- Running 4th order higher multipole example -----"<<std::endl;	
-example4hm();
-std::cout<<"----"<<std::endl;
+// std::cout<<std::endl;
+// std::cout<<"---- Running 4th order higher multipole example -----"<<std::endl;	
+// example4hm();
+// std::cout<<"----"<<std::endl;
 
 
 // std::cout<<std::endl;
@@ -35,6 +40,46 @@ std::cout<<"----"<<std::endl;
 	
 	
 }
+
+
+void example_debug(){
+	
+// class instance
+AmiBase ami;
+ami.drop_matsubara_poles=true;
+ami.is_real_external=false;//true;
+
+// Problem setup
+AmiBase::g_prod_t R0=construct_example_debug();
+AmiBase::ami_vars avars=construct_ext_example_debug();
+
+// Storage objects 
+AmiBase::R_t R_array;
+AmiBase::P_t P_array;
+AmiBase::S_t S_array;
+
+// Integration/Evaluation parameters
+double E_REG=0;
+int N_INT=3;
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
+
+//Construction Stage
+ami.construct(test_amiparms, R0, R_array, P_array, S_array);
+
+for(double w=-4.0; w<2.0; w=w+.005){
+	
+	std::complex<double> entry(w,0.04);
+	avars.frequency_.back()=entry;
+	
+
+// Evaluate the result
+std::complex<double> calc_result=ami.evaluate(test_amiparms,R_array, P_array, S_array,  avars);	
+
+std::cout<<w<<" "<<calc_result.real()<<" "<< calc_result.imag()<<std::endl;	
+}
+	
+}
+
 
 
 void example2(){

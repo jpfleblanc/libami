@@ -12,7 +12,80 @@
 #include <chrono>
 #include <random>
 
- 
+
+AmiBase::g_prod_t construct_example_debug(){
+
+AmiBase::g_prod_t g;
+
+// Setting up G array
+// defining alpha's /// std::vector<int>
+int alpha1[]={1,0,0,0};
+int alpha2[]={0,1,0,0};
+int alpha3[]={0,0,1,0};
+int alpha4[]={1,1,0,-1};
+int alpha5[]={1,0,1,-1};
+
+//defining epsilon's
+int epsilon1[]={1,0};
+int epsilon2[]={1,0};
+int epsilon3[]={1,0};
+int epsilon4[]={0,1};
+int epsilon5[]={0,1};
+
+AmiBase::alpha_t alpha_1(alpha1, alpha1 + sizeof(alpha1) / sizeof(int) );
+AmiBase::alpha_t alpha_2(alpha2, alpha2 + sizeof(alpha2) / sizeof(int) );
+AmiBase::alpha_t alpha_3(alpha3, alpha3 + sizeof(alpha3) / sizeof(int) );
+AmiBase::alpha_t alpha_4(alpha4, alpha4 + sizeof(alpha4) / sizeof(int) );
+AmiBase::alpha_t alpha_5(alpha5, alpha5 + sizeof(alpha5) / sizeof(int) );
+
+
+AmiBase::epsilon_t epsilon_1(epsilon1, epsilon1+sizeof(epsilon1)/sizeof(int));
+AmiBase::epsilon_t epsilon_2(epsilon2, epsilon2+sizeof(epsilon2)/sizeof(int));
+AmiBase::epsilon_t epsilon_3(epsilon3, epsilon3+sizeof(epsilon3)/sizeof(int));
+AmiBase::epsilon_t epsilon_4(epsilon4, epsilon4+sizeof(epsilon4)/sizeof(int));
+AmiBase::epsilon_t epsilon_5(epsilon5, epsilon5+sizeof(epsilon5)/sizeof(int));
+
+AmiBase::g_struct g1(epsilon_1,alpha_1);
+AmiBase::g_struct g2(epsilon_2,alpha_2);
+AmiBase::g_struct g3(epsilon_3,alpha_3);
+AmiBase::g_struct g4(epsilon_4,alpha_4);
+AmiBase::g_struct g5(epsilon_5,alpha_5);
+
+AmiBase::g_prod_t R0;
+
+R0.push_back(g1);
+R0.push_back(g2);
+R0.push_back(g3);
+R0.push_back(g4);
+R0.push_back(g5);
+
+
+
+
+return R0;
+
+}
+
+AmiBase::ami_vars construct_ext_example_debug(){
+
+
+
+// energy_t energy={-4,1,-1};
+AmiBase::energy_t energy={0.6247996574321064,-0.6247996574321064};
+
+AmiBase::frequency_t frequency;
+
+for(int i=0;i<3;i++){ frequency.push_back(std::complex<double>(0,0));}
+
+frequency.push_back(std::complex<double>(0,M_PI));
+
+AmiBase::ami_vars external(energy, frequency);
+
+external.BETA_=1.0;
+
+return external;
+
+} 
 
 
 AmiBase::g_prod_t construct_multipole_example(){

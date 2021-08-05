@@ -18,6 +18,10 @@ void example4();
 void example4hm();
 void example9();
 
+void example_debug();
+AmiBase::g_prod_t construct_example_debug();
+AmiBase::ami_vars construct_ext_example_debug();
+
 void example2_spec();
 AmiBase::ami_vars construct_spec_example();
 
