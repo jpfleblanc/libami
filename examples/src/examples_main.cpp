@@ -46,8 +46,8 @@ void example_debug(){
 	
 // class instance
 AmiBase ami;
-ami.drop_matsubara_poles=true;
-ami.is_real_external=false;//true;
+ami.drop_matsubara_poles=true;// false;//true;
+ami.is_real_external=true;//false;//true;//true;
 
 // Problem setup
 AmiBase::g_prod_t R0=construct_example_debug();
@@ -58,13 +58,22 @@ AmiBase::R_t R_array;
 AmiBase::P_t P_array;
 AmiBase::S_t S_array;
 
+AmiBase::terms ami_terms;
+
 // Integration/Evaluation parameters
-double E_REG=0;
+double E_REG=1e-8;
 int N_INT=3;
 AmiBase::ami_parms test_amiparms(N_INT, E_REG);
 
 //Construction Stage
-ami.construct(test_amiparms, R0, R_array, P_array, S_array);
+// ami.construct(test_amiparms, R0, ami_terms);//R_array, P_array, S_array);
+ami.construct(N_INT, R0, ami_terms);//R_array, P_array, S_array);
+NewAmiCalc amicalc;
+
+// ami.print_terms(ami_terms);
+// amicalc.print_final(0, R_array, P_array, S_array);
+
+// exit(0);
 
 for(double w=-4.0; w<2.0; w=w+.005){
 	
@@ -73,7 +82,9 @@ for(double w=-4.0; w<2.0; w=w+.005){
 	
 
 // Evaluate the result
-std::complex<double> calc_result=ami.evaluate(test_amiparms,R_array, P_array, S_array,  avars);	
+// std::complex<double> calc_result=ami.evaluate_term(test_amiparms,ami_terms[9], avars); //R_array, P_array, S_array,  avars);	
+std::complex<double> calc_result=ami.evaluate(test_amiparms,ami_terms, avars); 
+
 
 std::cout<<w<<" "<<calc_result.real()<<" "<< calc_result.imag()<<std::endl;	
 }

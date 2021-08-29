@@ -19,18 +19,31 @@ AmiBase::g_prod_t g;
 
 // Setting up G array
 // defining alpha's /// std::vector<int>
+// int alpha1[]={1,0,0,0};
+// int alpha2[]={0,1,0,0};
+// int alpha3[]={0,0,1,0};
+// int alpha4[]={1,1,0,-1};
+// int alpha5[]={1,0,1,-1};
+
+//defining epsilon's
+// int epsilon1[]={1,0};
+// int epsilon2[]={1,0};
+// int epsilon3[]={1,0};
+// int epsilon4[]={0,1};
+// int epsilon5[]={0,1};
+
 int alpha1[]={1,0,0,0};
 int alpha2[]={0,1,0,0};
 int alpha3[]={0,0,1,0};
-int alpha4[]={1,1,0,-1};
-int alpha5[]={1,0,1,-1};
+int alpha4[]={-1,0,1,1};
+int alpha5[]={0,-1,1,1};
 
 //defining epsilon's
-int epsilon1[]={1,0};
-int epsilon2[]={1,0};
-int epsilon3[]={1,0};
-int epsilon4[]={0,1};
-int epsilon5[]={0,1};
+int epsilon1[]={0,1};
+int epsilon2[]={0,1};
+int epsilon3[]={0,1};
+int epsilon4[]={1,0};
+int epsilon5[]={1,0};
 
 AmiBase::alpha_t alpha_1(alpha1, alpha1 + sizeof(alpha1) / sizeof(int) );
 AmiBase::alpha_t alpha_2(alpha2, alpha2 + sizeof(alpha2) / sizeof(int) );
