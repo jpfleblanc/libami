@@ -131,6 +131,15 @@ void reduce_deltas(ami_sp_term &term);
 
 AmiSpec(double xc);
 
+// io functions for debugging
+void print_delta_prod_t(delta_prod_t &delta_prod);
+void print_delta_t(delta_t &delta);
+void print_a_prod_t(A_prod_t &Aprod);
+void print_a_struct(A_struct &A);
+void print_sp_term(ami_sp_term &term);
+void print_sp_terms(sp_terms &sp_terms);
+void print_int_vec(std::vector<int> vec);
+
 
 
 private:

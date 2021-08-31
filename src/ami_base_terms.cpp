@@ -85,7 +85,8 @@ out_terms.insert(out_terms.end(), new_terms.begin(), new_terms.end());
 }
 
 void AmiBase::print_term(term &t){
-std::cout<<"--- Term is ---"<<std::endl;
+std::cout<<"--- Printing Term ---"<<std::endl;
+std::cout<<"-- g prod - SIZE="<< t.g_list.size()<<"-"<<std::endl;
 		for(int j=0; j< t.g_list.size(); j++){
 		print_g_struct_info(t.g_list[j]);
 		}

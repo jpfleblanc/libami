@@ -138,6 +138,8 @@ for(int i=0; i< pp_v.size(); i++){
 A_prod_t this_Ap;
 R0_to_Aprod(R0, this_Ap);
 
+// std::cout<<"This ap has size "<<this_Ap<<std::endl;
+
 // now attach the innert G's to each new term 
 
 for(int i=0; i< new_terms.size(); i++){
@@ -160,8 +162,40 @@ new_sp_terms=new_terms;
 	
 }
 
+
+
+// epsilon_i either by index or by value 
+// int eps_index=-1;
+// std::complex<double> eps_val;
+
+// AmiBase::epsilon_t eps_;
+// X_t x_;
+// AmiBase::alpha_t alpha_;
+// AmiBase::species_t species_;
+
+
+// };
 void AmiSpec::R0_to_Aprod(AmiBase::g_prod_t &R0, A_prod_t &Ap){
 	
+// R0 is g_prod_t 
+// each g_prod_t has an epsilon and an alpha 	
+
+Ap.clear();
+Ap.resize(R0.size());
+
+for(int i=0; i< R0.size(); i++){
+	
+X_t this_X;
+this_X.resize(R0.size(),0);
+this_X[i]=1;	
+
+Ap[i].alpha_=R0[i].alpha_;
+Ap[i].species_=R0[i].species_;
+Ap[i].x_=this_X;
+Ap[i].eps_index=i;
+// Ap[i].eps_=R0[i].eps_; // not sure this is needed 
+
+}	
 	
 	
 }
