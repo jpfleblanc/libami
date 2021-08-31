@@ -171,6 +171,10 @@ resolve_deltas(sp_terms[i]);
 	
 }
 
+
+// TODO: if the prefactor is not +1 or -1, then need to modify the sign for the term to account for the delta rule delta(2*x)=delta(x)/|2|
+
+// TODO: if there is a delta function that is squared, then it is the same as the single delta function but still gives the volume element due to normalization in the larger space. 
 void AmiSpec::resolve_deltas(ami_sp_term &sp_term){
 	
 std::cout<<"Number of deltas is "<<sp_term.dprod_.size()<<std::endl;
@@ -216,14 +220,22 @@ if( count(used.begin(), used.end(),1)==delta_size){
 	
 }
 
+if(count(used.begin(), used.end(),1)!= delta_size){
+	throw std::runtime_error("Didn't resolve deltas correctly - exiting");
+	exit(0);
+}
+
 // at this point we should have a list of xi we are going to replace. so generate the poles 
 
  for(int i=0; i< sp_term.dprod_.size(); i++){
+	
 	pv[i].eps_.resize( sp_term.dprod_[i].eps_.size());
+	
 	pv[i].alpha_.resize( sp_term.dprod_[i].alpha_.size());
 	
 	int this_index=pv[i].index_;
-	int this_prefactor=pv[i].eps_[this_index];
+	int this_prefactor=sp_term.dprod_[i].eps_[this_index];
+	
 	
 	for( int m=0; m< pv[i].alpha_.size(); m++){
 		pv[i].alpha_[m]=sp_term.dprod_[i].alpha_[m]*(-this_prefactor);
@@ -232,15 +244,31 @@ if( count(used.begin(), used.end(),1)==delta_size){
 	for(int m=0; m< pv[i].eps_.size(); m++){
 		if(m==this_index){pv[i].eps_[m]=0;}
 		else{
+			
 			pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(-this_prefactor);
 		}
 		
 	}
 	
+	
 }
 
 // now at this point we should have all of the poles accounted for 
-std::cout<<std::count(used.begin(), used.end(),1)<<std::endl;
+// std::cout<<std::count(used.begin(), used.end(),1)<<std::endl;
+
+std::cout<<"BEFORE: Printing poles "<<std::endl;
+
+for(int i=0; i< pv.size(); i++){
+
+std::cout<<i<<" x"<<pv[i].index_<<" alpha-";
+print_int_vec(pv[i].alpha_);
+std::cout<<" | eps-";
+print_int_vec(pv[i].eps_);
+std::cout<<std::endl;	
+	
+	
+}
+
 
 // so now replace poles 
 for(int i=0; i< pv.size(); i++){
@@ -249,6 +277,23 @@ replace_xi(i,pv, sp_term);
 	
 	
 }
+
+std::cout<<"AFTER: Printing poles "<<std::endl;
+
+for(int i=0; i< pv.size(); i++){
+
+std::cout<<i<<" x"<<pv[i].index_<<" alpha-";
+print_int_vec(pv[i].alpha_);
+std::cout<<" | eps-";
+print_int_vec(pv[i].eps_);
+std::cout<<std::endl;	
+	
+	
+}
+
+
+// we should have a catch in case something goes wrong. 
+sp_term.dprod_.clear();
 
 
 
@@ -267,6 +312,7 @@ replace_xi(i,pv, sp_term);
 }
 
 void AmiSpec::replace_xi(int i, AmiBase::pole_array_t &pv, ami_sp_term &sp_term){
+
 
 AmiBase::pole_struct this_pole=pv[i];
 
@@ -292,12 +338,34 @@ for(int j=0; j< sp_term.ami_term_.g_list.size(); j++){
 	
 }
 
+// update the Aprod
+// note that Aprod is defined by the X_t x_ values not eps_ 
+for(int j=0; j< sp_term.aprod_.size(); j++){
+	
+	update_spec_pole(pv[i], sp_term.aprod_[j].alpha_, sp_term.aprod_[j].x_);
+	
+}
+
+
 	
 	
 	
 }
 
 void AmiSpec::update_spec_pole(AmiBase::pole_struct &source_pole, AmiBase::alpha_t &target_alpha, AmiBase::epsilon_t &target_eps){
+	
+// std::cout<<"Updating : starting with: alpha - ";
+// print_int_vec(target_alpha);
+// std::cout<<" | and eps=";
+// print_int_vec(target_eps);
+// std::cout<<std::endl;
+
+// std::cout<<"USING pole: alpha - ";
+// print_int_vec(source_pole.alpha_);
+// std::cout<<" | and eps=";
+// print_int_vec(source_pole.eps_);
+// std::cout<<std::endl;
+	
 	
 int index=source_pole.index_;	
 if(target_eps[index]==0){ return;} // nothing to do 
@@ -313,6 +381,15 @@ for(int m=0; m< target_eps.size(); m++){
 	}
 }
 
+	
+	
+
+// std::cout<<"Updating : resulting in: alpha - ";
+// print_int_vec(target_alpha);
+// std::cout<<" | and eps=";
+// print_int_vec(target_eps);
+// std::cout<<std::endl;
+		
 	
 	return;
 	
