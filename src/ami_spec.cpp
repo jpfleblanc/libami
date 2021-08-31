@@ -163,6 +163,30 @@ new_sp_terms=new_terms;
 }
 
 
+void AmiSpec::resolve_deltas( sp_terms &sp_terms){
+
+for(int i=0; i< sp_terms.size(); i++){
+resolve_deltas(sp_terms[i]);
+}	
+	
+}
+
+void AmiSpec::resolve_deltas(ami_sp_term &sp_term){
+	
+std::cout<<"Number of deltas is "<<sp_term.dprod_.size()<<std::endl;	
+	
+// look at each delta. create a pole for each, and assign an index_ to it that represents which xi will be replaced.  do this for each and make sure each delta gets a unique xi to replace 
+// for each pole with respect to its xi values generate the actual pole 
+// for each pole replace the xi in every Aterm, g_prod, fermi_pole AND other remaining deltas. once done mark the delta for removal
+// for removal define an empty integer vec of size delta.size(). initialize to zero. set to 1 for each resolved delta.  check at the end that all the entries are 1.  and then remove all of the deltas. otherwise throw an error.  OR remove only the entries that are resolved. 
+	
+	
+	
+	
+	
+}
+
+
 
 // epsilon_i either by index or by value 
 // int eps_index=-1;
