@@ -142,6 +142,9 @@ void R0_to_Aprod(AmiBase::g_prod_t &R0, A_prod_t &Ap);
 void resolve_deltas( sp_terms &sp_terms);
 void resolve_deltas(ami_sp_term &sp_term);
 
+void replace_xi(int i, AmiBase::pole_array_t &pv, ami_sp_term &sp_term);
+void update_spec_pole(AmiBase::pole_struct &source_pole, AmiBase::alpha_t &target_alpha, AmiBase::epsilon_t &target_eps);
+
 
 AmiSpec(double xc);
 
