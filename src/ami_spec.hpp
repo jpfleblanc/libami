@@ -106,7 +106,7 @@ ami_term_=this_term;
 ami_sp_term(){}
 
 A_prod_t aprod_;
-AmiBase::term ami_term_;
+AmiBase::term ami_term_;// prod of G's and prod of F's and a sign 
 delta_prod_t dprod_;
 
 bool root=true;

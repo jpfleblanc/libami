@@ -371,6 +371,10 @@ std::cout<<"Number of deltas is "<<sp_term.dprod_.size()<<std::endl;
 
 if(	sp_term.dprod_.size()==0){ return;}
 
+
+
+
+
 // look at each delta. create a pole for each, and assign an index_ to it that represents which xi will be replaced.  do this for each and make sure each delta gets a unique xi to replace
 // for each pole with respect to its xi values generate the actual pole
 // for each pole replace the xi in every Aterm, g_prod, fermi_pole AND other remaining deltas. once done mark the delta for removal
@@ -386,29 +390,87 @@ std::vector<int> used, assigned;
 used.resize(xi_size,0);
 assigned.resize(delta_size,0);
 
+
+// find any xi that appear only once. these are guaranteed to be safe. 
+std::vector<int> trivial_xi;
+
 for(int i=0; i< xi_size; i++){
-
-// search through deltas to find a non-zero and then break
-
+	
+	int count=0;
 	for(int m=0; m< sp_term.dprod_.size(); m++){
-		if( assigned[m]==0){
 		if(sp_term.dprod_[m].eps_[i]!=0 ){
-			pv[m].index_=i;
-			used[i]=1;
-			assigned[m]=1;
-			break;
-
-		}
-		}
-
+			
+			count++;
+			
+		}		
+		if(count>1){break;}
+		
 	}
+	
+	if(count==1){
+		trivial_xi.push_back(i);
+	}
+	
+	
+	
+}
 
-if( count(used.begin(), used.end(),1)==delta_size){
-	break;
+// std::cout<<"Found trivial xi size is "<< trivial_xi.size()<<std::endl;
+
+// exit(0);
+
+if(trivial_xi.size()< delta_size){
+	throw std::runtime_error("Not enough trivial xi's to proceed - exiting");
+	exit(0);
 }
 
 
+for(int i=0; i< trivial_xi.size(); i++){
+	
+	for(int m=0; m< sp_term.dprod_.size(); m++){
+		
+		if(assigned[m]==0){
+			if(sp_term.dprod_[m].eps_[trivial_xi[i]]!=0 ){
+			pv[m].index_=trivial_xi[i];
+			used[trivial_xi[i]]=1;
+			assigned[m]=1;
+			
+
+			}
+			
+		}
+		
+	}
+	
+	
 }
+
+
+
+
+// for(int i=0; i< xi_size; i++){
+
+// //search through deltas to find a non-zero and then break
+
+	// for(int m=0; m< sp_term.dprod_.size(); m++){
+		// if( assigned[m]==0){
+		// if(sp_term.dprod_[m].eps_[i]!=0 ){
+			// pv[m].index_=i;
+			// used[i]=1;
+			// assigned[m]=1;
+			// break;
+
+		// }
+		// }
+
+	// }
+
+// if( count(used.begin(), used.end(),1)==delta_size){
+	// break;
+// }
+
+
+// }
 
 if(count(used.begin(), used.end(),1)!= delta_size){
 	throw std::runtime_error("Didn't resolve deltas correctly - exiting");
@@ -506,6 +568,7 @@ void AmiSpec::replace_xi(int i, AmiBase::pole_array_t &pv, ami_sp_term &sp_term)
 
 AmiBase::pole_struct this_pole=pv[i];
 
+// Sept 1st: shouldn't need to do this - currently using only trivial poles, so there should be no replacement because of this 
 // update other poles j>i
 for(int j=0; j< pv.size(); j++){
 	if(j==i){ continue;}
