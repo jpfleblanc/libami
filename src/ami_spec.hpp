@@ -2,9 +2,9 @@
 #pragma once
 #include "ami_base.hpp"
 #include "ami_calc.hpp"
- 
-#include <string> 
-#include <sstream> 
+
+#include <string>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <complex>
@@ -18,19 +18,19 @@
 /**
  * @class AmiSpec
  *
- *  
+ *
  *
  * @brief  A spectral application of the AmiBase class.  Experimental.
  *
  * @note N/A
  *
- * @author JPF LeBlanc 
+ * @author JPF LeBlanc
  *
- * @version Revision: 0.4 
+ * @version Revision: 0.4
  *
- * @date Date: 2020/11/03  
+ * @date Date: 2020/11/03
  *
- * 
+ *
  * Contact: jleblanc@mun.ca
  *
  *
@@ -38,7 +38,7 @@
  *
  */
 
-class AmiSpec 
+class AmiSpec
 {
 
 public:
@@ -47,13 +47,22 @@ AmiBase amibase;
 NewAmiCalc ami;
 
 double xi_cutoff=10;
-
-// Define structures that are not in the ami_base class 
+std::vector<double> AMI_spec_se_Im_vector;
+std::vector<double> AMI_spec_se_Im_err_vector;
+std::vector<double> AMI_spec_se_Re_vector;
+std::vector<double> AMI_spec_se_Re_err_vector;
+std::vector<double> AMI_spec_freq_vector;
+std::vector<double> AMI_spec_ky_vector;
+std::vector<double> AMI_spec_kx_vector;
+std::vector<double> AMI_spec_freq_vector_simplified;
+std::vector<double> AMI_spec_kx_vector_simplified;
+std::vector<double> AMI_spec_ky_vector_simplified;
+// Define structures that are not in the ami_base class
 
 typedef AmiBase::epsilon_t X_t ;
 
 
-// the A_struct stores the symbolic information about A.  you will need your own function to take the A_struct and some self energy and return a value. 
+// the A_struct stores the symbolic information about A.  you will need your own function to take the A_struct and some self energy and return a value.
 struct A_struct{
 A_struct(AmiBase::epsilon_t eps, X_t x){
 eps_=eps;
@@ -64,9 +73,9 @@ species_=0;
 
 /// uninitialized variant
 A_struct(){
-} 
+}
 
-// epsilon_i either by index or by value 
+// epsilon_i either by index or by value
 int eps_index=-1;
 std::complex<double> eps_val;
 
@@ -90,11 +99,11 @@ struct ami_sp_term{
 ami_sp_term(AmiBase::term this_term, A_prod_t aprod, delta_prod_t dprod){
 aprod_=aprod;
 ami_term_=this_term;
-	
+
 }
-	
-//uninitialized 	
-ami_sp_term(){}	
+
+//uninitialized
+ami_sp_term(){}
 
 A_prod_t aprod_;
 AmiBase::term ami_term_;
@@ -102,7 +111,7 @@ delta_prod_t dprod_;
 
 bool root=true;
 int delta_count=0;
-	
+
 };
 
 typedef std::vector<ami_sp_term> sp_terms;
@@ -120,6 +129,9 @@ std::complex<double> eval_tb(double t, double tp, NewAmiCalc::k_vector_t &k, std
 std::complex<double> get_X(X_t &Xsym, xi_t &xi);
 std::complex<double> get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &eps);
 std::complex<double> get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X);
+void find_closest_points_in_vector(double &closest_lt,double &closest_gt,double point, std::vector<double> vec);
+std::vector<double> return_simple_grid_vector(std::vector<double> &in_vector);
+void read_self_energy(std::string file_name);
 
 std::complex<double> construct_energy(AmiBase::alpha_t &alpha, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
 
@@ -148,5 +160,3 @@ private:
 
 
 };
-
-
