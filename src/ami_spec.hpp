@@ -131,10 +131,15 @@ std::complex<double> eval_tb(double t, double tp, NewAmiCalc::k_vector_t &k, std
 // std::complex<double> get_X(X_t &Xsym, xi_t &xi);
 std::complex<double> get_X(X_t &Xsym, xi_t &xi, AmiBase::alpha_t &x_alpha_, AmiBase::frequency_t &freq);
 std::complex<double> get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &eps);
+void randomize_xi(xi_t &xi, int length);
+
+// Sigma
 std::complex<double> get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X);
 void find_closest_points_in_vector(double &closest_lt,double &closest_gt,double point, std::vector<double> vec);
 std::vector<double> return_simple_grid_vector(std::vector<double> &in_vector);
 void read_self_energy(std::string file_name);
+//
+
 
 std::complex<double> construct_energy(AmiBase::alpha_t &alpha, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
 

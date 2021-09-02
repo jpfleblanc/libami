@@ -21,6 +21,16 @@ std::complex<double> AmiSpec::get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &e
 	return output;
 }
 
+void AmiSpec::randomize_xi(xi_t &xi, int length){
+
+xi.resize(length);
+
+for(int i=0; i<length; i++){
+	xi[i]=ami.random_real(-xi_cutoff,xi_cutoff);
+}
+	
+}
+
 std::complex<double> AmiSpec::get_X(X_t &Xsym, xi_t &xi, AmiBase::alpha_t &x_alpha_, AmiBase::frequency_t &freq){
 	if(Xsym.size()!= xi.size()){
 	throw std::runtime_error("In A_t the X_t and xi_t do not match in size - exiting");

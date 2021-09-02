@@ -4,6 +4,8 @@ std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpe
 
 std::complex<double> output(0,0);
 
+// std::cout<<"Entering eval"<<std::endl;
+
 AmiBase::ami_vars gprod_external=external;	
 
 // TODO: is this sign swap necessary?	
@@ -13,12 +15,15 @@ gprod_external.energy_[i]=-xi_list[i];
 	
 }		
 
+// std::cout<<"Entering eval A"<<std::endl;
+
 std::complex<double> A_prod=eval_Aprod(sp_term.aprod_, xi_list, external.frequency_, klist, ev.MU_);
 
+// std::cout<<"Entering eval G"<<std::endl;
 std::complex<double> gprod;
 gprod=amibase.eval_gprod(parms, sp_term.ami_term_.g_list, gprod_external);
 	
-	
+	// std::cout<<"Entering eval F"<<std::endl;
 std::complex<double> fprod;
 fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);	
 
@@ -30,9 +35,13 @@ term_val=sp_term.ami_term_.sign*gprod*fprod;
 std::complex<double> imag(0.,1.0);
 norm=std::pow(-imag*M_PI/(2.0*xi_cutoff), sp_term.delta_count);
 
+// std::cout<<term_val<<" "<<A_prod<<" "<< norm<<std::endl;
+
 term_val=term_val*A_prod*norm;
 
 output+= term_val;
+
+// std::cout<<"Exiting eval"<<std::endl;
 
 return output;	
 	
@@ -55,7 +64,8 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, AmiBase::freque
 		NewAmiCalc::k_vector_t this_k=ami.construct_k(Ap[i].alpha_, klist);
 		std::complex<double> this_E=eval_tb(1.,0., this_k, mu);
 
-		std::complex<double> this_sigma=get_sigma(this_k, this_X);
+		// std::complex<double> this_sigma=get_sigma(this_k, this_X); 
+			std::complex<double> this_sigma(0,0.1);// would replace this with a working sigma 
 
 
 		output=output*A_eval(this_sigma, this_X, this_E);
