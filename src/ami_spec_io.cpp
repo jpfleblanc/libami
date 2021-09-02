@@ -68,6 +68,10 @@ std::cout<<std::endl;
 std::cout<<"X -";
 print_int_vec(A.x_);
 std::cout<<std::endl;
+
+std::cout<<"X_alpha -";
+print_int_vec(A.x_alpha_);
+std::cout<<std::endl;
 	
 	
 }

@@ -81,6 +81,7 @@ std::complex<double> eps_val;
 
 AmiBase::epsilon_t eps_;
 X_t x_;
+AmiBase::alpha_t x_alpha_;
 AmiBase::alpha_t alpha_;
 AmiBase::species_t species_;
 
@@ -106,7 +107,7 @@ ami_term_=this_term;
 ami_sp_term(){}
 
 A_prod_t aprod_;
-AmiBase::term ami_term_;
+AmiBase::term ami_term_;// prod of G's and prod of F's and a sign 
 delta_prod_t dprod_;
 
 bool root=true;
@@ -117,16 +118,18 @@ int delta_count=0;
 typedef std::vector<ami_sp_term> sp_terms;
 
 
-
+std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, NewAmiCalc::ext_vars &ev,   AmiBase::ami_vars &external, NewAmiCalc::k_vect_list_t &klist,   xi_t &xi_list);
 
 std::complex<double> A_eval(std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
 
 std::complex<double> get_A(A_struct &A, double this_x, NewAmiCalc::k_vector_t k);
-std::complex<double> eval_Aprod(A_prod_t &Ap, xi_t &xi, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
+// std::complex<double> eval_Aprod(A_prod_t &Ap, xi_t &xi, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
+std::complex<double> eval_Aprod(A_prod_t &Ap, xi_t &xi, AmiBase::frequency_t &freq, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu);
 std::complex<double> eval_tb(double t, double tp, NewAmiCalc::k_vector_t &k, std::complex<double> &mu);
 
 
-std::complex<double> get_X(X_t &Xsym, xi_t &xi);
+// std::complex<double> get_X(X_t &Xsym, xi_t &xi);
+std::complex<double> get_X(X_t &Xsym, xi_t &xi, AmiBase::alpha_t &x_alpha_, AmiBase::frequency_t &freq);
 std::complex<double> get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &eps);
 std::complex<double> get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X);
 void find_closest_points_in_vector(double &closest_lt,double &closest_gt,double point, std::vector<double> vec);

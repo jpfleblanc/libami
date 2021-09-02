@@ -21,7 +21,7 @@ std::complex<double> AmiSpec::get_E(AmiBase::energy_t &ei, AmiBase::epsilon_t &e
 	return output;
 }
 
-std::complex<double> AmiSpec::get_X(X_t &Xsym, xi_t &xi){
+std::complex<double> AmiSpec::get_X(X_t &Xsym, xi_t &xi, AmiBase::alpha_t &x_alpha_, AmiBase::frequency_t &freq){
 	if(Xsym.size()!= xi.size()){
 	throw std::runtime_error("In A_t the X_t and xi_t do not match in size - exiting");
 	}
@@ -32,34 +32,14 @@ std::complex<double> AmiSpec::get_X(X_t &Xsym, xi_t &xi){
 
 	}
 
-	return output;
-}
-
-std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu){
-
-	std::complex<double> output(1,0);
-
-	// A(Sigma, X, E)  : Sigma: self-energy, X: is frequency, E: energy from k_vector
-	for(int i=0; i< Ap.size(); i++){
-
-		std::complex<double> this_X=get_X( Ap[i].x_, xi);
-
-		NewAmiCalc::k_vector_t this_k=ami.construct_k(Ap[i].alpha_, klist);
-		std::complex<double> this_E=eval_tb(1.,0., this_k, mu);
-
-		std::complex<double> this_sigma=get_sigma(this_k, this_X);
-
-
-		output=output*A_eval(this_sigma, this_X, this_E);
-
-
-
+	for(int i=0; i< freq.size(); i++){
+		output+=(double)x_alpha_[i]*freq[i];
 	}
 
 
 	return output;
-
 }
+
 
 //TODO: connor please do this part :)
 /*std::complex<double> AmiSpec::get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X){
@@ -181,92 +161,10 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
   return std::complex<double> (se_Re_interpolated,se_Im_interpolated);
 
 
-}
-
-std::vector<double> AmiSpec::return_simple_grid_vector(std::vector<double> &in_vector){
-  std::vector<double> out_vector;
-  out_vector.push_back(in_vector[0]);
-  for (int n=0;n<in_vector.size();n++){
-    if (in_vector[n] != out_vector.back()){
-      if (std::count(out_vector.begin(),out_vector.end(),in_vector[n] )) return out_vector;
-      else out_vector.push_back(in_vector[n]);
-    }
-  }
-}
-
-//std::complex<double> AmiSpec::get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X){}
-
-void AmiSpec::read_self_energy(std::string file_name){
-  std::ifstream MyReadFile(file_name);
-  std::string myText;
-  std::stringstream ss;
-  //std::ifstream MyReadFile(argv[1]);
-  //std::cout << argv[1] << std::endl;
-  //std::vector<float> frequency;
-  //std::vector<float> gf;
-  //int count = 0;
-  //std::vector<double> se_Im_vector;
-  //std::vector<double> se_Im_err_vector;
-  //std::vector<double> se_Re_vector;
-  //std::vector<double> se_Re_err_vector;
-  //std::vector<double> freq_vector;
-  //std::vector<double> ky_vector;
-  //std::vector<double> kx_vector;
-
-
-  std::vector<std::string> output_vector;
-  std::string a_string;
-  getline (MyReadFile, myText);
-  while (getline (MyReadFile, myText)) {
-    //std::cout <<"myText  " <<myText << std::endl;
-    ss.str( myText);
-
-   output_vector.clear();
-   //   std::cout << "contents of ss: " << ss.str() << std::endl;
-   //std::cout << "a string OUTSIDE: " << a_string << std::endl;
-     a_string="";
-   while(ss >> a_string){
-     //std::cout << "a string: " << a_string << std::endl;
-     output_vector.push_back(a_string);
-   }
-   //std::cout<<"got to here "<< output_vector.back()<<std::endl;
-   AMI_spec_kx_vector.push_back(std::stod(output_vector[0]));
-   AMI_spec_ky_vector.push_back(std::stod(output_vector[1]));
-   AMI_spec_freq_vector.push_back(std::stod(output_vector[2]));
-   AMI_spec_se_Re_vector.push_back(std::stod(output_vector[3]));
-  AMI_spec_se_Im_vector.push_back(std::stod(output_vector[4]));
-   AMI_spec_se_Re_err_vector.push_back(std::stod(output_vector[5]));
-   AMI_spec_se_Im_err_vector.push_back(std::stod(output_vector[6]));
-   ss.clear();
-  }
-  AMI_spec_ky_vector_simplified = return_simple_grid_vector(AMI_spec_ky_vector);
-  AMI_spec_kx_vector_simplified = return_simple_grid_vector(AMI_spec_kx_vector);
- AMI_spec_freq_vector_simplified = return_simple_grid_vector(AMI_spec_freq_vector);
-//for (std::vector<double>::const_iterator i = ky_vector_simplified.begin(); i != ky_vector_simplified.end(); ++i)
-//    std::cout << *i << ' ';
-
-// std::cout<<"\n";
-// for (std::vector<double>::const_iterator i = freq_vector_simplified.begin(); i != freq_vector_simplified.end(); ++i)    std::cout << *i << ' ';
-// std::cout<<"\n";
-   //tk::spline spline_I(freq_vector,se_Re_vector);
-   //std::cout<< spline_I(std::stod(argv[2]))<<std::endl;
- //std::vector<double> point_wanted={0.0,0.314159,0.0};//0.314159
- //std::cout <<   get_sigma(point_wanted, kx_vector, ky_vector, freq_vector, ky_vector_simplified,  kx_vector_simplified, freq_vector_simplified,se_Im_vector, se_Re_vector) << std::endl;
-  MyReadFile.close();
-
-}
 
 
 
-// todo: probably don't need to pass A if this function takes in X and E already
-std::complex<double> AmiSpec::A_eval( std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E){
 
-std::complex<double> output(0,0);
-
-output=- sigma.imag()/M_PI/( std::pow(X-E-sigma.real(),2) +std::pow(sigma.imag(),2) );
-return output;
-
-}
 
 void AmiSpec::generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms, AmiBase::g_prod_t &R0){
 
@@ -371,6 +269,10 @@ std::cout<<"Number of deltas is "<<sp_term.dprod_.size()<<std::endl;
 
 if(	sp_term.dprod_.size()==0){ return;}
 
+
+
+
+
 // look at each delta. create a pole for each, and assign an index_ to it that represents which xi will be replaced.  do this for each and make sure each delta gets a unique xi to replace
 // for each pole with respect to its xi values generate the actual pole
 // for each pole replace the xi in every Aterm, g_prod, fermi_pole AND other remaining deltas. once done mark the delta for removal
@@ -386,29 +288,87 @@ std::vector<int> used, assigned;
 used.resize(xi_size,0);
 assigned.resize(delta_size,0);
 
+
+// find any xi that appear only once. these are guaranteed to be safe.
+std::vector<int> trivial_xi;
+
 for(int i=0; i< xi_size; i++){
 
-// search through deltas to find a non-zero and then break
-
+	int count=0;
 	for(int m=0; m< sp_term.dprod_.size(); m++){
-		if( assigned[m]==0){
 		if(sp_term.dprod_[m].eps_[i]!=0 ){
-			pv[m].index_=i;
-			used[i]=1;
-			assigned[m]=1;
-			break;
+
+			count++;
 
 		}
+		if(count>1){break;}
+
+	}
+
+	if(count==1){
+		trivial_xi.push_back(i);
+	}
+
+
+
+}
+
+// std::cout<<"Found trivial xi size is "<< trivial_xi.size()<<std::endl;
+
+// exit(0);
+
+if(trivial_xi.size()< delta_size){
+	throw std::runtime_error("Not enough trivial xi's to proceed - exiting");
+	exit(0);
+}
+
+
+for(int i=0; i< trivial_xi.size(); i++){
+
+	for(int m=0; m< sp_term.dprod_.size(); m++){
+
+		if(assigned[m]==0){
+			if(sp_term.dprod_[m].eps_[trivial_xi[i]]!=0 ){
+			pv[m].index_=trivial_xi[i];
+			used[trivial_xi[i]]=1;
+			assigned[m]=1;
+
+
+			}
+
 		}
 
 	}
 
-if( count(used.begin(), used.end(),1)==delta_size){
-	break;
+
 }
 
 
-}
+
+
+// for(int i=0; i< xi_size; i++){
+
+// //search through deltas to find a non-zero and then break
+
+	// for(int m=0; m< sp_term.dprod_.size(); m++){
+		// if( assigned[m]==0){
+		// if(sp_term.dprod_[m].eps_[i]!=0 ){
+			// pv[m].index_=i;
+			// used[i]=1;
+			// assigned[m]=1;
+			// break;
+
+		// }
+		// }
+
+	// }
+
+// if( count(used.begin(), used.end(),1)==delta_size){
+	// break;
+// }
+
+
+// }
 
 if(count(used.begin(), used.end(),1)!= delta_size){
 	throw std::runtime_error("Didn't resolve deltas correctly - exiting");
@@ -493,12 +453,6 @@ sp_term.dprod_.clear();
 // }
 
 
-
-
-
-
-
-
 }
 
 void AmiSpec::replace_xi(int i, AmiBase::pole_array_t &pv, ami_sp_term &sp_term){
@@ -506,6 +460,7 @@ void AmiSpec::replace_xi(int i, AmiBase::pole_array_t &pv, ami_sp_term &sp_term)
 
 AmiBase::pole_struct this_pole=pv[i];
 
+// Sept 1st: shouldn't need to do this - currently using only trivial poles, so there should be no replacement because of this
 // update other poles j>i
 for(int j=0; j< pv.size(); j++){
 	if(j==i){ continue;}
@@ -532,7 +487,7 @@ for(int j=0; j< sp_term.ami_term_.g_list.size(); j++){
 // note that Aprod is defined by the X_t x_ values not eps_
 for(int j=0; j< sp_term.aprod_.size(); j++){
 
-	update_spec_pole(pv[i], sp_term.aprod_[j].alpha_, sp_term.aprod_[j].x_);
+	update_spec_pole(pv[i], sp_term.aprod_[j].x_alpha_, sp_term.aprod_[j].x_);
 
 }
 
@@ -614,6 +569,7 @@ this_X.resize(R0.size(),0);
 this_X[i]=1;
 
 Ap[i].alpha_=R0[i].alpha_;
+Ap[i].x_alpha_.resize(R0[i].alpha_.size(),0);
 Ap[i].species_=R0[i].species_;
 Ap[i].x_=this_X;
 Ap[i].eps_index=i;
@@ -624,43 +580,6 @@ Ap[i].eps_index=i;
 
 }
 
-std::complex<double> AmiSpec::eval_tb(double t, double tp, NewAmiCalc::k_vector_t &k, std::complex<double> &mu){
-
-	std::complex<double> output(0,0);
-
-	for(int i=0; i<k.size();i++){
-
-	output+=-2.0*t*cos(k[i]);
-
-	}
-
-	// uncomment this block if want t' in dispersion
-	// double term=-4.0*tp;
-	// for(int i=0; i<k.size(); i++){
-
-		// term=term*cos(k[i]);
-	// }
-	// output+=term;
-
-
-	output -= mu;
-
-	return output;
-
-}
-
-
-std::complex<double> AmiSpec::construct_energy(AmiBase::alpha_t &alpha, NewAmiCalc::k_vect_list_t &klist, std::complex<double> &mu){
-
-std::complex<double> result=0;
-
-NewAmiCalc::k_vector_t this_k=ami.construct_k(alpha, klist);
-result=eval_tb(1.,0., this_k, mu);
-
-
-return result;
-
-}
 
 
 
