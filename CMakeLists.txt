@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 2.8)
 
 project (amibase CXX)
 #find_package(ALPSCore REQUIRED)
@@ -58,11 +58,11 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 
 
 
-add_subdirectory(test)
-enable_testing()
-add_test(fb test/fb)
-add_test(getE test/getE)
-add_test(pole_equiv_fun test/pole_equiv)
+#add_subdirectory(test)
+#enable_testing()
+#add_test(fb test/fb)
+#add_test(getE test/getE)
+#add_test(pole_equiv_fun test/pole_equiv)
 
 
 if(BUILD_DOC)
