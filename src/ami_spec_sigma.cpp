@@ -115,7 +115,6 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 
   return std::complex<double> (se_Re_interpolated,se_Im_interpolated);
 
-
 }
 
 std::vector<double> AmiSpec::return_simple_grid_vector(std::vector<double> &in_vector){
