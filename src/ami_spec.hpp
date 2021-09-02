@@ -88,12 +88,36 @@ AmiBase::species_t species_;
 
 };
 
+
+
 typedef std::vector<A_struct> A_prod_t;
 
 
 typedef AmiBase::g_struct delta_t;
 typedef std::vector< delta_t > delta_prod_t;
 typedef AmiBase::energy_t xi_t;
+
+
+
+struct ami_spec_vars{
+
+ami_spec_vars(){prefactor=1.0;}
+
+AmiBase::energy_t energy_;
+AmiBase::frequency_t frequency_;
+double prefactor;
+double BETA_;
+std::complex<double> MU_;
+
+NewAmiCalc::k_vect_list_t k_list_;
+xi_t xi_list_;
+
+///Experimental parameter for spectral representation 
+double gamma_=0;
+
+};
+
+
 
 struct ami_sp_term{
 
@@ -117,8 +141,12 @@ int delta_count=0;
 
 typedef std::vector<ami_sp_term> sp_terms;
 
-
+// initial attempt
 std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, NewAmiCalc::ext_vars &ev,   AmiBase::ami_vars &external, NewAmiCalc::k_vect_list_t &klist,   xi_t &xi_list);
+
+// simplified usage 
+std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, AmiSpec::ami_spec_vars &vars);
+
 
 std::complex<double> A_eval(std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
 

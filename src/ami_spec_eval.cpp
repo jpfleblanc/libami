@@ -1,5 +1,56 @@
 #include "ami_spec.hpp"
 
+
+std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, AmiSpec::ami_spec_vars &vars){
+
+
+std::complex<double> output(0,0);
+
+// std::cout<<"Entering eval"<<std::endl;
+
+AmiBase::ami_vars gprod_external(vars.energy_, vars.frequency_, vars.BETA_, vars.prefactor);	
+
+// TODO: is this sign swap necessary?	
+for(int i=0; i< gprod_external.energy_.size(); i++){
+ 
+gprod_external.energy_[i]=-gprod_external.energy_[i];	
+	
+}		
+
+// std::cout<<"Entering eval A"<<std::endl;
+
+std::complex<double> A_prod=eval_Aprod(sp_term.aprod_, vars.xi_list_, vars.frequency_, vars.k_list_, vars.MU_);
+
+// std::cout<<"Entering eval G"<<std::endl;
+std::complex<double> gprod;
+gprod=amibase.eval_gprod(parms, sp_term.ami_term_.g_list, gprod_external);
+	
+	// std::cout<<"Entering eval F"<<std::endl;
+std::complex<double> fprod;
+fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);	
+
+std::complex<double> term_val(0,0);
+std::complex<double> norm(0,0);
+
+term_val=sp_term.ami_term_.sign*gprod*fprod;
+
+std::complex<double> imag(0.,1.0);
+norm=std::pow(-imag*M_PI/(2.0*xi_cutoff), sp_term.delta_count);
+
+// std::cout<<term_val<<" "<<A_prod<<" "<< norm<<std::endl;
+
+term_val=term_val*A_prod*norm;
+
+output+= term_val;
+
+// std::cout<<"Exiting eval"<<std::endl;
+
+return output;	
+
+
+
+}
+
 std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, NewAmiCalc::ext_vars &ev,   AmiBase::ami_vars &external, NewAmiCalc::k_vect_list_t &klist,   xi_t &xi_list){
 
 std::complex<double> output(0,0);
