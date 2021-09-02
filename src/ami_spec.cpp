@@ -477,6 +477,59 @@ Ap[i].eps_index=i;
 }
 
 
+AmiSpec::ami_spec_vars AmiSpec::construct_ami_spec_vars(AmiBase::g_prod_t &R0, double prefactor, NewAmiCalc::internal_state &state, NewAmiCalc::ext_vars &external, xi_t &xi){
+	
+//energy_t energy={-4,1,-1};
+// std::cout<<"Beta value is "<<external.BETA_<<std::endl;
+// std::cout<<"Frequency value is "<< external.external_freq_[0]<<std::endl;
+
+AmiBase::energy_t energy=ami.construct_energy(R0, state, external);
+
+NewAmiCalc::k_vect_list_t k_list;
+
+k_list=state.internal_k_list_;
+for(int i=0; i<external.external_k_list_.size(); i++){
+k_list.push_back(external.external_k_list_[i]);
+}
+
+
+// std::cout<<"Got here"<<std::endl;
+
+// the state 'order_' is actually just the internal k-length - or number of independent variables 
+AmiBase::frequency_t frequency;
+int size=state.internal_k_list_.size();
+frequency.reserve(size+1);
+
+for(int i=0;i<size;i++){ frequency.push_back(std::complex<double>(0,0));}
+
+// TODO : this doesn't work with multiple external frequencies 
+// if(external.external_freq_.size()!=0){
+// frequency.push_back(external.external_freq_[0]); // some number of external frequencies
+// }
+
+// This should address above todo: should allow multiple external frequencies.
+// TODO: need a check somewhere that the frequency length matches the alpha length 
+for(int i=0; i< external.external_freq_.size(); i++){
+	
+frequency.push_back(external.external_freq_[i]);	
+	
+}
+
+
+if(frequency.size()!= R0[0].alpha_.size()){
+	throw std::runtime_error(std::string("Frequency size does not match alpha:")+ std::to_string(frequency.size())+" "+std::to_string(R0[0].alpha_.size()));
+}
+
+
+AmiSpec::ami_spec_vars final_out(energy, frequency, k_list, xi, external.BETA_, external.MU_, prefactor);
+// final_out.BETA_=external.BETA_;
+// final_out.prefactor=prefactor; //state.prefactor_;
+return final_out;
+
+	
+}
+
+
 
 
 // void generate_sp_terms(ami_term &start_term, sp_terms &new_sp_terms);

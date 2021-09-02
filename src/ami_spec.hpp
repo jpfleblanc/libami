@@ -101,7 +101,21 @@ typedef AmiBase::energy_t xi_t;
 
 struct ami_spec_vars{
 
+
+
+
+ami_spec_vars(AmiBase::energy_t eps, AmiBase::frequency_t freq, NewAmiCalc::k_vect_list_t k, xi_t x,  double Bta, std::complex<double> mu, double pf){
+energy_= eps;
+frequency_= freq;
+prefactor=pf;
+BETA_=Bta;
+k_list_=k;
+xi_list_=x;
+MU_=mu;
+}
+
 ami_spec_vars(){prefactor=1.0;}
+
 
 AmiBase::energy_t energy_;
 AmiBase::frequency_t frequency_;
@@ -146,7 +160,7 @@ std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp
 
 // simplified usage 
 std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, AmiSpec::ami_spec_vars &vars);
-
+ami_spec_vars construct_ami_spec_vars(AmiBase::g_prod_t &R0, double prefactor, NewAmiCalc::internal_state &state, NewAmiCalc::ext_vars &external, xi_t &xi);
 
 std::complex<double> A_eval(std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
 
