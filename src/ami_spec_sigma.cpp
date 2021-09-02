@@ -83,14 +83,14 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
     if (AMI_spec_freq_vector[n]==freq_gt && AMI_spec_kx_vector[n]==kx_gt && AMI_spec_ky_vector[n]==ky_gt) ggg_corner=n;
 
   }
-  std::cout << "lll: "<<AMI_spec_freq_vector[lll_corner]<<"  "<<AMI_spec_kx_vector[lll_corner]<<"  "<<AMI_spec_ky_vector[lll_corner] << "  Real: " << AMI_spec_se_Re_vector[lll_corner] << "  Imag: " << AMI_spec_se_Im_vector[lll_corner] <<std::endl;
+  /*std::cout << "lll: "<<AMI_spec_freq_vector[lll_corner]<<"  "<<AMI_spec_kx_vector[lll_corner]<<"  "<<AMI_spec_ky_vector[lll_corner] << "  Real: " << AMI_spec_se_Re_vector[lll_corner] << "  Imag: " << AMI_spec_se_Im_vector[lll_corner] <<std::endl;
   std::cout << "ggg: "<<AMI_spec_freq_vector[ggg_corner]<<"  "<<AMI_spec_kx_vector[ggg_corner]<<"  "<<AMI_spec_ky_vector[ggg_corner] << "  Real: " << AMI_spec_se_Re_vector[ggg_corner] << "  Imag: " << AMI_spec_se_Im_vector[ggg_corner] <<std::endl;
 	std::cout << "llg: "<<AMI_spec_freq_vector[llg_corner]<<"  "<<AMI_spec_kx_vector[llg_corner]<<"  "<<AMI_spec_ky_vector[llg_corner] << "  Real: " << AMI_spec_se_Re_vector[llg_corner] << "  Imag: " << AMI_spec_se_Im_vector[llg_corner] <<std::endl;
 	std::cout << "ggl: "<<AMI_spec_freq_vector[ggl_corner]<<"  "<<AMI_spec_kx_vector[ggl_corner]<<"  "<<AMI_spec_ky_vector[ggl_corner] << "  Real: " << AMI_spec_se_Re_vector[ggl_corner] << "  Imag: " << AMI_spec_se_Im_vector[ggl_corner] <<std::endl;
 	std::cout << "lgl: "<<AMI_spec_freq_vector[lgl_corner]<<"  "<<AMI_spec_kx_vector[lgl_corner]<<"  "<<AMI_spec_ky_vector[lgl_corner] << "  Real: " << AMI_spec_se_Re_vector[lgl_corner] << "  Imag: " << AMI_spec_se_Im_vector[lgl_corner] <<std::endl;
   std::cout << "gll: "<<AMI_spec_freq_vector[gll_corner]<<"  "<<AMI_spec_kx_vector[gll_corner]<<"  "<<AMI_spec_ky_vector[gll_corner] << "  Real: " << AMI_spec_se_Re_vector[gll_corner] << "  Imag: " << AMI_spec_se_Im_vector[gll_corner] <<std::endl;
 	std::cout << "glg: "<<AMI_spec_freq_vector[glg_corner]<<"  "<<AMI_spec_kx_vector[glg_corner]<<"  "<<AMI_spec_ky_vector[glg_corner] << "  Real: " << AMI_spec_se_Re_vector[glg_corner] << "  Imag: " << AMI_spec_se_Im_vector[glg_corner] <<std::endl;
-	std::cout << "lgg: "<<AMI_spec_freq_vector[lgg_corner]<<"  "<<AMI_spec_kx_vector[lgg_corner]<<"  "<<AMI_spec_ky_vector[lgg_corner] << "  Real: " << AMI_spec_se_Re_vector[lgg_corner] << "  Imag: " << AMI_spec_se_Im_vector[lgg_corner] <<std::endl;
+	std::cout << "lgg: "<<AMI_spec_freq_vector[lgg_corner]<<"  "<<AMI_spec_kx_vector[lgg_corner]<<"  "<<AMI_spec_ky_vector[lgg_corner] << "  Real: " << AMI_spec_se_Re_vector[lgg_corner] << "  Imag: " << AMI_spec_se_Im_vector[lgg_corner] <<std::endl;*/
 
   //linearinterpolation along freq axis
   double se_Im_ll_corner = AMI_spec_se_Im_vector[lll_corner] + (X.real() - AMI_spec_freq_vector[lll_corner])*(AMI_spec_se_Im_vector[llg_corner] - AMI_spec_se_Im_vector[lll_corner])/(AMI_spec_freq_vector[llg_corner] - AMI_spec_freq_vector[lll_corner]);
