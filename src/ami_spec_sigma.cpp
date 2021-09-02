@@ -11,7 +11,7 @@ void AmiSpec::find_closest_points_in_vector(double &closest_lt,double &closest_g
   //for(int n=0;n<comparison_vector.size();n++){std::cout << "comparison: " << comparison_vector[n]<<std::endl;}
   auto minimum_dif_iter = std::min_element(comparison_vector.begin(),comparison_vector.end());
   double minimum_dif=*minimum_dif_iter;//gives minimum difference between point and contents of vec
-  std::cout<< "\nminimum_dif:  " << minimum_dif << std::endl;
+  //std::cout<< "\nminimum_dif:  " << minimum_dif << std::endl;
   int minimum_dif_index=0;
 
 
