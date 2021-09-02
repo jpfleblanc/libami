@@ -39,7 +39,7 @@ NewAmiCalc::k_vector_t k_copy=k;
 for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	if(abs(k_copy[for_counter])>M_PI){
 		double modulo_shifted=k_copy[for_counter]+M_PI;
-		k_copy[for_counter]=M_PI+modulo_shifted-floor(modulo_shifted/(2*M_PI))*2*M_PI;//fmod(k_copy[for_counter])
+		k_copy[for_counter]=-M_PI+modulo_shifted-floor(modulo_shifted/(2*M_PI))*2*M_PI;//fmod(k_copy[for_counter])
 	}
 
 }
