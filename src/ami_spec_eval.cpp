@@ -115,8 +115,8 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, AmiBase::freque
 		NewAmiCalc::k_vector_t this_k=ami.construct_k(Ap[i].alpha_, klist);
 		std::complex<double> this_E=eval_tb(1.,0., this_k, mu);
 
-		std::complex<double> this_sigma=get_sigma(this_k, this_X); 
-			//std::complex<double> this_sigma(0,0.1);// would replace this with a working sigma
+		//std::complex<double> this_sigma=get_sigma(this_k, this_X);
+			std::complex<double> this_sigma(0,0.1);// would replace this with a working sigma
 
 
 		output=output*A_eval(this_sigma, this_X, this_E);
