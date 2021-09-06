@@ -8,14 +8,14 @@ std::complex<double> output(0,0);
 
 // std::cout<<"Entering eval"<<std::endl;
 
-AmiBase::ami_vars gprod_external(vars.energy_, vars.frequency_, vars.BETA_, vars.prefactor);	
+AmiBase::ami_vars gprod_external(vars.energy_, vars.frequency_, vars.BETA_, vars.prefactor);
 
-// TODO: is this sign swap necessary?	
+// TODO: is this sign swap necessary?
 for(int i=0; i< gprod_external.energy_.size(); i++){
- 
-gprod_external.energy_[i]=-gprod_external.energy_[i];	
-	
-}		
+
+gprod_external.energy_[i]=-gprod_external.energy_[i];
+
+}
 
 // std::cout<<"Entering eval A"<<std::endl;
 
@@ -24,10 +24,10 @@ std::complex<double> A_prod=eval_Aprod(sp_term.aprod_, vars.xi_list_, vars.frequ
 // std::cout<<"Entering eval G"<<std::endl;
 std::complex<double> gprod;
 gprod=amibase.eval_gprod(parms, sp_term.ami_term_.g_list, gprod_external);
-	
+
 	// std::cout<<"Entering eval F"<<std::endl;
 std::complex<double> fprod;
-fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);	
+fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);
 
 std::complex<double> term_val(0,0);
 std::complex<double> norm(0,0);
@@ -45,7 +45,7 @@ output+= term_val;
 
 // std::cout<<"Exiting eval"<<std::endl;
 
-return output;	
+return output;
 
 
 
@@ -57,14 +57,14 @@ std::complex<double> output(0,0);
 
 // std::cout<<"Entering eval"<<std::endl;
 
-AmiBase::ami_vars gprod_external=external;	
+AmiBase::ami_vars gprod_external=external;
 
-// TODO: is this sign swap necessary?	
+// TODO: is this sign swap necessary?
 for(int i=0; i< gprod_external.energy_.size(); i++){
- 
-gprod_external.energy_[i]=-xi_list[i];	
-	
-}		
+
+gprod_external.energy_[i]=-xi_list[i];
+
+}
 
 // std::cout<<"Entering eval A"<<std::endl;
 
@@ -73,10 +73,10 @@ std::complex<double> A_prod=eval_Aprod(sp_term.aprod_, xi_list, external.frequen
 // std::cout<<"Entering eval G"<<std::endl;
 std::complex<double> gprod;
 gprod=amibase.eval_gprod(parms, sp_term.ami_term_.g_list, gprod_external);
-	
+
 	// std::cout<<"Entering eval F"<<std::endl;
 std::complex<double> fprod;
-fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);	
+fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);
 
 std::complex<double> term_val(0,0);
 std::complex<double> norm(0,0);
@@ -94,9 +94,9 @@ output+= term_val;
 
 // std::cout<<"Exiting eval"<<std::endl;
 
-return output;	
-	
-	
+return output;
+
+
 }
 
 
@@ -115,8 +115,8 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, AmiBase::freque
 		NewAmiCalc::k_vector_t this_k=ami.construct_k(Ap[i].alpha_, klist);
 		std::complex<double> this_E=eval_tb(1.,0., this_k, mu);
 
-		// std::complex<double> this_sigma=get_sigma(this_k, this_X); 
-			std::complex<double> this_sigma(0,0.1);// would replace this with a working sigma 
+		std::complex<double> this_sigma=get_sigma(this_k, this_X); 
+			//std::complex<double> this_sigma(0,0.1);// would replace this with a working sigma
 
 
 		output=output*A_eval(this_sigma, this_X, this_E);
