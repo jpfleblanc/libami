@@ -1,5 +1,20 @@
 #include "ami_spec.hpp"
 
+std::complex<double> AmiSpec::evaluate_sp_terms(AmiBase::ami_parms &parms, AmiSpec::sp_terms &sp_terms, AmiSpec::ami_spec_vars &vars){
+	
+std::complex<double> sum(0,0);	
+	
+for(int i=0; i< sp_terms.size(); i++){
+
+std::complex<double> sp_result=evaluate_sp_term(parms, sp_terms[i], vars);
+
+sum+=sp_result;
+}
+
+return sum;	
+	
+	
+}
 
 std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, AmiSpec::ami_spec_vars &vars){
 
@@ -35,7 +50,7 @@ std::complex<double> norm(0,0);
 term_val=sp_term.ami_term_.sign*gprod*fprod;
 
 std::complex<double> imag(0.,1.0);
-norm=std::pow(-imag*M_PI/(2.0*xi_cutoff), sp_term.delta_count);
+norm=std::pow(-imag*M_PI/(2.0*xi_cutoff), sp_term.delta_count);//*std::pow(2.0*xi_cutoff, vars.xi_list_.size()) ;
 
 // std::cout<<term_val<<" "<<A_prod<<" "<< norm<<std::endl;
 
