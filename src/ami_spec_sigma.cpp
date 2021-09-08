@@ -34,7 +34,7 @@ void AmiSpec::find_closest_points_in_vector(double &closest_lt,double &closest_g
 }
 std::complex<double> AmiSpec::get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X)
 {
-if(abs(X)>xi_cutoff) return std::complex<double> (0.0,0.0);
+//if(abs(X)>xi_cutoff) return std::complex<double> (0.0,0.0);
 NewAmiCalc::k_vector_t k_copy=k;
 for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	if(abs(k_copy[for_counter])>M_PI){
@@ -103,10 +103,14 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	double se_Re_gl_corner = AMI_spec_se_Re_vector[gll_corner] + (X.real() - AMI_spec_freq_vector[gll_corner])*(AMI_spec_se_Re_vector[glg_corner] - AMI_spec_se_Re_vector[gll_corner])/(AMI_spec_freq_vector[glg_corner] - AMI_spec_freq_vector[gll_corner]);
 	double se_Re_gg_corner = AMI_spec_se_Re_vector[ggl_corner] + (X.real() - AMI_spec_freq_vector[ggl_corner])*(AMI_spec_se_Re_vector[ggg_corner] - AMI_spec_se_Re_vector[ggl_corner])/(AMI_spec_freq_vector[ggg_corner] - AMI_spec_freq_vector[ggl_corner]);
 
-
+  //std::cout<<"\nse_Re_ll_corner:  "<<se_Re_ll_corner<<std::endl;
+  //std::cout<<"se_Re_gg_corner:  "<<se_Re_gg_corner<<std::endl;
 
   //bilinear interpolation in momentum plane
   double bilinear_prefactor=1/((kx_gt-kx_lt)*(ky_gt-ky_lt));
+  //std::cout<<"prefactor:  "<<bilinear_prefactor<<std::endl;
+  //std::cout<<"se_Re_ll_corner*(kx_gt-k[0])*(ky_gt-k[1]):  "<<se_Re_ll_corner*(kx_gt-k[0])*(ky_gt-k[1])<<std::endl;
+  //std::cout << "se_Re_gg_corner*(k[0]-kx_lt)*(k[1]-ky_lt):  " << se_Re_gg_corner*(k[0]-kx_lt)*(k[1]-ky_lt)<<std::endl;
   double bilinear_main_Re=se_Re_ll_corner*(kx_gt-k[0])*(ky_gt-k[1]) + se_Re_lg_corner*(kx_gt-k[0])*(k[1]-ky_lt) + se_Re_gl_corner*(k[0]-kx_lt)*(ky_gt-k[1]) + se_Re_gg_corner*(k[0]-kx_lt)*(k[1]-ky_lt);
   double  se_Re_interpolated=bilinear_prefactor*bilinear_main_Re;
 
