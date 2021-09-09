@@ -162,6 +162,8 @@ std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp
 std::complex<double> evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, AmiSpec::ami_spec_vars &vars);
 ami_spec_vars construct_ami_spec_vars(AmiBase::g_prod_t &R0, double prefactor, NewAmiCalc::internal_state &state, NewAmiCalc::ext_vars &external, xi_t &xi);
 
+std::complex<double> evaluate_sp_terms(AmiBase::ami_parms &parms, AmiSpec::sp_terms &sp_terms, AmiSpec::ami_spec_vars &vars);
+
 std::complex<double> A_eval(std::complex<double> &sigma, std::complex<double> &X, std::complex<double> &E);
 
 std::complex<double> get_A(A_struct &A, double this_x, NewAmiCalc::k_vector_t k);
