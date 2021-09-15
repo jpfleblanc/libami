@@ -384,7 +384,17 @@ for(int j=0; j< sp_term.ami_term_.g_list.size(); j++){
 // note that Aprod is defined by the X_t x_ values not eps_
 for(int j=0; j< sp_term.aprod_.size(); j++){
 
-	update_spec_pole(pv[i], sp_term.aprod_[j].x_alpha_, sp_term.aprod_[j].x_);
+	// AmiBase::pole_struct this_pole=pv[i];
+	// for(int m=0; m< this_pole.eps_.size(); m++){
+		// this_pole.eps_[m]=-this_pole.eps_[m];
+	// }
+	
+	for(int m=0; m< this_pole.alpha_.size(); m++){
+		this_pole.alpha_[m]=-this_pole.alpha_[m];
+	}
+	
+
+	update_spec_pole(this_pole, sp_term.aprod_[j].x_alpha_, sp_term.aprod_[j].x_);
 
 }
 
