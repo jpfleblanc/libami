@@ -80,7 +80,7 @@ int eps_index=-1;
 std::complex<double> eps_val;
 
 AmiBase::epsilon_t eps_;
-X_t x_;
+X_t x_; // not to be confused with xi_t.  X_t is symbolic.  xi_t is numbers. 
 AmiBase::alpha_t x_alpha_;
 AmiBase::alpha_t alpha_;
 AmiBase::species_t species_;

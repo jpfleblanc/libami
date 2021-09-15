@@ -22,6 +22,9 @@ std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpe
 std::complex<double> output(0,0);
 
 // std::cout<<"Entering eval"<<std::endl;
+//TODO: Need some sort of warning or catch because this could be really dangerous....
+vars.frequency_.back()=vars.frequency_.back().real();
+
 
 AmiBase::ami_vars gprod_external(vars.energy_, vars.frequency_, vars.BETA_, vars.prefactor);
 
@@ -66,6 +69,7 @@ return output;
 
 }
 
+//TODO: Remove this...
 std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, NewAmiCalc::ext_vars &ev,   AmiBase::ami_vars &external, NewAmiCalc::k_vect_list_t &klist,   xi_t &xi_list){
 
 std::complex<double> output(0,0);

@@ -410,15 +410,16 @@ void AmiSpec::update_spec_pole(AmiBase::pole_struct &source_pole, AmiBase::alpha
 
 int index=source_pole.index_;
 if(target_eps[index]==0){ return;} // nothing to do
+int prefactor=target_eps[index];
 
 for(int m=0; m< target_alpha.size(); m++){
-	target_alpha[m]+=source_pole.alpha_[m];
+	target_alpha[m]+=source_pole.alpha_[m]*prefactor;
 }
 
 for(int m=0; m< target_eps.size(); m++){
 	if(m==index){ target_eps[m]=0;}
 	else{
-	target_eps[m]+=source_pole.eps_[m];
+	target_eps[m]+=source_pole.eps_[m]*prefactor;
 	}
 }
 
