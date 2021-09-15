@@ -18,12 +18,13 @@ return sum;
 
 std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, AmiSpec::ami_spec_vars &vars){
 
+vars.frequency_.back()=vars.frequency_.back().real();
 
 std::complex<double> output(0,0);
 
 // std::cout<<"Entering eval"<<std::endl;
 
-AmiBase::ami_vars gprod_external(vars.energy_, vars.frequency_, vars.BETA_, vars.prefactor);
+AmiBase::ami_vars gprod_external(vars.xi_list_, vars.frequency_, vars.BETA_, vars.prefactor);
 
 // TODO: is this sign swap necessary?
 for(int i=0; i< gprod_external.energy_.size(); i++){
@@ -35,17 +36,17 @@ gprod_external.energy_[i]=-gprod_external.energy_[i];
 // std::cout<<"Entering eval A"<<std::endl;
 
 std::complex<double> A_prod=eval_Aprod(sp_term.aprod_, vars.xi_list_, vars.frequency_, vars.k_list_, vars.MU_);
-//std::cout<< "A_prod:  "<<A_prod<<std::endl;
+std::cout<< "A_prod:  "<<A_prod<<std::endl;
 
-// std::cout<<"Entering eval G"<<std::endl;
+// //std::cout<<"Entering eval G"<<std::endl;
 std::complex<double> gprod;
 gprod=amibase.eval_gprod(parms, sp_term.ami_term_.g_list, gprod_external);
-//std::cout<< "gprod:  "<<gprod<<std::endl;
-	// std::cout<<"Entering eval F"<<std::endl;
+std::cout<< "gprod:  "<<gprod<<std::endl;
+	// //std::cout<<"Entering eval F"<<std::endl;
 
 std::complex<double> fprod;
 fprod=amibase.eval_fprod(parms, sp_term.ami_term_.p_list, gprod_external);
-//std::cout<< "fprod:  "<<fprod<<std::endl;
+std::cout<< "fprod:  "<<fprod<<std::endl;
 std::complex<double> term_val(0,0);
 std::complex<double> norm(0,0);
 
@@ -54,7 +55,7 @@ term_val=sp_term.ami_term_.sign*gprod*fprod;
 std::complex<double> imag(0.,1.0);
 
 norm=std::pow(-imag*M_PI/(2.0*xi_cutoff), sp_term.delta_count);
-//std::cout<< "norm:  "<<norm<<std::endl;
+std::cout<< "norm:  "<<norm<<std::endl;
 
 // std::cout<<term_val<<" "<<A_prod<<" "<< norm<<std::endl;
 
@@ -129,15 +130,20 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, AmiBase::freque
 	// A(Sigma, X, E)  : Sigma: self-energy, X: is frequency, E: energy from k_vector
 	for(int i=0; i< Ap.size(); i++){
 
-		std::complex<double> this_X=get_X( Ap[i].x_, xi, Ap[i].x_alpha_, freq);
 
+		std::complex<double> this_X=get_X( Ap[i].x_, xi, Ap[i].x_alpha_, freq);
+		std::cout<<"this_X Aprod:  "<<this_X<<std::endl;
+		for(int freq_count=0;freq_count<freq.size();freq_count++){
+		std::cout<<"freq:  "<<freq[freq_count]<<"  ";
+	}
+	std::cout<<"\n"<<std::endl;
 		NewAmiCalc::k_vector_t this_k=ami.construct_k(Ap[i].alpha_, klist);
 		std::complex<double> this_E=eval_tb(1.,0., this_k, mu);
 		//std::cout<<"this X:  "<<this_X<<std::endl;
 		//std::cout<<"this_k:  "<<this_k<<std::endl;
-		std::complex<double> this_sigma=get_sigma(this_k, this_X);
+		//std::complex<double> this_sigma=get_sigma(this_k, this_X);
 		//std::cout<<"got sigma"<<std::endl;
-			//std::complex<double> this_sigma(0,0.1);// would replace this with a working sigma
+			std::complex<double> this_sigma(0,-0.1);// would replace this with a working sigma
 
 
 		output=output*A_eval(this_sigma, this_X, this_E);
