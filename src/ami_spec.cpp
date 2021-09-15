@@ -291,8 +291,8 @@ if(count(used.begin(), used.end(),1)!= delta_size){
 		if(m==this_index){pv[i].eps_[m]=0;}
 		else{
 
-			//pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(-this_prefactor);
-			pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(this_prefactor);
+			pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(-this_prefactor);
+			// pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(this_prefactor);
 		}
 
 	}
