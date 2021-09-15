@@ -28,7 +28,7 @@ xi.resize(length);
 for(int i=0; i<length; i++){
 	xi[i]=ami.random_real(-xi_cutoff,xi_cutoff);
 }
-	
+
 }
 
 std::complex<double> AmiSpec::get_X(X_t &Xsym, xi_t &xi, AmiBase::alpha_t &x_alpha_, AmiBase::frequency_t &freq){
@@ -291,7 +291,8 @@ if(count(used.begin(), used.end(),1)!= delta_size){
 		if(m==this_index){pv[i].eps_[m]=0;}
 		else{
 
-			pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(-this_prefactor);
+			//pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(-this_prefactor);
+			pv[i].eps_[m]= sp_term.dprod_[i].eps_[m]*(this_prefactor);
 		}
 
 	}
@@ -479,7 +480,7 @@ Ap[i].eps_index=i;
 
 
 AmiSpec::ami_spec_vars AmiSpec::construct_ami_spec_vars(AmiBase::g_prod_t &R0, double prefactor, NewAmiCalc::internal_state &state, NewAmiCalc::ext_vars &external, xi_t &xi){
-	
+
 //energy_t energy={-4,1,-1};
 // std::cout<<"Beta value is "<<external.BETA_<<std::endl;
 // std::cout<<"Frequency value is "<< external.external_freq_[0]<<std::endl;
@@ -496,24 +497,24 @@ k_list.push_back(external.external_k_list_[i]);
 
 // std::cout<<"Got here"<<std::endl;
 
-// the state 'order_' is actually just the internal k-length - or number of independent variables 
+// the state 'order_' is actually just the internal k-length - or number of independent variables
 AmiBase::frequency_t frequency;
 int size=state.internal_k_list_.size();
 frequency.reserve(size+1);
 
 for(int i=0;i<size;i++){ frequency.push_back(std::complex<double>(0,0));}
 
-// TODO : this doesn't work with multiple external frequencies 
+// TODO : this doesn't work with multiple external frequencies
 // if(external.external_freq_.size()!=0){
 // frequency.push_back(external.external_freq_[0]); // some number of external frequencies
 // }
 
 // This should address above todo: should allow multiple external frequencies.
-// TODO: need a check somewhere that the frequency length matches the alpha length 
+// TODO: need a check somewhere that the frequency length matches the alpha length
 for(int i=0; i< external.external_freq_.size(); i++){
-	
-frequency.push_back(external.external_freq_[i]);	
-	
+
+frequency.push_back(external.external_freq_[i]);
+
 }
 
 
@@ -527,7 +528,7 @@ AmiSpec::ami_spec_vars final_out(energy, frequency, k_list, xi, external.BETA_, 
 // final_out.prefactor=prefactor; //state.prefactor_;
 return final_out;
 
-	
+
 }
 
 

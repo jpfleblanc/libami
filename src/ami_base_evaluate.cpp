@@ -1,16 +1,16 @@
 #include "ami_base.hpp"
 
-// TODO: since there is some duplication of code in these two evaluate commands they should be separated 
+// TODO: since there is some duplication of code in these two evaluate commands they should be separated
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
-	
+
 	// std::cout<<"Evaluating with external"<<std::endl;
-	
+
 	// for(int i=0; i< external.energy_.size(); i++){
 		// std::cout<<external.energy_[i]<<" ";
 	// }
 	// std::cout<<std::endl;
-	
-	
+
+
 	// for(int i=0; i< external.frequency_.size(); i++){
 		// std::cout<<external.frequency_[i]<<" ";
 	// }
@@ -41,9 +41,9 @@ return gprod;
 
 if (dim==1){
 SorF_t SF_left, SF_right;
-SorF_t S_double_left, S_double_right;	
-	
-SF_left=dot(S_array[0], fermi(parms,P_array[0], external));	
+SorF_t S_double_left, S_double_right;
+
+SF_left=dot(S_array[0], fermi(parms,P_array[0], external));
 
 SorF_result=SF_left;
 
@@ -51,7 +51,7 @@ SorF_result=SF_left;
 // for( int x=0; x< SorF_result[0].size(); x++){
 // std::cout<<x<<" "<< SorF_result[0][x]<<std::endl;
 // }
-	
+
 }
 
 for (int i=0; i< dim-1; i++){
@@ -78,7 +78,7 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
  SorF_result=cross(SF_left,SF_right);
  // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
- 
+
 
 // std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
 // for( int x=0; x< SorF_result[0].size(); x++){
@@ -88,7 +88,7 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
 
 }
- 
+
 
 
 std::complex<double> final_result;
@@ -104,14 +104,14 @@ final_result=optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, extern
 // if(double_check!=final_result){
 	// std::cout<<"Double checking got"<<std::endl;
 	// std::cout<<double_check<<" "<<final_result<<std::endl;
-	
+
 // }
 
 return final_result;
 
 
-	
-	
+
+
 }
 
 
@@ -126,21 +126,21 @@ std::complex<double> term;
 std::vector< std::complex<double>> unique_vals;
 // std::cout<<"External prefactor is "<<external.prefactor<<std::endl;
 for(int i=0; i< unique_g.size(); i++){
-// we pretend each G is a g_prod and use the same function as the normal star operation for evaluating products of G's 
+// we pretend each G is a g_prod and use the same function as the normal star operation for evaluating products of G's
 g_prod_t this_term;
 this_term.push_back(unique_g[i]);
 
-unique_vals.push_back(eval_gprod(parms,this_term,external)*external.prefactor); // This removes the overall prefactor for each g. we then add that back later 
-		
+unique_vals.push_back(eval_gprod(parms,this_term,external)*external.prefactor); // This removes the overall prefactor for each g. we then add that back later
+
 }
 
 
 // std::cout<<"Debugging Energy values "<<std::endl;
 
 // for(int i=0; i< external.energy_.size(); i++){
-	
+
 	// std::cout<<external.energy_[i]<<std::endl;
-	
+
 // }
 
 
@@ -148,49 +148,49 @@ unique_vals.push_back(eval_gprod(parms,this_term,external)*external.prefactor); 
 // for(int i=0; i<unique_vals.size(); i++){
 	// std::cout<<i<<std::endl;
 	// print_g_struct_info(unique_g[i]);
-	
+
 // }
 
 // std::cout<<"Debugging unique values "<<std::endl;
 // for(int i=0; i<unique_vals.size(); i++){
 	// std::cout<<i<<" "<<unique_vals[i]<<std::endl;
-	
+
 // }
 
-// now I have the numerical values of our unique G's 
+// now I have the numerical values of our unique G's
 
 bool verbose=0;
 
 for(int i=0; i< Eval_list.size(); i++){
-	
+
 	std::complex<double> ksum(0,0);
 	for(int j=0; j< Eval_list[i].size(); j++){
 		// std::cout<<j<<" "<<K[0][Eval_list[i][j].first]<<" "<<double(Eval_list[i][j].second)<<std::endl;
 		ksum+=K[0][Eval_list[i][j].first]*double(Eval_list[i][j].second);
-		
+
 	}
-	// in principle, every entry in eval_list has the same Rref terms 
-	ref_v_t pair_vec= Rref[i]; // just grab the first one 
+	// in principle, every entry in eval_list has the same Rref terms
+	ref_v_t pair_vec= Rref[i]; // just grab the first one
 	std::complex<double> this_gprod(1,0);
-	
+
 	// std::cout<<"Term comprised of unique G indexes ";
 	for(int j=0; j< pair_vec.size(); j++){
 	// std::cout<<pair_vec[j].first<<" ";
 	this_gprod=this_gprod*unique_vals[pair_vec[j].first];
-	
+
 	}
-	
+
 	// std::cout<<std::endl;
-	
-	term=ksum*this_gprod*external.prefactor; // add back the overall prefactor for this term 
-	
-	
+
+	term=ksum*this_gprod*external.prefactor; // add back the overall prefactor for this term
+
+
 	// std::cout<<"In optimized star K[]*R"<<std::endl;
 // std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
-	
+
 	output+=term;
-	
-	
+
+
 }
 
 
@@ -204,12 +204,12 @@ return output;
 
 
  /**
- * This is a primary AMI symbolic evaluation function.  It takes a solution defined by S, P, and R arrays and the external parameters and returns a `complex<double>` restult. 
- * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
- * @param[in] R_array: Input `R_t` 
+ * This is a primary AMI symbolic evaluation function.  It takes a solution defined by S, P, and R arrays and the external parameters and returns a `complex<double>` restult.
+ * @param[in] parms : `ami_parms` object, basic parameters for AMI.
+ * @param[in] R_array: Input `R_t`
  * @param[in] P_array : Input `P_t`
  * @param[in] S_array : Input `S_t`
- * @param[in] external : Input `ami_vars` containing point to evaluate. 
+ * @param[in] external : Input `ami_vars` containing point to evaluate.
 */
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
@@ -233,12 +233,12 @@ return gprod;
 
 if (dim==1){
 SorF_t SF_left, SF_right;
-SorF_t S_double_left, S_double_right;	
-	
-SF_left=dot(S_array[0], fermi(parms,P_array[0], external));	
+SorF_t S_double_left, S_double_right;
+
+SF_left=dot(S_array[0], fermi(parms,P_array[0], external));
 
 SorF_result=SF_left;
-	
+
 }
 
 for (int i=0; i< dim-1; i++){
@@ -262,7 +262,7 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
  SorF_result=cross(SF_left,SF_right);
  // std::cout<<"xS["<<i+1<<"].f(P["<<i+1<<"])";
- 
+
 
 // std::cout<<"After i "<<i<<"steps, K contains "<<std::endl;
 // for( int x=0; x< SorF_result[0].size(); x++){
@@ -272,7 +272,7 @@ SF_right=dot(S_array[i+1], fermi(parms,P_array[i+1], external));
 
 
 }
- 
+
 
 
 std::complex<double> final_result;
@@ -426,22 +426,22 @@ double E_REG=parms.E_REG_;
 // if(is_real_external){
 
 	// if(pole.alpha_.back()!=0){
-		
+
 		// freq_shift=external.frequency_.back()*(double)pole.alpha_.back();
 		// pole.alpha_.back()=0;
-		
+
 	// }
-	
-	
+
+
 // }
 
 
-// In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered. 
+// In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered.
 
 // example fixed
 //
-// 1) create a stat map for the frequencies std::vector<int> stat_map: populate 1 for fermi and 0 for bose. length is equal to alpha.size() 
-// 2) simply replace eta=eta + 1*stat_map[i] 
+// 1) create a stat map for the frequencies std::vector<int> stat_map: populate 1 for fermi and 0 for bose. length is equal to alpha.size()
+// 2) simply replace eta=eta + 1*stat_map[i]
 //
 
 // alternate fix.  parms.TYPE_ is 0 for sigma, 1 for Pi etc.  So if parms.TYPE_==1 and pole.alpha_.back()==1 (or -1), don't add one. else add one to eta.
@@ -457,11 +457,11 @@ if(pole.alpha_[i]!=0){
 
 
 
-// handle external based on graph type 
+// handle external based on graph type
 if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiBase::Pi_phuu && parms.TYPE_!=AmiBase::Pi_phud  && parms.TYPE_ !=AmiBase::doubleocc && parms.TYPE_!=AmiBase::Pi_ppuu && parms.TYPE_!=AmiBase::Pi_ppud && parms.TYPE_!=AmiBase::FORCE){
 
 
-eta++;	
+eta++;
 
 // std::cout<<"External triggered"<<std::endl;
 }
@@ -472,8 +472,8 @@ if(parms.TYPE_==AmiBase::doubleocc){
 if(pole.index_==pole.alpha_.size()-1){
 eta++;
 // std::cout<<"Incrementing eta since this is a bosonic integral for "<< pole.index_<<std::endl;
-}	
-	
+}
+
 }
 
 // END TODO
@@ -504,16 +504,16 @@ std::complex<double> im(0,1);
 // TODO: This regulator may not be sufficient for derivative functions.
 // if(eta%2==1 && abs(E.real())<abs(E_REG)){
 // E+=E_REG*sgn(E.real());
-// }	
+// }
 
 
 if(E==zero && sigma==-1  ){  // && pole.der_==0    Not sure if pole derivative plays any role
 	// std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
-if(drop_bosonic_diverge){	
+if(drop_bosonic_diverge){
 // std::cout<<"Bosonic function at zero energy - must vanish, setting to zero"<<std::endl;
-return zero;	// TODO: need to test this might be an approximation 
+return zero;	// TODO: need to test this might be an approximation
 }
-E+=E_REG;	
+E+=E_REG;
 }else{
 	if(sgn(E.real())!=0){
 	E+=E_REG*sgn(E.real());}
@@ -522,7 +522,7 @@ E+=E_REG;
 	}
 }
 
-// july 23rd adding back in a different regulator 
+// july 23rd adding back in a different regulator
 
 // if(sgn(E.real())!=0){
 	// E+=E_REG*sgn(E.real());}
@@ -539,7 +539,7 @@ E+=E_REG;
 if(drop_der && pole.der_!=0){
 
 // if(pole.der_!=0){
-	
+
 	return zero;
 }
 
@@ -559,10 +559,10 @@ output=fermi_bose(m,sigma,beta,E);
 // std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 
 
-// TODO I'm not sure this is correct for doubleocc 
+// TODO I'm not sure this is correct for doubleocc
 // if external was integrated over and bosonic, then the above (-1.0) should not be there. ... I think, and the starting fermi turns into a bosonic function  should generalize this
 if(parms.TYPE_==AmiBase::doubleocc){
-output=-1.0*output;	
+output=-1.0*output;
 }
 
 
@@ -573,7 +573,7 @@ output=-1.0*output;
 return output;
 }
 
-/// This computes the mth order derivative of the fermi or bose distribution functions at beta, for energy E. sigma=1.0 for fermi and -1.0 for bose. 
+/// This computes the mth order derivative of the fermi or bose distribution functions at beta, for energy E. sigma=1.0 for fermi and -1.0 for bose.
 std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta, std::complex<double> E){
 
 std::complex<double> output,term;
@@ -587,12 +587,12 @@ output=0.0;
 		// std::complex<double> zero(0,0);
 		// return zero;
 	// }
-	
-// } 
+
+// }
 
 if(m==0){
-	
-	
+
+
 output=1.0/(sigma*std::exp(beta*(E))+1.0);
 // return output;
 }else{  // compute m'th derivative
@@ -605,14 +605,14 @@ for( int k=0; k<m+1; k++){
 	// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 }
 
-// TODO: double check that this multiplication is general 
+// TODO: double check that this multiplication is general
 output=output*std::pow(beta,m)*(-1.0);
 }
-	
+
 	// std::cout<<"Fermi Pole output evaluated to "<< output << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
 
-return output;	
-	
+return output;
+
 }
 
 
@@ -651,7 +651,7 @@ return output;
 }
 
 
-// TODO: Comment completely 
+// TODO: Comment completely
 std::complex<double> AmiBase::eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external){
 std::complex<double> output(0,0);
 
@@ -674,7 +674,7 @@ std::complex<double> epsdenom(0,0);
  for(int a=0; a< g_prod[i].alpha_.size(); a++){
 alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
 
-} 
+}
 // TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
 
 std::complex<double> zero(0,0);
@@ -691,7 +691,7 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // }
 }
 
-// For safety this is disabled.  No regulator whatsoever. 
+// For safety this is disabled.  No regulator whatsoever.
 // if(alphadenom==zero){
 	// return zero;
 	// double val=E_REG*sgn(epsdenom.real());
@@ -700,12 +700,12 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 // alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*im;
 // std::cout<<"Added ereg in gprod_eval "<<alphadenom<<std::endl;
 // verbose=true;
-// alphadenom+=E_REG;	
+// alphadenom+=E_REG;
 // }
 
 
 denom_prod=denom_prod*(alphadenom+epsdenom);
-
+std::cout<<"alphadenom:  "<<alphadenom<<"  epsdenom:  "<<epsdenom<<"  prefactor:  "<<prefactor<<std::endl;
 
 
 }
@@ -719,45 +719,42 @@ return output;
 }
 
 
-/// Using notation to match 10.1103/PhysRevB.101.075113 
-/// They produced coefficients to the fermi functions and put them in a table. 
-/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order I think 
+/// Using notation to match 10.1103/PhysRevB.101.075113
+/// They produced coefficients to the fermi functions and put them in a table.
+/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order I think
 double AmiBase::frk(int r, int k){
 double output=0.0;
 
 
 
 for(int m=0; m< k+1; m++){
-	
-output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));	
-	
-	
+
+output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));
+
+
 }
 
 // std::cout<<"Evaluating Frk function "<<r<<" "<<k<<" = "<<output<<std::endl;
-	
+
 	return output;
-	
+
 }
 
-// Returns value of Binomial Coefficient C(n, k)  
-int AmiBase::binomialCoeff(int n, int k){  
-    int res = 1;  
-  
-    // Since C(n, k) = C(n, n-k)  
-    if ( k > n - k )  
-        k = n - k;  
-  
-    // Calculate value of  
-    // [n * (n-1) *---* (n-k+1)] / [k * (k-1) *----* 1]  
-    for (int i = 0; i < k; ++i)  
-    {  
-        res *= (n - i);  
-        res /= (i + 1);  
-    }  
-  
-    return res;  
-}  
+// Returns value of Binomial Coefficient C(n, k)
+int AmiBase::binomialCoeff(int n, int k){
+    int res = 1;
 
+    // Since C(n, k) = C(n, n-k)
+    if ( k > n - k )
+        k = n - k;
 
+    // Calculate value of
+    // [n * (n-1) *---* (n-k+1)] / [k * (k-1) *----* 1]
+    for (int i = 0; i < k; ++i)
+    {
+        res *= (n - i);
+        res /= (i + 1);
+    }
 
+    return res;
+}

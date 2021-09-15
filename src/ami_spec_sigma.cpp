@@ -34,7 +34,7 @@ void AmiSpec::find_closest_points_in_vector(double &closest_lt,double &closest_g
 }
 std::complex<double> AmiSpec::get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X)
 {
-//if(abs(X)>xi_cutoff) return std::complex<double> (0.0,0.0);
+if(X.real()<AMI_spec_freq_vector_simplified[0]||X.real()>AMI_spec_freq_vector.back()) return std::complex<double> (0.0,0.0);
 NewAmiCalc::k_vector_t k_copy=k;
 for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	if(abs(k_copy[for_counter])>M_PI){
@@ -43,7 +43,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	}
 
 }
-
+//std::cout<<"where is the seg fault 1"<<std::endl;
   //std::vector<double> point_wanted_modulo;
   //if(X>M_PI) point_wanted_modulo.push_back(fmod())
   //identify 8 closest points
@@ -57,12 +57,14 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
     //if(freq_vector_simplified[n] > freq_lt && abs(X - freq_vector_simplified[n]) < abs(X - freq_lt)) freq_lt = freq_vector_simplified[n];
     //if(freq_vector_simplified[n] < freq_gt && abs(X - freq_vector_simplified[n]) < abs(X - freq_gt)) freq_gt = freq_vector_simplified[n];
 
-
+//std::cout<<"where is the seg fault 1.25"<<std::endl;
+//std::cout<<X.real()<<"  "<<k[0]<<"  "<<k[0]<<std::endl;
   find_closest_points_in_vector(freq_lt,freq_gt, X.real(), AMI_spec_freq_vector_simplified);
 
   find_closest_points_in_vector(kx_lt,kx_gt, k[0], AMI_spec_kx_vector_simplified);
 
   find_closest_points_in_vector(ky_lt,ky_gt, k[1], AMI_spec_ky_vector_simplified);
+  //std::cout<<"where is the seg fault 1.5"<<std::endl;
   //find_closest_points_in_vector(double &closest_lt,double &closest_gt,double point, std::vector<double> vec)
   int lll_corner;
   int llg_corner;
@@ -83,6 +85,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
     if (AMI_spec_freq_vector[n]==freq_gt && AMI_spec_kx_vector[n]==kx_gt && AMI_spec_ky_vector[n]==ky_gt) ggg_corner=n;
 
   }
+  //std::cout<<"where is the seg fault 2"<<std::endl;
   /*std::cout << "lll: "<<AMI_spec_freq_vector[lll_corner]<<"  "<<AMI_spec_kx_vector[lll_corner]<<"  "<<AMI_spec_ky_vector[lll_corner] << "  Real: " << AMI_spec_se_Re_vector[lll_corner] << "  Imag: " << AMI_spec_se_Im_vector[lll_corner] <<std::endl;
   std::cout << "ggg: "<<AMI_spec_freq_vector[ggg_corner]<<"  "<<AMI_spec_kx_vector[ggg_corner]<<"  "<<AMI_spec_ky_vector[ggg_corner] << "  Real: " << AMI_spec_se_Re_vector[ggg_corner] << "  Imag: " << AMI_spec_se_Im_vector[ggg_corner] <<std::endl;
 	std::cout << "llg: "<<AMI_spec_freq_vector[llg_corner]<<"  "<<AMI_spec_kx_vector[llg_corner]<<"  "<<AMI_spec_ky_vector[llg_corner] << "  Real: " << AMI_spec_se_Re_vector[llg_corner] << "  Imag: " << AMI_spec_se_Im_vector[llg_corner] <<std::endl;
@@ -108,6 +111,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 
   //bilinear interpolation in momentum plane
   double bilinear_prefactor=1/((kx_gt-kx_lt)*(ky_gt-ky_lt));
+  //std::cout<<"where is the seg fault 3"<<std::endl;
   //std::cout<<"prefactor:  "<<bilinear_prefactor<<std::endl;
   //std::cout<<"se_Re_ll_corner*(kx_gt-k[0])*(ky_gt-k[1]):  "<<se_Re_ll_corner*(kx_gt-k[0])*(ky_gt-k[1])<<std::endl;
   //std::cout << "se_Re_gg_corner*(k[0]-kx_lt)*(k[1]-ky_lt):  " << se_Re_gg_corner*(k[0]-kx_lt)*(k[1]-ky_lt)<<std::endl;
@@ -116,7 +120,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 
 	double bilinear_main_Im=se_Im_ll_corner*(kx_gt-k[0])*(ky_gt-k[1]) + se_Im_lg_corner*(kx_gt-k[0])*(k[1]-ky_lt) + se_Im_gl_corner*(k[0]-kx_lt)*(ky_gt-k[1]) + se_Im_gg_corner*(k[0]-kx_lt)*(k[1]-ky_lt);
   double  se_Im_interpolated=bilinear_prefactor*bilinear_main_Im;
-
+//std::cout<<"where is the seg fault 4"<<std::endl;
   return std::complex<double> (se_Re_interpolated,se_Im_interpolated);
 
 }
