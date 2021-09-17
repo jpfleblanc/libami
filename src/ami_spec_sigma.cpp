@@ -34,7 +34,11 @@ void AmiSpec::find_closest_points_in_vector(double &closest_lt,double &closest_g
 }
 std::complex<double> AmiSpec::get_sigma(NewAmiCalc::k_vector_t &k, std::complex<double> &X)
 {
-if(X.real()<AMI_spec_freq_vector_simplified[0]||X.real()>AMI_spec_freq_vector.back()) return std::complex<double> (0.0,0.0);
+
+  //std::cout<<AMI_spec_freq_vector_simplified[0]<<std::endl;
+  //std::cout<<AMI_spec_freq_vector_simplified.back()<<std::endl;
+if(X.real()<AMI_spec_freq_vector_simplified[0]||X.real()>AMI_spec_freq_vector_simplified.back()) return std::complex<double> (0.0,0.0);
+
 NewAmiCalc::k_vector_t k_copy=k;
 for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	if(abs(k_copy[for_counter])>M_PI){
@@ -43,6 +47,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
 	}
 
 }
+
 //std::cout<<"where is the seg fault 1"<<std::endl;
   //std::vector<double> point_wanted_modulo;
   //if(X>M_PI) point_wanted_modulo.push_back(fmod())
@@ -66,6 +71,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
   find_closest_points_in_vector(ky_lt,ky_gt, k[1], AMI_spec_ky_vector_simplified);
   //std::cout<<"where is the seg fault 1.5"<<std::endl;
   //find_closest_points_in_vector(double &closest_lt,double &closest_gt,double point, std::vector<double> vec)
+
   int lll_corner;
   int llg_corner;
   int lgl_corner;
@@ -85,6 +91,7 @@ for(int for_counter=0;for_counter<k_copy.size();for_counter++){
     if (AMI_spec_freq_vector[n]==freq_gt && AMI_spec_kx_vector[n]==kx_gt && AMI_spec_ky_vector[n]==ky_gt) ggg_corner=n;
 
   }
+
   //std::cout<<"where is the seg fault 2"<<std::endl;
   /*std::cout << "lll: "<<AMI_spec_freq_vector[lll_corner]<<"  "<<AMI_spec_kx_vector[lll_corner]<<"  "<<AMI_spec_ky_vector[lll_corner] << "  Real: " << AMI_spec_se_Re_vector[lll_corner] << "  Imag: " << AMI_spec_se_Im_vector[lll_corner] <<std::endl;
   std::cout << "ggg: "<<AMI_spec_freq_vector[ggg_corner]<<"  "<<AMI_spec_kx_vector[ggg_corner]<<"  "<<AMI_spec_ky_vector[ggg_corner] << "  Real: " << AMI_spec_se_Re_vector[ggg_corner] << "  Imag: " << AMI_spec_se_Im_vector[ggg_corner] <<std::endl;
