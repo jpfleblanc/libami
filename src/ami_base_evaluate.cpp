@@ -422,6 +422,18 @@ double beta=external.BETA_;
 double E_REG=parms.E_REG_;
 // std::cout<<"Evaluating with energy regulator of "<< E_REG<<std::endl;
 
+// Spectral evaluation only 
+std::complex<double> freq_shift(0,0);
+if(pole.x_alpha_.size()!=0){
+	for(int i=0; i< pole.x_alpha_.size(); i++){
+		
+		freq_shift+=external.frequency_[i]*(double)pole.x_alpha_[i];
+		
+	}
+	
+}
+
+
 // std::complex<double> freq_shift(0,0);
 // if(is_real_external){
 
@@ -482,7 +494,8 @@ eta++;
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
 
-// E=E+freq_shift;
+// In the case of spectral poles the freq_shift might not be zero 
+E=E+freq_shift;
 
 // if(std::abs(E.real())<E_REG){return std::complex<double>(0,0);}
 
@@ -705,7 +718,7 @@ epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
 
 
 denom_prod=denom_prod*(alphadenom+epsdenom);
-std::cout<<"alphadenom:  "<<alphadenom<<"  epsdenom:  "<<epsdenom<<"  prefactor:  "<<prefactor<<std::endl;
+// std::cout<<"alphadenom:  "<<alphadenom<<"  epsdenom:  "<<epsdenom<<"  prefactor:  "<<prefactor<<std::endl;
 
 
 }

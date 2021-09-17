@@ -233,6 +233,9 @@ int multiplicity_=1;
 int der_=0; /**< Count of derivatives */
 std::vector<int> which_g_; /**< G-structure that is attached to it */
 
+// experimental Spectral eval 
+alpha_t x_alpha_;
+
 };
 
 

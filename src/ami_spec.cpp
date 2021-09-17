@@ -369,7 +369,10 @@ for(int j=0; j< pv.size(); j++){
 
 for(int j=0; j< sp_term.ami_term_.p_list.size(); j++){
 
-	update_spec_pole(pv[i],sp_term.ami_term_.p_list[j].alpha_,sp_term.ami_term_.p_list[j].eps_);
+int size=sp_term.ami_term_.p_list[j].alpha_.size();
+sp_term.ami_term_.p_list[j].x_alpha_.resize(size,0);
+
+	update_spec_pole(pv[i],sp_term.ami_term_.p_list[j].x_alpha_,sp_term.ami_term_.p_list[j].eps_);
 
 }
 

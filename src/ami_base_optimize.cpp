@@ -504,6 +504,9 @@ std::cout<<std::endl;
 std::cout<<"Alpha=(";
 print_alpha_info(g.alpha_);
 std::cout<<")";
+std::cout<<"X_Alpha=(";
+print_alpha_info(g.x_alpha_);
+std::cout<<")";
 std::cout<<std::endl;
 std::cout<<"Der: "<<g.der_<<std::endl;
 
