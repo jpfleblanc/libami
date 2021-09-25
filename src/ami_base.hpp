@@ -60,6 +60,9 @@ template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
+// Maximum argument allowed for fermi and bose functions - to prevent inf due to double precision numbers
+double exp_max_arg=500.0;
+
 
 /// Simple factorial function - Nothing special. 
 int factorial(int n);
