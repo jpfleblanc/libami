@@ -190,6 +190,8 @@ std::complex<double> construct_energy(AmiBase::alpha_t &alpha, NewAmiCalc::k_vec
 void generate_sp_terms(AmiBase::term &start_term, sp_terms &new_sp_terms, AmiBase::g_prod_t &R0);
 void R0_to_Aprod(AmiBase::g_prod_t &R0, A_prod_t &Ap);
 
+void generate_sp_terms(AmiBase::terms &start_terms, sp_terms &full_sp_terms, AmiBase::g_prod_t &R0);
+
 // void reduce_deltas(ami_sp_term &term);
 void resolve_deltas( sp_terms &sp_terms);
 void resolve_deltas(ami_sp_term &sp_term);

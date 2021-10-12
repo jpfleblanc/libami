@@ -153,7 +153,7 @@ std::complex<double> AmiSpec::eval_Aprod(A_prod_t &Ap, xi_t &xi, AmiBase::freque
 		// std::cout<<"this_E:  "<<this_E<<std::endl;
 		//std::complex<double> this_sigma=get_sigma(this_k, this_X);
 		//std::cout<<"got sigma"<<std::endl;
-			std::complex<double> this_sigma(0,-0.05);// would replace this with a working sigma
+			std::complex<double> this_sigma(0,-0.5);// would replace this with a working sigma
 
 
 		output=output*A_eval(this_sigma, this_X, this_E);

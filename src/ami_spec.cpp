@@ -58,7 +58,23 @@ std::complex<double> AmiSpec::get_X(X_t &Xsym, xi_t &xi, AmiBase::alpha_t &x_alp
 }*/
 
 
+void AmiSpec::generate_sp_terms(AmiBase::terms &start_terms, sp_terms &full_sp_terms, AmiBase::g_prod_t &R0){
 
+
+for(int i=0; i<start_terms.size(); i++){
+	
+sp_terms new_terms;
+
+generate_sp_terms(start_terms[0], new_terms, R0);
+
+full_sp_terms.insert(full_sp_terms.end(), new_terms.begin(), new_terms.end());
+	
+	
+}
+
+return;
+
+}
 
 
 
