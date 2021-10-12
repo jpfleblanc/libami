@@ -427,11 +427,12 @@ std::complex<double> freq_shift(0,0);
 if(pole.x_alpha_.size()!=0){
 	for(int i=0; i< pole.x_alpha_.size(); i++){
 		
-		freq_shift+=external.frequency_[i]*(double)pole.x_alpha_[i];
+		freq_shift-=external.frequency_[i]*(double)pole.x_alpha_[i];
 		
 	}
 	
 }
+// std::cout<<"Freq shift is "<<freq_shift<<std::endl;
 
 
 // std::complex<double> freq_shift(0,0);
@@ -494,8 +495,12 @@ eta++;
 // could put infor into ami_vars external as to what the state type of the external variables is.
 std::complex<double>  E= get_energy_from_pole(pole,external);
 
+// std::cout<<"Energy and shift "<< E<<" "<<freq_shift<<std::endl;
+
 // In the case of spectral poles the freq_shift might not be zero 
 E=E+freq_shift;
+
+
 
 // if(std::abs(E.real())<E_REG){return std::complex<double>(0,0);}
 
@@ -510,6 +515,8 @@ E=E+freq_shift;
 
 double sigma= pow(-1.0, double(eta));
 // if(eta==0){sigma=-1;}
+
+// std::cout<<"eta and sigma "<< eta<<" "<<sigma<<std::endl;
 
 std::complex<double> zero(0,0);
 std::complex<double> im(0,1);
@@ -604,9 +611,25 @@ output=0.0;
 // }
 
 if(m==0){
-
-
+	
+	double arg=std::real(beta*E);
+	double arg_amp=std::abs(arg);
+	
+	if(arg>exp_max_arg){
+		double arg_sign=(double)sgn(arg);
+			if(arg_sign>0){
+				output=0;
+			}
+			else{
+				output=1;
+			}
+			
+		
+				
+		
+	}else{
 output=1.0/(sigma*std::exp(beta*(E))+1.0);
+	}
 // return output;
 }else{  // compute m'th derivative
 
