@@ -35,8 +35,7 @@ for(int i=0; i< gprod_external.energy_.size(); i++){
 gprod_external.energy_[i]=-gprod_external.energy_[i];
 
 }
-
-// std::cout<<"Entering eval A"<<std::endl;
+ std::cout<<"Entering eval A"<<std::endl;
 
 std::complex<double> A_prod=eval_Aprod(sp_term.aprod_, vars.xi_list_, vars.frequency_, vars.k_list_, vars.MU_);
 std::cout<< "A_prod:  "<<A_prod<<std::endl;
@@ -73,6 +72,8 @@ return output;
 
 
 }
+//
+
 
 //TODO: Remove this...
 std::complex<double> AmiSpec::evaluate_sp_term(AmiBase::ami_parms &parms, AmiSpec::ami_sp_term &sp_term, NewAmiCalc::ext_vars &ev,   AmiBase::ami_vars &external, NewAmiCalc::k_vect_list_t &klist,   xi_t &xi_list){
