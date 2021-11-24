@@ -806,7 +806,11 @@ return output;
 void NewAmiCalc::collect_spectral_poles(AmiBase::g_prod_t &gprod, AmiBase::Pi_t &pa){
 	// clear the array 
 pa.clear();
-pa.resize(gprod.size());	
+pa.resize(gprod.size());
+// if there are no G's then there is nothing to be done. 
+if(gprod.size()==0){
+return;
+}	
 
 // std::cout<<"Collecting spectral poles"<<std::endl;
 	

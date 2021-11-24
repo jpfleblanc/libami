@@ -325,9 +325,9 @@ for(int i=0; i< Rn.size(); i++){
 	
 	}	
 	
-	
+	if(ref_v.size()!=0){
 	Rref.push_back(ref_v);
-	
+	}
 }	
 
 
@@ -341,6 +341,8 @@ for(int i=0; i< Rn.size(); i++){
 
 
 reduce_rref(Rref, Eval_list);
+	
+// std::cout<<"Reduce completed"<<std::endl;	
 	
 }
 
