@@ -616,6 +616,8 @@ output+= double(g.eps_[i])*external.energy_[i];
 
 }
 
+
+
 return output;
 
 }

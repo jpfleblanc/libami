@@ -100,7 +100,7 @@ return R0;
 AmiBase::ami_vars construct_ext_example1_bose(){
 
 
-AmiBase::energy_t energy={-4,0.1};
+AmiBase::energy_t energy={-1,0.1};
 
 AmiBase::frequency_t frequency;
 

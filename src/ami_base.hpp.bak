@@ -154,7 +154,7 @@ E_REG_=E_REG;
 N_EXT_=1;
 TYPE_=static_cast<AmiBase::graph_type>(0); /// by default sigma
 int_type_=static_cast<AmiBase::int_type>(0); /// by default is hubbard 
-dispersion_=static_cast<AmiBase::disp_type>(0);/// by default is tight-binding.
+dispersion_=static_cast<AmiBase::disp_type>(0);// by default is tight-binding.
 }
 
 ami_parms(int N_INT, double E_REG, graph_type TYPE){

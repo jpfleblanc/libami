@@ -14,7 +14,6 @@
 #include <thread>
 
 void example2();
-void example1_bose();
 void example4();
 void example4hm();
 void example9();

@@ -7,7 +7,7 @@ add_executable(${PROJECT_NAME}
 )
 
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -std=c++11 -DUSE_MPI -lstdc++fs")# -msse4.2")# -ffast-math -funsafe-math-optimizations -msse4.2")# -ffast-math")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -DUSE_MPI -lstdc++fs")# -msse4.2")# -ffast-math -funsafe-math-optimizations -msse4.2")# -ffast-math")
 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/include)
