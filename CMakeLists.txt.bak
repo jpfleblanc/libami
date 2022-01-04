@@ -80,7 +80,7 @@ if(DOXYGEN_FOUND)
   set(DOXYGEN_EXCLUDE_PATTERNS
         */sqlite3/*
   )
-  message("run 'make DOCS' to generate documentation")
+  message("run 'make DOCS' ")
   # doxygen settings can be set here, prefixed with "DOXYGEN_"
   set(DOXYGEN_EXTRACT_PRIVATE YES)
   set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/DOCS")
