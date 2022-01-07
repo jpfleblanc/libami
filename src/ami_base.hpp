@@ -289,6 +289,8 @@ typedef std::vector< term > terms;
 
 /// Construct terms 
 void construct(int N_INT, g_prod_t R0, terms &terms_out);
+/// For user simplicity this is a wrapper function to make ami_terms and SPR calls similar 
+void construct(ami_parms &parms,  g_prod_t R0, terms &terms_out);
 /// Evaluate Terms 
 std::complex<double> evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external);
 /// Evaluate a single Term 

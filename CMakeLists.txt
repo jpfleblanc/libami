@@ -68,6 +68,8 @@ enable_testing()
 add_test(fb test/fb)
 add_test(getE test/getE)
 add_test(pole_equiv_fun test/pole_equiv)
+add_test(num_test test/num_test)
+add_test(construct_tests test/construct_tests)
 
 message("Adding doc subdirectory")
 add_subdirectory("doc")

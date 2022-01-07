@@ -36,6 +36,12 @@ terms_out.insert(terms_out.end(), these_terms.begin(), these_terms.end());
 	
 }
 
+void AmiBase::construct(ami_parms &parms,  g_prod_t R0, terms &terms_out){
+	
+	construct(parms.N_INT_, R0, terms_out);
+	
+}
+
 void AmiBase::integrate_step(int index, terms &in_terms, terms &out_terms){
 	
 	out_terms.clear();

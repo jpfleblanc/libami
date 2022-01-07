@@ -23,8 +23,8 @@ AmiBase::g_prod_t g;
 
 
 AmiBase::alpha_t alpha_1={1,0,0};
-AmiBase::alpha_t alpha_2={1,1,0};
-AmiBase::alpha_t alpha_3={0,1,1};
+AmiBase::alpha_t alpha_2={0,1,0};
+AmiBase::alpha_t alpha_3={-1,1,1};
 
 //defining epsilon's
 AmiBase::epsilon_t epsilon_1={1,0,0};
@@ -35,11 +35,13 @@ AmiBase::g_struct g1(epsilon_1,alpha_1);
 AmiBase::g_struct g2(epsilon_2,alpha_2);
 AmiBase::g_struct g3(epsilon_3,alpha_3);
 
-AmiBase::g_prod_t R0;
+AmiBase::g_prod_t R0={g1,g2,g3};
 
-R0.push_back(g1);
-R0.push_back(g2);
-R0.push_back(g3);
+// OR
+//AmiBase::g_prod_t R0;
+// R0.push_back(g1);
+// R0.push_back(g2);
+// R0.push_back(g3);
 
 
 
@@ -391,26 +393,6 @@ AmiBase::alpha_t alpha_14={0,0,-1,1,-1,1,1,0,0,0};
 AmiBase::alpha_t alpha_15={0,-1,-1,1,0,0,0,1,0,1};
 AmiBase::alpha_t alpha_16={0,0,1,-1,1,-1,0,0,1,0};
 AmiBase::alpha_t alpha_17={0,-1,0,0,1,-1,0,1,1,0};
-
-/*
-AmiBase::alpha_t alpha_1={1,0,0,0,0,0,0,0,0,0};
-AmiBase::alpha_t alpha_2={0,1,0,0,0,0,0,0,0,0};
-AmiBase::alpha_t alpha_3={0,0,1,0,0,0,0,0,0,0};
-AmiBase::alpha_t alpha_4={0,0,0,1,0,0,0,0,0,0};
-AmiBase::alpha_t alpha_5={0,0,0,0,1,0,0,0,0,0};
-AmiBase::alpha_t alpha_6={0,0,0,0,0,1,0,0,0,0};
-AmiBase::alpha_t alpha_7={0,0,0,0,0,0,1,0,0,0};
-AmiBase::alpha_t alpha_8={0,0,0,0,0,0,0,1,0,0};
-AmiBase::alpha_t alpha_9={0,0,0,0,0,0,0,0,1,0};
-AmiBase::alpha_t alpha_10={1,1,0,0,0,0,0,0,0,-1};
-AmiBase::alpha_t alpha_11={1,1,1,-1,0,0,0,0,0,-1};
-AmiBase::alpha_t alpha_12={0,-1,0,0,1,0,0,1,0,0};
-AmiBase::alpha_t alpha_13={0,0,1,-1,1,0,0,0,0,0};
-AmiBase::alpha_t alpha_14={0,0,-1,1,-1,1,1,0,0,0};
-AmiBase::alpha_t alpha_15={0,-1,-1,1,0,0,0,1,0,1};
-AmiBase::alpha_t alpha_16={0,0,1,-1,1,-1,0,0,1,0};
-AmiBase::alpha_t alpha_17={0,-1,0,0,1,-1,0,1,1,0};
-*/
 
 
 //defining epsilon's

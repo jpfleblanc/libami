@@ -154,7 +154,7 @@ E_REG_=E_REG;
 N_EXT_=1;
 TYPE_=static_cast<AmiBase::graph_type>(0); /// by default sigma
 int_type_=static_cast<AmiBase::int_type>(0); /// by default is hubbard 
-dispersion_=static_cast<AmiBase::disp_type>(0);// by default is tight-binding.
+dispersion_=static_cast<AmiBase::disp_type>(0);/// by default is tight-binding.
 }
 
 ami_parms(int N_INT, double E_REG, graph_type TYPE){
@@ -289,6 +289,8 @@ typedef std::vector< term > terms;
 
 /// Construct terms 
 void construct(int N_INT, g_prod_t R0, terms &terms_out);
+/// For user simplicity this is a wrapper function to make ami_terms and SPR calls similar 
+void construct(ami_parms &parms, , g_prod_t R0, terms &terms_out);
 /// Evaluate Terms 
 std::complex<double> evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external);
 /// Evaluate a single Term 

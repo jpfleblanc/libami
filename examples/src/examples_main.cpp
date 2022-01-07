@@ -195,7 +195,7 @@ AmiBase::R_t R_array;
 // Integration/Evaluation parameters
 double E_REG=0; // Numerical regulator for small energies.  If inf/nan results try E_REG=1e-8 
 int N_INT=1;  // Number of Matsubara sums to perform
-AmiBase::ami_parms test_amiparms(N_INT, E_REG);
+AmiBase::ami_parms test_amiparms(N_INT, E_REG,1);
 
 //Construction Stage
 ami.construct(test_amiparms, R0, R_array, P_array, S_array);  // Populates S,P,R with solution 

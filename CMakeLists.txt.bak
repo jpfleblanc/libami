@@ -68,6 +68,7 @@ enable_testing()
 add_test(fb test/fb)
 add_test(getE test/getE)
 add_test(pole_equiv_fun test/pole_equiv)
+add_test(num_test test/num_test)
 
 message("Adding doc subdirectory")
 add_subdirectory("doc")
@@ -80,7 +81,7 @@ if(DOXYGEN_FOUND)
   set(DOXYGEN_EXCLUDE_PATTERNS
         */sqlite3/*
   )
-  message("run 'make DOCS' ")
+  message("run 'make DOCS' to generate documentation")
   # doxygen settings can be set here, prefixed with "DOXYGEN_"
   set(DOXYGEN_EXTRACT_PRIVATE YES)
   set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/DOCS")
