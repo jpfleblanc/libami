@@ -1,0 +1,12 @@
+======================
+`Pole_equiv` Function
+======================
+
+Another eg. of block of math code:
+
+.. math::
+	\alpha _t(i) = P(O_1, O_2, … O_t, q_t = S_i λ)
+
+.. doxygenfunction:: AmiCalc::pole_equiv
+   
+   
