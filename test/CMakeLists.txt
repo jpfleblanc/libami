@@ -22,14 +22,12 @@ FetchContent_MakeAvailable(googletest)
 # Add test cpp file
 #add_executable(blank blank.cpp)
 add_executable(fb fermi_bose.cpp)
-add_executable(getE get_energy.cpp)
-add_executable(pole_equiv pole_equiv.cpp)
+add_executable(helper_functions helper_functions.cpp)
 add_executable(num_test num_test.cpp)
 add_executable(construct_tests construct_tests.cpp)
 
 target_link_libraries(fb amibase gtest gtest_main)
-target_link_libraries(getE amibase gtest gtest_main)
-target_link_libraries(pole_equiv amibase gtest gtest_main)
+target_link_libraries(helper_functions amibase gtest gtest_main)
 target_link_libraries(num_test amibase gtest gtest_main)
 target_link_libraries(construct_tests amibase gtest gtest_main)
 

@@ -234,6 +234,12 @@ pole.eps_.reserve(R[0].eps_.size());
 
 pole.index_=index;
 
+if(pole.index_>R[0].alpha_.size()){
+
+std::cerr<<"WARNING: Pole index exceeds length of g_prod_t: This may result in errors.  Exiting find_poles for safety."<<std::endl;	
+return pole_array;	
+}
+
 for (int i=0; i< R.size(); i++){
 
 
@@ -333,6 +339,32 @@ if (pole1.alpha_[i] != pole2.alpha_[i]){ return false; break;}
 
 return result;
 }
+
+
+bool AmiBase::g_equiv (g_struct g1, g_struct g2){
+
+bool result=true;
+
+if(g1.eps_.size()!= g2.eps_.size()){ return false;}
+if(g1.alpha_.size()!= g2.alpha_.size()){ return false;}
+
+for (int i=0; i< g1.eps_.size(); i++)
+{
+if (g1.eps_[i] != g2.eps_[i]){ return false; break;}
+
+}
+
+for (int i=0; i< g1.alpha_.size(); i++)
+{
+if (g1.alpha_[i] != g2.alpha_[i]){ return false; break;}
+
+}
+
+
+
+return result;
+}
+
 
 
 AmiBase::sign_t AmiBase::find_signs(int index, g_prod_t &R){

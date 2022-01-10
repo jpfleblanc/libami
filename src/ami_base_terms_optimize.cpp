@@ -13,6 +13,7 @@ return;
 	
 }
 
+
 void AmiBase::convert_terms_to_ri(terms &ami_terms, Ri_t &Ri){
 
 Ri.clear();

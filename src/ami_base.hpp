@@ -229,6 +229,13 @@ int pp=-1;  // pp=0 means this G represents a principle part integral. pp=1 it i
 /// Pole structure. Equivalent to `g_struct`, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
 struct pole_struct{
 
+pole_struct(epsilon_t eps, alpha_t alpha){
+eps_=eps;
+alpha_=alpha;
+}
+
+pole_struct(){}
+
 epsilon_t eps_; 
 alpha_t alpha_;
 int index_; 
@@ -320,7 +327,7 @@ void convert_terms_to_ri(terms &ami_terms, Ri_t &Ri);
 
 
 /*
-Though perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
+Although perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
 */
 typedef std::vector< std::vector<std::complex<double> > > SorF_t;
 
@@ -404,6 +411,17 @@ std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars exte
  * 
 */
 bool pole_equiv (pole_struct pole1, pole_struct pole2);
+
+/**
+ *
+ * Checks if two `g_struct` have similar characteristics.
+ * These characteristics include `epsilon_t` size and `alpha_t` size.
+ * Additionally, it checks each value of `epsilon_t` vector  and `alpha_t` vector are the same.
+ * @param[in] g1 First pole you want to check and of type `pole_struct`
+ * @param[in] g2 Second pole you want to check and of type `pole_struct`
+ * 
+*/
+bool g_equiv (g_struct g1, g_struct g2);
 
 /// Testing Priority: 1
 // evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'

@@ -1,4 +1,5 @@
 
+
 #include "../src/ami_base.hpp"
 #include "../src/ami_calc.hpp"
 #include <iomanip>
@@ -10,14 +11,37 @@
 
 #include "gtest/gtest.h"
 // include other headers if necessary   #include ../src/ami.hpps
-// You are going to create two pole_struct (similar to g_struct) then,
-// test both epsilons have the same size, and both have the same alpha
-// size. Then, check each entry in eps and alpha if they are the same
-// for both poles.
+
+TEST(helper_functions, energy_test){
+
+AmiBase obj;
+
+std::complex<double> from_func, from_analytic;
+
+AmiBase::pole_struct pole;
+AmiBase::epsilon_t epsilon_1={1,1,1,1,1};
+pole.eps_=epsilon_1;
+
+
+AmiBase::ami_vars external;
+AmiBase::energy_t epspole={1,1.01,0,1.02,1.03};
+
+external.energy_=epspole;
+
+from_func=obj.get_energy_from_pole(pole, external);
+
+from_analytic=4.06;
+
+
+EXPECT_EQ(from_func,from_analytic);
+
+}	
+
+
 
 
 // Checks if both alpha vectors are equal.
-TEST(pole_equiv, alpha_size){
+TEST(helper_functions, alpha_size){
 	// Create two alpha objects
 	AmiBase::alpha_t alpha_1={0,0,0,1,0};
 	AmiBase::alpha_t alpha_2={0,0,0,1,0,0};
@@ -48,7 +72,7 @@ TEST(pole_equiv, alpha_size){
 
 
 // Checks if both epsilon vectors are equal
-TEST(pole_equiv, epsilon_size){
+TEST(helper_functions, epsilon_size){
 	// Create two alpha objects
 	AmiBase::alpha_t alpha_1={0,0,0,1,0};
 	AmiBase::alpha_t alpha_2={0,0,0,1,0};
@@ -76,7 +100,7 @@ TEST(pole_equiv, epsilon_size){
 
 
 //Checks that elements in alpha vector are not the same################
-TEST(pole_equiv, alpha_vector_diff){
+TEST(helper_functions, alpha_vector_diff){
 	// Create two alpha objects
 	AmiBase::alpha_t alpha_1={0,0,1,1,0};
 	AmiBase::alpha_t alpha_2={0,0,0,1,0};
@@ -105,7 +129,7 @@ TEST(pole_equiv, alpha_vector_diff){
 
 
 //Checks that elements in epsilon vector are not the same
-TEST(pole_equiv, epsilon_vector_diff){
+TEST(helper_functions, epsilon_vector_diff){
 	// Create two alpha objects
 	AmiBase::alpha_t alpha_1={0,0,0,1,0};
 	AmiBase::alpha_t alpha_2={0,0,0,1,0};
@@ -134,7 +158,7 @@ TEST(pole_equiv, epsilon_vector_diff){
 
 
 //Checks that the function will spit TRUE when poles are identical.
-TEST(pole_equiv, everything_works){
+TEST(helper_functions, everything_works){
 	// Create two alpha objects
 	AmiBase::alpha_t alpha_1={0,0,0,1,0};
 	AmiBase::alpha_t alpha_2={0,0,0,1,0};
@@ -160,5 +184,6 @@ TEST(pole_equiv, everything_works){
 	ASSERT_TRUE(obj.pole_equiv(pole_test_1, pole_test_2)) << "Alpha and Epsilon vectors are identical for both poles." ;
 	
 }	
+
 
 
