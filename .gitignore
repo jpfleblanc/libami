@@ -1,0 +1,6 @@
+*~
+*.dat
+CMakeCache.txt
+testing
+*.bak
+
