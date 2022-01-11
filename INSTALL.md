@@ -12,7 +12,7 @@ In short:
 
 	::
 
-	$ git clone https://github.com/jpfleblanc/leblanc_codes
+	$ git clone https://github.com/jpfleblanc/libami
 		
 2. Prerequisites:
  
@@ -48,13 +48,11 @@ In short, use a standard `CMake`-based approach:
 
 	::
 
-	 
 	  $ export libami_DIR=/install/dir/of/libami
 	  $ cd /your/project/
 	  $ mkdir build & cd build 
 	  $ cmake -DCMAKE_INSTALL_PREFIX=libami_DIR ..
 	  $ make
-
 
 
 
