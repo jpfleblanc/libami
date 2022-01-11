@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Libami'
-copyright = '2020, James Leblanc & Hossam Elazab'
-author = 'James Leblanc & Hossam Elazab'
+copyright = '2020, James Leblanc'
+author = 'James Leblanc'
 
 
 # -- General configuration ---------------------------------------------------
