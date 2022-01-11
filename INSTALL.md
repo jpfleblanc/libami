@@ -1,8 +1,6 @@
-============
-Installation
-============
 
-For detailed instructions, please see `Github Wiki`_
+Installation
+------------
 
 In short:
  
@@ -74,7 +72,7 @@ The DOCS folder will then contain the output from doxygen, while the /docs/docs/
 		$pip3 install sphinx_rtd_theme
 		$pip3 install breathe
 
-Further information and updates will be posted on the `Github Wiki`_. 
+
 
 	
 	
