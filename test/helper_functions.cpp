@@ -1,7 +1,6 @@
 
 
 #include "../src/ami_base.hpp"
-#include "../src/ami_calc.hpp"
 #include <iomanip>
 #include <random>
 #define _USE_MATH_DEFINES

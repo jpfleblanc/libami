@@ -8,7 +8,7 @@ In short:
  
 	Clone Git repository:
 
-	::
+	
 
 	$ git clone https://github.com/jpfleblanc/libami
 		
@@ -18,7 +18,7 @@ In short:
 
 	+ CMake >= 3.18
 
-	Optional:
+	Optional - Documentation:
 
 	+ Doxygen >= 1.9.0
 
@@ -30,7 +30,7 @@ In short:
 	An example cmake command is in the `compile.sh`.  Open the file in any editor, and change relevant file paths.
 	Use a standard `CMake` procedure:
 
-		::
+		
 
 		 $ mkdir build && cd build
 		 $ sh ../compile.sh
@@ -44,7 +44,7 @@ Please see github page for details.
 
 In short, use a standard `CMake`-based approach:
 
-	::
+	
 
 	  $ export libami_DIR=/install/dir/of/libami
 	  $ cd /your/project/
@@ -58,7 +58,7 @@ In short, use a standard `CMake`-based approach:
 
 Libami is documented using doxygen and Sphinx.  Documentation can be built using 
 
-	::
+	
 	
 		$make DOCS
 		$make Sphinx 
@@ -66,7 +66,7 @@ Libami is documented using doxygen and Sphinx.  Documentation can be built using
 
 The DOCS folder will then contain the output from doxygen, while the /docs/docs/sphinx directory will contain the sphinx html pages.  Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
 
-	::
+	
 		
 		$pip3 install sphinx
 		$pip3 install sphinx_rtd_theme

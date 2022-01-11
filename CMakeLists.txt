@@ -28,14 +28,6 @@ set(LIB_FILES
 	./src/ami_base_terms.cpp
 	./src/ami_base_terms_evaluate.cpp
 		./src/ami_base_terms_optimize.cpp
-  ./src/ami_calc_io.cpp
-  ./src/ami_calc_evaluate.cpp
-	./src/ami_calc_spectral.cpp
-	./src/ami_calc_terms_spectral.cpp
-	./src/ami_spec.cpp
-	./src/ami_spec_io.cpp
-	./src/ami_spec_sigma.cpp
-	./src/ami_spec_eval.cpp
   )
 
 ADD_LIBRARY(amibase SHARED ${LIB_FILES})
