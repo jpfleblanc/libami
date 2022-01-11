@@ -32,13 +32,13 @@
  *
  * @brief  The primary class of libami. 
  *
- * @note N/A
+ * @note See https://github.com/jpfleblanc/libami
  *
  * @author JPF LeBlanc 
  *
- * @version Revision: 0.4 
+ * @version Revision: 0.61 
  *
- * @date Date: 2020/11/03  
+ * @date Date: 2022/01/11  
  *
  * 
  * Contact: jleblanc@mun.ca
@@ -47,9 +47,6 @@
  *
  *
  */
- 
- 
-
 class AmiBase
 {
 	
@@ -102,19 +99,21 @@ typedef int species_t;
 typedef enum {Bose,Fermi} stat_type ;
 
 // Ideally these types will not appear in the ami_base class 
-// Graph types are an unfortunate oversight on my part - and should not strictly be in AMI 
+/// Graph types will be removed in a future release.  Current support is limited to Sigma and Pi_phuu graph types. 
 typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud, DOS,ENERGY, FORCE} graph_type ;
 
+/// To be removed in a future release
 typedef enum {hubbard,coulomb} int_type;
+/// To be removed in a future release
 typedef enum {tb, fp, hf} disp_type;
-
+/// To be removed in a future release
 typedef enum {matsubara, real} ext_type;
 
 ext_type ext_freq_type=matsubara;
 
 
 
-/// the ami_vars struct if the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
+/// the `ami_vars` struct is the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
 struct ami_vars{
 
 ami_vars(energy_t eps, frequency_t freq){

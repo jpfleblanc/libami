@@ -2,7 +2,7 @@
 Referencing
 =============
 
-Libami is provided under a GPLv2 licence. 
+Libami is provided under a GPLv3 licence. 
 
 Whenever scientific publications result from a program based on the AMI libraries we ask for acknowledgement of the scientific paper and published code:
 

@@ -79,6 +79,7 @@ if(DOXYGEN_FOUND)
   set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/DOCS")
   set(DOXYGEN_GENERATE_LATEX YES)
   set(DOXYGEN_GENERATE_XML YES)
+  set(DOXYGEN_SORT_MEMBER_DOCS NO)
   # this target will only be built if specifically asked to.
   # run "make LibAMI-docs" to create the doxygen documentation
   # run "make DOCS" to create the doxygen documentation
