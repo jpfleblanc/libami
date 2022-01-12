@@ -249,12 +249,14 @@ pole_struct(){}
 
 epsilon_t eps_; 
 alpha_t alpha_;
+/// Index that specifies which frequency it is a pole with respect to.
 int index_; 
+/// The multiplicity of the pole, starts at 1 and increments as needed
 int multiplicity_=1;
-int der_=0; /**< Count of derivatives */
-std::vector<int> which_g_; /**< G-structure that is attached to it */
+int der_=0; /**< Counter for derivatives */
+std::vector<int> which_g_; /**< Index to identify which `g_struct` a pole originated from.*/
 
-// experimental Spectral eval 
+/// experimental component of Spectral evaluation
 alpha_t x_alpha_;
 
 };
@@ -290,7 +292,10 @@ typedef std::vector<Si_t> S_t;
 
 // typedefs for evaluation
 
-/// Term Structure for term-by-term evaluation.  Conceptually simpler than SPR construction.
+/** Term Structure for term-by-term evaluation.  Conceptually simpler than SPR construction.
+* Storage translates to \f$ \prod{f(p_i)}\limits_{i}\prod{G_j}\limits_{j}*sign\f$
+*
+*/
 struct term{
 	
 	term(){
