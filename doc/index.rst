@@ -6,8 +6,9 @@
 Welcome to the frontpage of LibAMI's documentation!
 ===================================================
 | The LIBAMI project is a lightweight implementation of Algorithmic Matsubara Integration 
-|(Phys. Rev. B 99, 035120 (2019))
-| Documentation can be accessed for the latest build at https://libami.readthedocs.io/en/latest/ 
+(Phys. Rev. B 99, 035120 (2019))
+
+Documentation can be accessed for the latest build at https://libami.readthedocs.io/en/latest/ 
 
 
 .. toctree::
