@@ -72,11 +72,11 @@ bool drop_matsubara_poles=false; // if set to true, ignores matsubara poles with
 // bool is_real_external=false;
 
 // External list of energies and frequencies 
-/// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ etc  
-/// By convention, the energy_t contains the NEGATIVE of the energy of a given green's function line, 1/(w+Energy), E=-eps
+/// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ ..etc  
+/// By convention, the energy_t contains the NEGATIVE of the energy of a given green's function line, \f$ 1/(\omega+E) \f$ where \f$ E=-\epsilon \f$
 typedef std::vector<std::complex<double>> energy_t;
 
-/// This is the list of independent and external frequencies.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are necessary. 
+/// This is the list of internal and external frequencies values.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are non-zero. 
 ///
 typedef std::vector< std::complex<double>  > frequency_t;
 
@@ -85,14 +85,14 @@ typedef std::vector< std::complex<double>  > frequency_t;
 
 // the symbolic epsilon
 
-/// Vector of type `int`.  This is the symbolic \f$-\epsilon\f$ described in Ref[AMI].  We use the convention \f$G=\frac{1}{\omega+\epsilon}\f$.  
+/// Vector of type `int`.  This is the symbolic representation of the energy \f$-\epsilon\f$ described in Ref[AMI].  We use the convention \f$G=\frac{1}{\omega+\epsilon}\f$.  It is the coefficients for a linear combination of a set of possible values. 
 typedef std::vector<int> epsilon_t;
 
 
 /// Vector of type `int`.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1. Other values at intermediate steps typically represent an error.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
 typedef std::vector<int> alpha_t;
 
-/// Indicator for multi-species green's function or energy dispersions (spin-up vs spin-dn, multiband, etc)
+/// Indicator for multi-species green's function or energy dispersions (spin-up vs spin-dn, multiband, etc).  Technically this is not relevant for libami, but may be useful. 
 typedef int species_t;
 
 /// Indicator for statistics. A future version might use this more frequently.  Current version presumes all integration frequencies are Fermionic. 
@@ -113,7 +113,7 @@ ext_type ext_freq_type=matsubara;
 
 
 
-/// the `ami_vars` struct is the basic information required for the evaluation stage of AMI result.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
+/// the `ami_vars` struct is the basic information required for the evaluation stage of AMI result.  It contains the variable internal/external quantities.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
 struct ami_vars{
 
 ami_vars(energy_t eps, frequency_t freq){
@@ -134,9 +134,13 @@ BETA_=Bta;
 
 ami_vars(){prefactor=1.0;}
 
+/// Numerical values of energies. 
 energy_t energy_;
+/// Numerical Values of frequencies.
 frequency_t frequency_;
+/// Overall prefactor - default(1)
 double prefactor;
+/// Required value of inverse temperature, \f$\beta\f$.
 double BETA_;
 
 ///Experimental parameter for spectral representation 
@@ -175,9 +179,12 @@ dispersion_=static_cast<AmiBase::disp_type>(disp);
 
 ami_parms(){}
 
+/// Number of integrations to perform
 int N_INT_;
+/// Hardcoded as (1) in this version - represents number of external variables. 
 int N_EXT_=1;
-double E_REG_;
+/// Possible energy regulator for evaluation of Fermi/Bose functions to control divergences.  Should be zero by default and switched on if needed.
+double E_REG_=0;
 
 graph_type TYPE_;
 int_type int_type_;
@@ -190,6 +197,8 @@ disp_type dispersion_;
 /// A Green's function structure.  This is a symbolic vector of `epsilon_t` and vector of `alpha_t`.  Also needed is what the statistics of the line are.  While this could be determined from alpha - it is better to store it.  For multistate systems the species_ index might be useful.
 
 struct g_struct{
+	
+/// Constructor with state_type specified.	
 g_struct(epsilon_t eps, alpha_t alpha, stat_type stat){
 eps_=eps;
 alpha_=alpha;
@@ -214,13 +223,16 @@ stat_=Fermi;
 species_=0;
 } 
 
+/// Symbolic coefficients for a linear combination of epsilons
 epsilon_t eps_;
-// std::vector<int> eps_indices_;
+
+/// Symbolic coefficients for a linear combination of frequencies 
 alpha_t alpha_;
+/// Mark Fermi/Bose stats - Fermi is required in current version.
 stat_type stat_;
 species_t species_;
 
-/// Experimental Spectral representation
+/// Experimental Spectral representation.  Implementation incomplete.
 int pp=-1;  // pp=0 means this G represents a principle part integral. pp=1 it is a delta function. else it is inert 
 
 };
@@ -249,10 +261,12 @@ alpha_t x_alpha_;
 
 
 
-/// AMI output datatypes
 
+/// Basic element of the S array in SPR notation
 typedef std::vector<double> sign_t;
+/// Basic element of the R array in SPR notation
 typedef std::vector<g_struct> g_prod_t;
+/// Basic element of the P array in SPR notation
 typedef std::vector<pole_struct> pole_array_t;
 
 typedef std::vector<sign_t> sign_array_t;
@@ -260,19 +274,23 @@ typedef std::vector<g_prod_t> g_prod_array_t;
 
 
 
-/// S, P , R at each integration step
-
+/// R result after each integration step
 typedef std::vector<g_prod_t> Ri_t;
+/// P result after each integration step
 typedef std::vector<pole_array_t> Pi_t;
+/// S result after each integration step
 typedef std::vector<sign_t> Si_t;
 
-/// final output S, P, R arrays. See 
+/// final output R arrays. 
 typedef std::vector<Ri_t> R_t; 
+/// final output P arrays.
 typedef std::vector<Pi_t> P_t;
+/// final output S arrays.
 typedef std::vector<Si_t> S_t;
 
 // typedefs for evaluation
-/// Terms Structure for term-by-term evaluation.  Conceptually simpler than SPR construction.
+
+/// Term Structure for term-by-term evaluation.  Conceptually simpler than SPR construction.
 struct term{
 	
 	term(){
@@ -291,15 +309,19 @@ g_prod_t g_list;
 	
 };
 
+/// The storage for the term-by-term construction.  Each `term` struct is an element of the `terms` vector.
 typedef std::vector< term > terms;
 
-/// Construct terms 
+
+
+
+/// Construction function for term-by-term construction 
 void construct(int N_INT, g_prod_t R0, terms &terms_out);
 /// For user simplicity this is a wrapper function to make ami_terms and SPR calls similar 
 void construct(ami_parms &parms,  g_prod_t R0, terms &terms_out);
 /// Evaluate Terms 
 std::complex<double> evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external);
-/// Evaluate a single Term 
+/// Evaluate a single Term.  Usage is identical to `evaluate` function. 
 std::complex<double> evaluate_term(ami_parms &parms, term &ami_term, ami_vars &external);
 /// Evaluate the numerator of a term - product of fermi/bose functions. 
 std::complex<double> eval_fprod(ami_parms &parms,pole_array_t &p_list, ami_vars &external);
@@ -309,7 +331,7 @@ void integrate_step(int index, terms &in_terms, terms &out_terms);
 
 void split_term(term &this_term, pole_struct this_pole, term &innert_part, term &active_part);
 
-/// Primary residue function for temr construction 
+/// Primary residue function for term construction 
 void terms_general_residue(term &this_term, pole_struct this_pole, terms &out_terms);
 /// Derivative for term construction 
 void take_term_derivative(term &in_term, pole_struct &pole, terms &out_terms);
@@ -319,13 +341,13 @@ void print_terms(terms &t);
 /// Screen IO for debugging
 void print_term(term &t);
 
-/// Convert terms to Ri structure for optimization 
+/// Convert terms to Ri structure for optimization.  This does not create a usable `terms` object. It is purely an intermediate step for the optimization functions.
 void convert_terms_to_ri(terms &ami_terms, Ri_t &Ri);
 
 
 
 
-/*
+/**
 Although perhaps strangely named - represents the multiplication of sign and pole arrays defined in Equation (19)
 */
 typedef std::vector< std::vector<std::complex<double> > > SorF_t;
@@ -340,7 +362,6 @@ Given an array of Green's functions, finds all poles with respect to frequency i
 pole_array_t find_poles(int index, g_prod_t &R);
 
 // Residue Functions
-// TODO: Simple_residue might be depricated - check usage
 g_prod_t simple_residue(g_prod_t G_in, pole_struct pole);
 
 // Testing Priority: 1 - updating G with a given pole is an essential function - if it fails nothing will work 
@@ -478,9 +499,9 @@ int binomialCoeff(int n, int k);
 
 // Functions 
 
-  ///Default Constructor
+  ///Default Constructor.  Constructor is empty.  Currently no initialization is required in most cases.
   AmiBase();
-  /// Constructor with ami_parms
+  /// Constructor with ami_parms. Possible deprecated. 
   AmiBase(ami_parms &parms);
 
 

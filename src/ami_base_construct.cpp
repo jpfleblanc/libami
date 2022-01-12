@@ -119,11 +119,12 @@ S_array.push_back(temp_sign_array);
 
 
 /**
-* Used in pole multiplicity is 1 - aka, simple pole.  Performs residue theorem on G_in and produces a new `g_prod_t` as output. 
+* Used in pole multiplicity == 1 - aka, simple pole.  Performs residue theorem on G_in and produces a new `g_prod_t` as output. 
+*
 *@param[in] G_in: `g_prod_t` to evaluate residues with respect to pole.
 *@param[in] pole: `pole_struct` defining the pole. 
 *
-*Output is `g_prod_t`. 
+*@return is of type `g_prod_t`. 
 */
 AmiBase::g_prod_t AmiBase::simple_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole){
 
@@ -459,9 +460,9 @@ S_array.push_back(temp_sign_array);
  * Void function takes a product of Green's functions - an element of an `Ri_t` object - and obtains the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
  * @param[in] G_in : Product of green's functions
  * @param[in] pole : Pole to evaluate residue
- * @param[in] Ri_out : Resultant `g_prod_t` 
- * @param[in] poles : Resultant `pole_array_t`
- * @param[in] signs : Resultant `sign_t`. 
+ * @param[out] Ri_out : Resultant `g_prod_t` 
+ * @param[out] poles : Resultant `pole_array_t`
+ * @param[out] signs : Resultant `sign_t`. 
 */
 void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole, AmiBase::Ri_t &Ri_out, AmiBase::pole_array_t &poles, AmiBase::sign_t &signs){
 

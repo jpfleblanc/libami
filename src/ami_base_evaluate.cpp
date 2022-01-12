@@ -329,9 +329,7 @@ return output;
 }
 
 
-/// All the special function structures.
-
-
+/// Evaluation dot-product from AMI paper.
 AmiBase::SorF_t AmiBase::dot(Si_t Si, SorF_t fermi){
 
 SorF_t output;
@@ -356,6 +354,8 @@ output.push_back(line);
 return output;
 }
 
+
+///Evaluation cross operator from AMI paper.
 AmiBase::SorF_t AmiBase::cross(SorF_t left, SorF_t right){
 
 SorF_t output;
@@ -381,6 +381,7 @@ return output;
 
 }
 
+/// The fermi/bose operator. Translates a vector of poles, into a vector of Fermi/Bose functions (and their derivatives) with specific numerical values dependent upon input `ami_vars`.
 AmiBase::SorF_t AmiBase::fermi(ami_parms &parms, Pi_t Pi, ami_vars external){
 
 SorF_t output;
@@ -409,7 +410,7 @@ return output;
 
 }
 
-
+/// Evaluation of a single pole in Fermi/Bose functions for a given `ami_vars`.
 std::complex<double>  AmiBase::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
 // std::cout<<"Working on pole"<<std::endl;
@@ -432,8 +433,6 @@ if(pole.x_alpha_.size()!=0){
 	}
 	
 }
-// std::cout<<"Freq shift is "<<freq_shift<<std::endl;
-
 
 // In order to generalize to have fermi and bose lines, here to 'sigma' needs to be considered.
 
@@ -621,7 +620,14 @@ return output;
 }
 
 
-// TODO: Comment completely
+/**
+ * 
+ * Numerical evaluation of a product of Green's functions. Used both in `terms` and `R_t` constructions.  
+ * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
+ * @param[in] g_prod : `g_prod_t` a list of `g_struct` that is interpretted as \f$ \prod{G_i} \f$.  
+ * @param[in] external : Input external variables in a `ami_vars` struct. 
+ * @return Single value for product of Green's functions 
+*/
 std::complex<double> AmiBase::eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external){
 std::complex<double> output(0,0);
 
@@ -691,7 +697,7 @@ return output;
 
 /// Using notation to match 10.1103/PhysRevB.101.075113
 /// They produced coefficients to the fermi functions and put them in a table.
-/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order I think
+/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order... I think
 double AmiBase::frk(int r, int k){
 double output=0.0;
 
@@ -710,7 +716,7 @@ output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));
 
 }
 
-// Returns value of Binomial Coefficient C(n, k)
+/// Returns value of Binomial Coefficient C(n, k)
 int AmiBase::binomialCoeff(int n, int k){
     int res = 1;
 

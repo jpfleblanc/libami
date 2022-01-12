@@ -29,22 +29,31 @@ In short:
 	+ Breathe >= 4.20.0 (You can install it with `pip` as well.)
 	
 3. Building:
-	An example cmake command is in the `compile.sh`.  Open the file in any editor, and change relevant file paths.
+
+	An example cmake command is in the `compile.sh` script.  Open the file in any editor, and change relevant file paths.
 	Use a standard `CMake` procedure:
 
+	
 		::
 
 		 $ mkdir build && cd build
-		 $ sh ../compile.sh
+		 $ cmake -DCMAKE_INSTALL_PREFIX=/path/to/install ..
 		 $ make
 		 $ make install
-
-         
 
 
 4. Creating documentation:
 
-Libami is documented using doxygen and Sphinx.  Documentation can be built using 
+	Libami is documented using doxygen and Sphinx.  Documentation is set off by default and must be enabled
+
+		::
+
+		 $ mkdir build && cd build
+		 $ cmake -DCMAKE_INSTALL_PREFIX=/path/to/install -DBUILD_DOC=ON ..
+		 $ make
+		 $ make install
+
+	Documentation can then be built using 
 
 	::
 	
@@ -52,13 +61,24 @@ Libami is documented using doxygen and Sphinx.  Documentation can be built using
 		$make Sphinx 
 
 
-The DOCS folder will then contain the output from doxygen, while the /docs/docs/sphinx directory will contain the sphinx html pages.  Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
+	The DOCS folder will then contain the output from doxygen, while the /docs/docs/sphinx directory will contain the sphinx html pages.  Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
 
 	::
 		
 		$pip3 install sphinx
 		$pip3 install sphinx_rtd_theme
 		$pip3 install breathe
+		
+5. Testing:
+
+	Enabled with the documentation are a minimal set of tests.  After compiling with make simply use
+		
+		::
+
+		 $ make test
+
+	Each test contains multiple internal checks.  If any tests should fail, more information can be gleaned by directly running the test executables in the /build/test directory.
+
 
 Further information and updates will be posted on the `Github Wiki`_. 
 

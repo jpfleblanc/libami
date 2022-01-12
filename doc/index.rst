@@ -11,6 +11,7 @@ Welcome to the frontpage of LibAMI's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
    
    install
    examples
