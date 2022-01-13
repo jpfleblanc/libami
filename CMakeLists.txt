@@ -52,9 +52,7 @@ INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/." # source directory
 
 
 
-
-
-if(BUILD_DOC)
+if(CMAKE_BUILD_TYPE MATCHES RELEASE OR TEST)
 
 add_subdirectory(test)
 enable_testing()
@@ -62,6 +60,11 @@ add_test(fb test/fb)
 add_test(helper_functions test/helper_functions)
 add_test(num_test test/num_test)
 add_test(construct_tests test/construct_tests)
+
+endif(CMAKE_BUILD_TYPE MATCHES RELEASE OR TEST)
+
+if(BUILD_DOC)
+
 
 message("Adding doc subdirectory")
 add_subdirectory("doc")
