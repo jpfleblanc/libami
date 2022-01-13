@@ -86,22 +86,22 @@ Further information and updates will be posted on the `Github Wiki`_.
 Using with your projects
 ------------------------
 
-In short, use a standard `CMake`-based approach:
+Including the header and linking to the library is required.  This can be accomplished using a standard `CMake`-based approach:
 
-	::
+		::
 
-	 
-	  $ export libami_DIR=/install/dir/of/libami
-	  $ cd /your/project/
-	  $ cat >CMakeLists.txt
-	  cmake_minimum_required(VERSION 3.1)
-	  project(MyProject C CXX)
-	  find_package(libami REQUIRED)
-	  add_executable(my_program main.cpp)
-	  target_link_libraries(my_program ${libami})
-	  ...cont
-	  $ cmake .
-	  $ make
+		 
+		  $ export libami_DIR=/install/dir/of/libami
+		  $ cd /your/project/
+		  $ cat >CMakeLists.txt
+		  cmake_minimum_required(VERSION 3.1)
+		  project(MyProject C CXX)
+		  find_package(libami REQUIRED)
+		  add_executable(my_program main.cpp)
+		  target_link_libraries(my_program ${libami})
+		  ...cont
+		  $ cmake .
+		  $ make
 
 
 
