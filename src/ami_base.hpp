@@ -73,7 +73,7 @@ bool drop_matsubara_poles=false; // if set to true, ignores Matsubara poles with
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ ..etc  
-/// By convention, the energy_t contains the NEGATIVE of the energy of a given green's function line, \f$ 1/(\omega+E) \f$ where \f$ E=-\epsilon \f$
+/// By convention, the energy_t contains the NEGATIVE of the energy of a given green's function line, \f$ 1/(\omega+E) \f$ where \f$ E=-\epsilon \f$.
 typedef std::vector<std::complex<double>> energy_t;
 
 /// This is the list of internal and external frequencies values.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are non-zero. 
