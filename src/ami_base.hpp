@@ -293,7 +293,7 @@ typedef std::vector<Si_t> S_t;
 // typedefs for evaluation
 
 /** Term Structure for term-by-term evaluation.  Conceptually simpler than SPR construction.
-* Storage translates to \f$ \prod{f(p_i)}_{i}\prod{G_j}_{j}\times sign \f$.
+* Storage translates to \f$ \prod{f(p_i)}\prod{G_j}\times sign \f$.
 *
 */
 struct term{
