@@ -537,7 +537,7 @@ output=-1.0*output;
 return output;
 }
 
-/// This computes the mth order derivative of the fermi or bose distribution functions at \f$ \beta\f$, for energy \f$ E\f$. \f$ \sigma=1.0\f$ for Fermi and -1.0 for Bose.
+/// This computes the mth order derivative of the Fermi function or the negative of the Bose distribution functions given by \f$\frac{1}{\sigma \exp^{\beta E}+1} \f$ at \f$ \beta\f$, for energy \f$ E\f$. \f$ \sigma=1.0\f$ for Fermi and -1.0 for Bose.
 std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta, std::complex<double> E){
 
 std::complex<double> output,term;
