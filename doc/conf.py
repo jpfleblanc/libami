@@ -41,7 +41,7 @@ if read_the_docs_build:
 
 # -- Project information -----------------------------------------------------
 
-project = 'libami'
+project = 'ami'
 copyright = '2020, James P.F. LeBlanc'
 author = 'James P.F. LeBlanc'
 
@@ -79,4 +79,4 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # Breathe Configuration
-breathe_default_project = "libami"
+breathe_default_project = "ami"
