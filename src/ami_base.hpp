@@ -73,7 +73,7 @@ bool drop_matsubara_poles=false; // if set to true, ignores Matsubara poles with
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ ..etc  
-/// By convention, the energy_t contains the NEGATIVE of the energy of a given green's function line, \f$ 1/(\omega+E) \f$ where \f$ E=-\epsilon \f$.
+/// By convention, the energy_t contains the NEGATIVE of the energy of a given Green's function line, \f$ 1/(\omega+E) \f$ where \f$ E=-\epsilon \f$.
 typedef std::vector<std::complex<double>> energy_t;
 
 /// This is the list of internal and external frequencies values.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are non-zero. 
@@ -92,7 +92,7 @@ typedef std::vector<int> epsilon_t;
 /// Vector of type `int`.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1. Other values at intermediate steps typically represent an error.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
 typedef std::vector<int> alpha_t;
 
-/// Indicator for multi-species green's function or energy dispersions (spin-up vs spin-dn, multiband, etc).  Technically this is not relevant for libami, but may be useful. 
+/// Indicator for multi-species Green's function or energy dispersions (spin-up vs spin-dn, multiband, etc).  Technically this is not relevant for libami, but may be useful. 
 typedef int species_t;
 
 /// Indicator for statistics. A future version might use this more frequently.  Current version presumes all integration frequencies are Fermionic. 
@@ -237,7 +237,7 @@ int pp=-1;  // pp=0 means this G represents a principle part integral. pp=1 it i
 
 };
 
-/// Pole structure. Equivalent to `g_struct`, but kept separate. Tracks multiplicity, and which green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
+/// Pole structure. Equivalent to `g_struct`, but kept separate. Tracks multiplicity, and which Green's function it is attached to. Also it tracks how many derivatives to take when evaluated at a fermi function.
 struct pole_struct{
 
 pole_struct(epsilon_t eps, alpha_t alpha){
@@ -361,7 +361,7 @@ typedef std::vector< std::vector<std::complex<double> > > SorF_t;
 
 // Functions for poles
 /*
-Given an array of Green's functions, finds all poles with respect to frequency index, and checks for multiplicities. Stores multiplicities of the poles as well as `which_g_`, an identifier that specifies which green's function it was attached to.  
+Given an array of Green's functions, finds all poles with respect to frequency index, and checks for multiplicities. Stores multiplicities of the poles as well as `which_g_`, an identifier that specifies which Green's function it was attached to.  
 */
 pole_array_t find_poles(int index, g_prod_t &R);
 
@@ -456,7 +456,7 @@ void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign
 
 // This is actually a pretty important function. probably needs a more clear name and documentation as to what it does 
 // TODO: This became depricated - unsure how 
-// the der_fix function absorbed a minus sign into the alpha and epsilon values of one of the two green's functions before pushing it into the new array 
+// the der_fix function absorbed a minus sign into the alpha and epsilon values of one of the two Green's functions before pushing it into the new array 
 // I think i bailed on amir's definition and instead put a minus sign into the sign array - much cleaner 
 // g_struct der_fix(g_struct &g_in, double alpha);
 
