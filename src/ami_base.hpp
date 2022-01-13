@@ -360,7 +360,6 @@ typedef std::vector< std::vector<std::complex<double> > > SorF_t;
 
 
 // Functions for poles
-//Testing Priority: 1 - this is an essential function - if it fails nothing will work 
 /*
 Given an array of Green's functions, finds all poles with respect to frequency index, and checks for multiplicities. Stores multiplicities of the poles as well as `which_g_`, an identifier that specifies which green's function it was attached to.  
 */
@@ -369,7 +368,7 @@ pole_array_t find_poles(int index, g_prod_t &R);
 // Residue Functions
 g_prod_t simple_residue(g_prod_t G_in, pole_struct pole);
 
-// Testing Priority: 1 - updating G with a given pole is an essential function - if it fails nothing will work 
+
 g_struct update_G_pole(g_struct g_in,pole_struct pole);
 pole_struct update_Z_pole(AmiBase::pole_struct p_in, AmiBase::pole_struct pole);
 
@@ -381,7 +380,6 @@ double get_simple_sign(int index,g_prod_t &R,pole_struct pole);
 // TODO: Of these three only 'update_gprod_general' is actually used.  'Simple' is the case with no multi-poles.  
 void update_gprod_simple(int index, R_t &R_array, P_t &P_array, S_t &S_array);
 
-// Testing Priority: 1 - This is the central loop of the code. However it is a very complicated function so again test the internal functions and not the function itself 
 void update_gprod_general(int int_index, int array_index,  R_t &R_array, P_t &P_array, S_t &S_array);
 
 // Functions for Evaluation
@@ -448,7 +446,7 @@ bool pole_equiv (pole_struct pole1, pole_struct pole2);
 */
 bool g_equiv (g_struct g1, g_struct g2);
 
-/// Testing Priority: 1
+// Testing Priority: 1
 // evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
 
 void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pole_array_t &poles, sign_t &signs);
