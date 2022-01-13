@@ -4,6 +4,7 @@ libami: Library for Algorithmic Matsubara Integration
  * For copyright, see [COPYRIGHT.TXT][]
  * For licensing, see [LICENSE.TXT][]
  * For installation, see [INSTALL.md][]
+ * For Documentation, see [Documentation](https://libami.readthedocs.io/en/latest/)
  * For acknowledgment in scientific publications, see [ACKNOWLEDGE.TXT][]
  
 
