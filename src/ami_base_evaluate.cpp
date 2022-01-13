@@ -696,7 +696,7 @@ return output;
 }
 
 
-/// Using notation to match 10.1103/PhysRevB.101.075113 .
+/// Using notation to match https://doi.org/10.1103/PhysRevB.99.035120.
 /// They produced coefficients to the fermi functions and put them in a table.
 /// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order.
 double AmiBase::frk(int r, int k){
