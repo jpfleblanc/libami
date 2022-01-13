@@ -53,15 +53,9 @@ In short:
 		 $ make
 		 $ make install
 
-	Documentation can then be built using 
+	Documentation will then be built and installed in /path/to/install/share/doc
 
-	::
-	
-		$make DOCS
-		$make Sphinx 
-
-
-	The DOCS folder will then contain the output from doxygen, while the /docs/docs/sphinx directory will contain the sphinx html pages.  Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
+	Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
 
 	::
 		
@@ -71,11 +65,16 @@ In short:
 		
 5. Testing:
 
-	Enabled with the documentation are a minimal set of tests.  After compiling with make simply use
+	Enabled for 'Release' builds or manually with the TEST=ON flag, are a minimal set of tests.  Simply use
 		
 		::
 
+		 $ mkdir build && cd build
+		 $ cmake -DCMAKE_INSTALL_PREFIX=/path/to/install -DBUILD_DOC=ON -DTEST=ON ..
+		 $ make
 		 $ make test
+		 or
+		 $ ctest
 
 	Each test contains multiple internal checks.  If any tests should fail, more information can be gleaned by directly running the test executables in the /build/test directory.
 
@@ -83,9 +82,9 @@ In short:
 Further information and updates will be posted on the `Github Wiki`_. 
 
 	
-----------
+------------------------
 Using with your projects
-----------
+------------------------
 
 In short, use a standard `CMake`-based approach:
 

@@ -4,8 +4,8 @@
  * This is the primary AMI symbolic integration function.  It takes a starting integrand defined by `g_prod_t` R0 and `ami_parms` object, and returns the S, P and R arrays necessary for symbolic evaluation. 
  * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
  * @param[in] R0 : `g_prod_t` integrand to be processed.
- * @param[out] R_array: Resultant `R_t` 
- * @param[out] P_array : Resultant `P_t`
+ * @param[out] R_array: Resultant `R_t`. 
+ * @param[out] P_array : Resultant `P_t`.
  * @param[out] S_array : Resultant `S_t`. 
 */
 void AmiBase::construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array){
@@ -40,9 +40,9 @@ update_gprod_general(index, index, R_array, P_array,S_array);
 /**
 *
 * Primary loop.  Takes R[n] as input and outputs R[n+1], P[n+1] and S[n+1].
-* @param[in] int_index: indicator for which is the integration variable
+* @param[in] int_index: indicator for which is the integration variable.
 * @param[in] array_index: indicator for which element of `alpha_t` corresponds to that integration variable. Typically the same as int_index, unless you want to perform out of order. 
-* @param[in] R_array: R[n] input 
+* @param[in] R_array: R[n] input. 
 * @param[out] R_array: updated with R[n+1] on output. 
 * @param[out] S_array: updated with S[n+1] on output.
 * @param[out] P_array: updated with P[n+1] on output.
@@ -458,10 +458,10 @@ S_array.push_back(temp_sign_array);
 /**
  *
  * Void function takes a product of Green's functions - an element of an `Ri_t` object - and obtains the residue for a specific pole. Output is an array of such elements, a full `Ri_T` object, along with the respective poles and signs for `Pi_t` and  `Si_t`. Includes derivative. 
- * @param[in] G_in : Product of green's functions
- * @param[in] pole : Pole to evaluate residue
- * @param[out] Ri_out : Resultant `g_prod_t` 
- * @param[out] poles : Resultant `pole_array_t`
+ * @param[in] G_in : Product of green's functions.
+ * @param[in] pole : Pole to evaluate residue.
+ * @param[out] Ri_out : Resultant `g_prod_t`. 
+ * @param[out] poles : Resultant `pole_array_t`.
  * @param[out] signs : Resultant `sign_t`. 
 */
 void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in, AmiBase::pole_struct pole, AmiBase::Ri_t &Ri_out, AmiBase::pole_array_t &poles, AmiBase::sign_t &signs){
@@ -539,7 +539,7 @@ Ri_out=temp_ri;//_out;
 }
 
 /**
-* Take derivative of `g_prod_t` with respect to index stored in `pole_struct`. This is accomplished via multiple applications of chain rule.  This is described somewhat in PRB 99 035120 - though the notation changed somewhat.  The prefactor of -1 is no longer absorbed into a green's function, but instead is stored in the `S_t` array.  What is omitted there is discussion of derivatives of the fermi functions.  Here they are simply tracked by defining an integer `der_` of the `pole-struct` that gets incremented. 
+* Take derivative of `g_prod_t` with respect to index stored in `pole_struct`. This is accomplished via multiple applications of chain rule.  This is described in PRB 99 035120 - though the notation changed somewhat.  The prefactor of -1 is no longer absorbed into a green's function, but instead is stored in the `S_t` array.  What is omitted there is discussion of derivatives of the Fermi functions.  Here they are simply tracked by defining an integer `der_` of the `pole-struct` that gets incremented. 
 *
 */
 void AmiBase::take_derivative_gprod(AmiBase::g_prod_t &g_prod, AmiBase::pole_struct pole, double start_sign, AmiBase::Ri_t &r_out, AmiBase::pole_array_t &poles, AmiBase::sign_t &signs){

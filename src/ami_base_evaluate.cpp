@@ -206,10 +206,11 @@ return output;
  /**
  * This is a primary AMI symbolic evaluation function.  It takes a solution defined by S, P, and R arrays and the external parameters and returns a `complex<double>` restult.
  * @param[in] parms : `ami_parms` object, basic parameters for AMI.
- * @param[in] R_array: Input `R_t`
- * @param[in] P_array : Input `P_t`
- * @param[in] S_array : Input `S_t`
+ * @param[in] R_array: Input `R_t`.
+ * @param[in] P_array : Input `P_t`.
+ * @param[in] S_array : Input `S_t`.
  * @param[in] external : Input `ami_vars` containing point to evaluate.
+ * @return Result is returned as single value of type `std::complex<double>`.
 */
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
 
@@ -626,7 +627,7 @@ return output;
  * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
  * @param[in] g_prod : `g_prod_t` a list of `g_struct` that is interpretted as \f$ \prod{G_i} \f$.  
  * @param[in] external : Input external variables in a `ami_vars` struct. 
- * @return Single value for product of Green's functions 
+ * @return Single value for product of Green's functions. 
 */
 std::complex<double> AmiBase::eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external){
 std::complex<double> output(0,0);
@@ -695,9 +696,9 @@ return output;
 }
 
 
-/// Using notation to match 10.1103/PhysRevB.101.075113
+/// Using notation to match 10.1103/PhysRevB.101.075113 .
 /// They produced coefficients to the fermi functions and put them in a table.
-/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order... I think
+/// We derive a general expression for those coefficients - we believe this to be general but have only checked up to 6th order.
 double AmiBase::frk(int r, int k){
 double output=0.0;
 
@@ -716,7 +717,7 @@ output+= binomialCoeff(k,m)*std::pow(m,r)*(std::pow(-1,k-m));
 
 }
 
-/// Returns value of Binomial Coefficient C(n, k)
+/// Returns value of Binomial Coefficient C(n, k).
 int AmiBase::binomialCoeff(int n, int k){
     int res = 1;
 

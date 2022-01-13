@@ -70,9 +70,9 @@ return output;
 /**
  * This is the primary AMI evaluation function for the term-by-term construction.
  * @param[in] parms : `ami_parms` object, basic parameters for AMI. Typically same as construction. 
- * @param[in] ami_terms : `terms` result from construction function
+ * @param[in] ami_terms : `terms` result from construction function.
  * @param[in] external : Input external variables in a `ami_vars` struct. 
- * @return Result is returned as single value of type `std::complex<double>`
+ * @return Result is returned as single value of type `std::complex<double>`.
  */
 std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external){
 
@@ -116,7 +116,7 @@ return output;
  * @param[in] parms : `ami_parms` object, basic parameters for AMI. 
  * @param[in] p_list : `pole_array_t` a list of poles that is interpretted as \f$ \prod{f(p_i)} \f$.  If poles contain derivatives then these are resolved at this stage.
  * @param[in] external : Input external variables in a `ami_vars` struct. 
- * @return Single value for product of fermi/bose functions 
+ * @return Single value for product of fermi/bose functions. 
 */
 std::complex<double> AmiBase::eval_fprod(ami_parms &parms,pole_array_t &p_list, ami_vars &external){
 	
