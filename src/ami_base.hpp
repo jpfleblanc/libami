@@ -73,7 +73,7 @@ bool drop_matsubara_poles=false; // if set to true, ignores Matsubara poles with
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ ..etc  
-/// By convention, the energy_t contains the NEGATIVE of the energy of a given Green's function line, \f$ 1/(\omega+E) \f$ where \f$ E=-\epsilon \f$.
+/// By convention, the energy_t contains the NEGATIVE of the energy of a given Green's function line, \f$ 1/(X+E) \f$ where \f$ E=-\epsilon \f$.
 typedef std::vector<std::complex<double>> energy_t;
 
 /// This is the list of internal and external frequencies values.  Typically only the last elements for external frequencies are non-zero - but one can evaluate intermediate steps where multiple external frequencies are non-zero. 
@@ -85,11 +85,11 @@ typedef std::vector< std::complex<double>  > frequency_t;
 
 // the symbolic epsilon
 
-/// Vector of type `int`.  This is the symbolic representation of the energy \f$-\epsilon\f$ described in AMI paper (https://doi.org/10.1103/PhysRevB.99.035120).  We use the convention \f$G=\frac{1}{\omega+\epsilon}\f$.  It is the coefficients for a linear combination of a set of possible values. 
+/// Vector of type `int` with elements \f$ a_i\f$.  This is the symbolic representation of the energy \f$E=-\sum\limits_{i}a_i\epsilon_i\f$ described in AMI paper (https://doi.org/10.1103/PhysRevB.99.035120).  We use the convention \f$G=\frac{1}{X+\epsilon}\f$.  It is the coefficients for a linear combination of a set of possible values. 
 typedef std::vector<int> epsilon_t;
 
 
-/// Vector of type `int`.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1. Other values at intermediate steps typically represent an error.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
+/// Vector of type `int` with elements \f$ \alpha_i\f$.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1. Other values at intermediate steps typically represent an error.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
 typedef std::vector<int> alpha_t;
 
 /// Indicator for multi-species Green's function or energy dispersions (spin-up vs spin-dn, multiband, etc).  Technically this is not relevant for libami, but may be useful. 
@@ -308,8 +308,11 @@ p_list=p;
 g_list=g;
 }	
 
+/// Sign prefactor 
 double sign=1;
+/// List of poles, \f$ \prod{f(p_i)}\f$. 
 pole_array_t p_list;
+/// List of Green's functions, \f$ \prod{G_j}\f$.
 g_prod_t g_list;	
 	
 };
