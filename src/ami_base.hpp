@@ -123,6 +123,13 @@ prefactor=1.0;
 
 }
 
+ami_vars(energy_t eps, frequency_t freq, double Bta){
+energy_= eps;
+frequency_= freq;
+BETA_=Bta;
+
+}
+
 ami_vars(energy_t eps, frequency_t freq, double Bta, double pf){
 energy_= eps;
 frequency_= freq;

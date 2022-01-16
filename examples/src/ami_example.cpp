@@ -61,9 +61,8 @@ for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 frequency.push_back(std::complex<double>(0,M_PI));
 
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
@@ -110,9 +109,8 @@ for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 frequency.push_back(std::complex<double>(0,M_PI));// This frequency is expected to be a bosonic matsubara or real frequency. There is no catch if this is untrue. 
 
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
@@ -183,10 +181,8 @@ AmiBase::frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,M_PI)};
 
-
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
@@ -206,10 +202,8 @@ AmiBase::frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,M_PI)};
 
-
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
@@ -229,10 +223,8 @@ AmiBase::frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,M_PI)};
 
-
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
@@ -254,9 +246,8 @@ for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 frequency.push_back(std::complex<double>(0,M_PI));
 
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
@@ -278,9 +269,9 @@ AmiBase::frequency_t frequency= {std::complex<double>(0,0),
 				std::complex<double>(0,0),
 				std::complex<double>(0,M_PI)};
 
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
-AmiBase::ami_vars external(energy, frequency);
-external.BETA_=1.0;
 return external;
 
 }
@@ -361,8 +352,9 @@ AmiBase::frequency_t frequency= {std::complex<double>(0,0),
 
 //frequency.push_back(std::complex<double>(0, M_PI));//(0,M_PI));
 
-AmiBase::ami_vars external(energy, frequency);
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
+
 return external;
 
 }
@@ -487,8 +479,9 @@ AmiBase::frequency_t frequency= {std::complex<double>(0,0),
 
 //frequency.push_back(std::complex<double>(0, M_PI));//(0,M_PI));
 
-AmiBase::ami_vars external(energy, frequency);
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
+
 return external;
 
 }
@@ -605,9 +598,8 @@ for(int i=0;i<3;i++){ frequency.push_back(std::complex<double>(0,0));}
 
 frequency.push_back(std::complex<double>(0,M_PI));
 
-AmiBase::ami_vars external(energy, frequency);
-
-external.BETA_=1.0;
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
 
 return external;
 
