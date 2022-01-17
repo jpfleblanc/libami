@@ -34,7 +34,7 @@
  *
  * @note See https://github.com/jpfleblanc/libami
  *
- * @author JPF LeBlanc 
+ * @author James P.F. LeBlanc 
  *
  * @version Revision: 0.61 
  *
@@ -61,7 +61,7 @@ template <typename T> int sgn(T val) {
 double exp_max_arg=500.0;
 
 
-/// Simple factorial function - Nothing special. 
+/// Simple factorial function. It is rarely called except for multipole problems, and typically for only small arguments. 
 int factorial(int n);
 
 // AmiVars
@@ -85,21 +85,21 @@ typedef std::vector< std::complex<double>  > frequency_t;
 
 // the symbolic epsilon
 
-/// Vector of type `int` with elements \f$ a_i\f$.  This is the symbolic representation of the energy \f$E=-\sum\limits_{i}a_i\epsilon_i\f$ described in AMI paper (https://doi.org/10.1103/PhysRevB.99.035120).  We use the convention \f$G=\frac{1}{X+\epsilon}\f$.  It is the coefficients for a linear combination of a set of possible values. 
+/// Vector of type `int` with elements \f$ a_i\f$.  This is the symbolic representation of the energy \f$E=-\sum\limits_{i}a_i\epsilon_i\f$ described in AMI paper (https://doi.org/10.1103/PhysRevB.99.035120).  We use the convention \f$G=\frac{1}{X+E}\f$.  It is the coefficients for a linear combination of a set of possible values. 
 typedef std::vector<int> epsilon_t;
 
 
 /// Vector of type `int` with elements \f$ \alpha_i\f$.  This is the symbolic representation of the frequency, as a linear combination of possible entries.  Typically contains only values of 0, -1 and +1. Other values at intermediate steps typically represent an error.  \f$X=\sum\limits_{i} i\nu_i \alpha_i\f$. 
 typedef std::vector<int> alpha_t;
 
-/// Indicator for multi-species Green's function or energy dispersions (spin-up vs spin-dn, multiband, etc).  Technically this is not relevant for libami, but may be useful. 
+/// Indicator for multi-species Green's function or energy dispersions (spin-up vs spin-dn, multiband, etc).  This indicator should propagate through the Matsubara sums to the final expression, and might have utility for evaluating energies.  Technically this is not necessary for libami, but may be useful. 
 typedef int species_t;
 
 /// Indicator for statistics. A future version might use this more frequently.  Current version presumes all integration frequencies are Fermionic. 
 typedef enum {Bose,Fermi} stat_type ;
 
 // Ideally these types will not appear in the ami_base class 
-/// Graph types will be removed in a future release.  Current support is limited to Sigma and Pi_phuu graph types. 
+/// Graph types will likely be removed/replaced in a future release.  Current support is limited to Sigma and Pi_phuu graph types.  set graph_type=0 for Fermionic external line, and =1 for Bosonic. 
 typedef enum {Sigma,Pi_phuu, Pi_phud,Hartree, Bare, Greens, density, doubleocc, Pi_ppuu, Pi_ppud, DOS,ENERGY, FORCE} graph_type ;
 
 /// To be removed in a future release
@@ -404,8 +404,9 @@ SorF_t fermi(ami_parms &parms, Pi_t pi, ami_vars external);
 //Testing Priority: 1
 std::complex<double>  fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external);
 
-/// Cross and dot are other operations like 'star' above that are defined after equation (20) in the AMI paper  (https://doi.org/10.1103/PhysRevB.99.035120).
+/// Cross operator '\f$\times \f$' that is defined after equation (20) in the AMI paper  (https://doi.org/10.1103/PhysRevB.99.035120).
 SorF_t cross(SorF_t left, SorF_t right);
+/// Dot operator '\f$ \cdot \f$' that is defined after equation (20) in the AMI paper  (https://doi.org/10.1103/PhysRevB.99.035120).
 SorF_t dot(Si_t Si, SorF_t fermi);
 
 // Testing Priority: 2 should be easy to test 
@@ -418,20 +419,6 @@ std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
 /// Evaluates a product of Green's functions. 
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
-/* math example 
-
- * The distance between \f$(x_1,y_1)\f$ and \f$(x_2,y_2)\f$ is \f$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\f$.
- * \f[
-    |I_2|=\left| \int_{0}^T \psi(t) 
-             \left\{ 
-                u(a,t)-
-                \int_{\gamma(t)}^a 
-                \frac{d\theta}{k(\theta,t)}
-                \int_{a}^\theta c(\xi)u_t(\xi,t)\,d\xi
-             \right\} dt
-          \right|
- * \f]
- */
 
 
 /**
@@ -456,19 +443,15 @@ bool pole_equiv (pole_struct pole1, pole_struct pole2);
 */
 bool g_equiv (g_struct g1, g_struct g2);
 
-// Testing Priority: 1
-// evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
 
+// evaluate_general_residue is the primary function called in the main loop by 'update_gprod_general'
 void evaluate_general_residue(g_prod_t G_in, pole_struct pole, Ri_t &Ri_out, pole_array_t &poles, sign_t &signs);
 
-
+// Derivative function 
 void take_derivative_gprod(g_prod_t &g_prod, pole_struct pole, double start_sign, Ri_t &r_out, pole_array_t &poles, sign_t &signs);
 
 // This is actually a pretty important function. probably needs a more clear name and documentation as to what it does 
-// TODO: This became depricated - unsure how 
-// the der_fix function absorbed a minus sign into the alpha and epsilon values of one of the two Green's functions before pushing it into the new array 
-// I think i bailed on amir's definition and instead put a minus sign into the sign array - much cleaner 
-// g_struct der_fix(g_struct &g_in, double alpha);
+// TODO:may be deprecated function. 
 
 /**
 * As part of the construction of the `Si_t` arrays, the initial sign is extracted prior to taking derivatives.  Also is multiplied by \f$1/(M-1)!\f$ where M is the `multiplicity_` of the respective pole. 
@@ -526,21 +509,19 @@ void construct(ami_parms &parms,  g_prod_t R0, R_t &R_array, P_t &P_array, S_t &
 /* 
 This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression 
 */
-
 std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external);
 
 
-// Optimization functions - not strictly necessary but might implement automatically 
-
-
+// Optimization functions are not documented.  May be implemented automatically at some stage.
 typedef std::pair<int,int> ref_t;
 typedef std::vector<ref_t> ref_v_t;
 typedef std::vector<ref_v_t> R_ref_t;
 typedef R_ref_t ref_eval_t;
 
-/// This is an optimized version of the evaluate function. For simplicity if the new objects are empty the evaluate function is called directly. 
+/// This is an optimized version of the evaluate function. For simplicity if the additional arguments are empty the evaluate function is called directly. 
 std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 
+/// Optimize function for SPR notation. 
 void factorize_Rn(Ri_t &Rn, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 void reduce_rref(R_ref_t &Rref, ref_eval_t &Eval_list);
 
@@ -559,7 +540,7 @@ void derivative_opt(g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 
 
 // term optimization
-
+///Optimize function for terms notation.
 void factorize_terms(terms &ami_terms, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 std::complex<double> evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list);
 
