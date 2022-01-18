@@ -173,7 +173,7 @@ std::cout<<"Evaluation took "<<d8.count()<<" microseconds"<<std::endl;
 // This example is virtually identical to the fermionic case except for a single line
 // AmiBase::ami_parms test_amiparms(N_INT, E_REG); -> AmiBase::ami_parms test_amiparms(N_INT, E_REG,1);  Final argument is 0 for fermionic(default) and 1 for bosonic. 
 void example1_bose(){
-std::cout<<std::endl<<"-_-_-_ Example - Second Order For Bosonic _-_-_-"<<std::endl<<std::endl;	
+std::cout<<std::endl<<"-_-_-_ Example - First Order For Bosonic _-_-_-"<<std::endl<<std::endl;	
 	
 //START example	
 std::cout<<"-----Constructing AMI SPR format -----"<<std::endl;

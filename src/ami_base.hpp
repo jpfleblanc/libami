@@ -115,6 +115,19 @@ ext_type ext_freq_type=matsubara;
 
 /// The `ami_vars` struct is the basic information required for the evaluation stage of AMI result.  It contains the variable internal/external quantities.  Specifically it is a list of numerical values for energies of each line and values for each frequency.  Also stored is the possibility of an overall prefactor. Also required is a value of \f$\beta=\frac{1}{k_B T}\f$ needed for evaluation of Fermi/Bose distributions. 
 struct ami_vars{
+	
+	
+/// Numerical values of energies. 
+energy_t energy_;
+/// Numerical Values of frequencies.
+frequency_t frequency_;
+/// Overall prefactor - default(1).
+double prefactor=1.0;
+/// Required value of inverse temperature, \f$\beta\f$.
+double BETA_=0.0;
+
+///Experimental parameter for spectral representation. 
+double gamma_=0;
 
 ami_vars(energy_t eps, frequency_t freq){
 energy_= eps;
@@ -141,23 +154,22 @@ BETA_=Bta;
 
 ami_vars(){prefactor=1.0;}
 
-/// Numerical values of energies. 
-energy_t energy_;
-/// Numerical Values of frequencies.
-frequency_t frequency_;
-/// Overall prefactor - default(1).
-double prefactor;
-/// Required value of inverse temperature, \f$\beta\f$.
-double BETA_;
-
-///Experimental parameter for spectral representation. 
-double gamma_=0;
 
 };
 
 
 /// Parameters for AMI construction/evaluation.
 struct ami_parms{
+	
+	
+/// Number of integrations to perform.
+int N_INT_;
+/// Hardcoded as (1) in this version - represents number of external variables. 
+int N_EXT_=1;
+/// Possible energy regulator for evaluation of Fermi/Bose functions to control divergences.  Should be zero by default and switched on if needed.
+double E_REG_=0;
+	
+	
 ami_parms(int N_INT,  double E_REG){
 N_INT_=N_INT;
 E_REG_=E_REG;
@@ -186,12 +198,6 @@ dispersion_=static_cast<AmiBase::disp_type>(disp);
 
 ami_parms(){}
 
-/// Number of integrations to perform.
-int N_INT_;
-/// Hardcoded as (1) in this version - represents number of external variables. 
-int N_EXT_=1;
-/// Possible energy regulator for evaluation of Fermi/Bose functions to control divergences.  Should be zero by default and switched on if needed.
-double E_REG_=0;
 
 graph_type TYPE_;
 int_type int_type_;
