@@ -38,7 +38,7 @@ AmiBase::g_struct g3(epsilon_3,alpha_3);
 AmiBase::g_prod_t R0={g1,g2,g3};
 
 // OR
-//AmiBase::g_prod_t R0;
+// AmiBase::g_prod_t R0;
 // R0.push_back(g1);
 // R0.push_back(g2);
 // R0.push_back(g3);
@@ -62,7 +62,7 @@ for(int i=0;i<2;i++){ frequency.push_back(std::complex<double>(0,0));}
 frequency.push_back(std::complex<double>(0,M_PI));
 
 double BETA=1.0;
-AmiBase::ami_vars external(energy, frequency,BETA);
+AmiBase::ami_vars external(energy, frequency);//,BETA);
 
 return external;
 
@@ -111,6 +111,8 @@ frequency.push_back(std::complex<double>(0,M_PI));// This frequency is expected 
 
 double BETA=1.0;
 AmiBase::ami_vars external(energy, frequency,BETA);
+
+
 
 return external;
 

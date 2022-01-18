@@ -197,15 +197,16 @@ AmiBase::g_struct g6(epsilon_6,alpha_6);
 AmiBase::g_struct g7(epsilon_7,alpha_7);
 
 
-AmiBase::g_prod_t R0;
+AmiBase::g_prod_t R0={g1,g2,g3,g4,g5,g6,g7};
+// AmiBase::g_prod_t R0;
 
-R0.push_back(g1);
-R0.push_back(g2);
-R0.push_back(g3);
-R0.push_back(g4);
-R0.push_back(g5);
-R0.push_back(g6);
-R0.push_back(g7);
+// R0.push_back(g1);
+// R0.push_back(g2);
+// R0.push_back(g3);
+// R0.push_back(g4);
+// R0.push_back(g5);
+// R0.push_back(g6);
+// R0.push_back(g7);
 
 
 
