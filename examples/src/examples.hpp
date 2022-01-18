@@ -1,5 +1,5 @@
 #include "ami_base.hpp"
-#include "ami_calc.hpp"
+
 
 #include <fstream>
 #include <iostream>

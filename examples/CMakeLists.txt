@@ -12,7 +12,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -DUSE_MPI -lstdc++fs")# -
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/include)
 
-target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib/libamibase.so
+target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib/libami.so
  m )
 
 
