@@ -41,8 +41,11 @@ ADD_LIBRARY(ami SHARED ${LIB_FILES})
 
 
 #target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} m)
-target_link_libraries(${PROJECT_NAME}  m stdc++fs)
-
+if(MACOSX)
+target_link_libraries(${PROJECT_NAME}  m)
+else()
+target_link_libraries(${PROJECT_NAME}  m)
+endif()
    
    INSTALL(TARGETS ami 
    ARCHIVE DESTINATION "lib/"
