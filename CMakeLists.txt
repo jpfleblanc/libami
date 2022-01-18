@@ -19,7 +19,7 @@ link_directories("/usr/lib")
 
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(MACOSX TRUE
+    set(MACOSX TRUE)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -stdlib=libc++ -lc++experimental")
 else
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -lstdc++fs ") 
