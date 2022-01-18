@@ -67,7 +67,7 @@ from_func=obj.fermi_bose(2, 1.0,  beta, E);
 
 from_analytic=2.0*(std::pow(beta,2)*std::exp(2.0*beta*E))/ ( std::pow( (std::exp(E*beta) +1.0), 3.0)) - std::pow(beta,2)*std::exp(beta*E)/ ( std::pow( (std::exp(E*beta) +1.0), 2.0));
 
-ASSERT_DOUBLE_EQ(from_func.real(),from_analytic.real());	
+ASSERT_NEAR(from_func.real(),from_analytic.real(),1e-13);	
 	
 }
 

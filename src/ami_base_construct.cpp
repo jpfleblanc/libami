@@ -226,6 +226,7 @@ return p_new;
 */
 AmiBase::pole_array_t AmiBase::find_poles(int index, AmiBase::g_prod_t &R){
 
+
 pole_array_t pole_array;
 pole_struct pole;
 
@@ -235,7 +236,7 @@ pole.eps_.reserve(R[0].eps_.size());
 
 pole.index_=index;
 
-if(pole.index_>R[0].alpha_.size()){
+if(pole.index_>=R[0].alpha_.size()){
 
 std::cerr<<"WARNING: Pole index exceeds length of g_prod_t: This may result in errors.  Exiting find_poles for safety."<<std::endl;	
 return pole_array;	

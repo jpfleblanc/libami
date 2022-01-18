@@ -24,8 +24,8 @@ std::complex<double> from_func(-0.0009888959048396373,0.00075325682931293159);
 
 // std::cout<<from_benchmark<<" "<<from_func<<std::endl;
 	
-ASSERT_DOUBLE_EQ(from_func.real(),from_benchmark.real());
-ASSERT_DOUBLE_EQ(from_func.imag(),from_benchmark.imag());
+ASSERT_NEAR(from_func.real(),from_benchmark.real(),1e-11);
+ASSERT_NEAR(from_func.imag(),from_benchmark.imag(),1e-11);
 }
 
 

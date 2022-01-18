@@ -171,10 +171,11 @@ AmiBase::pole_array_t pole_list_1=ami.find_poles(1,R0);
 AmiBase::pole_array_t pole_list_2=ami.find_poles(2,R0);
 AmiBase::pole_array_t pole_list_3=ami.find_poles(3,R0);
 AmiBase::pole_array_t pole_list_6=ami.find_poles(6,R0);
+
+std::cout<<"Expect warnings: { ";
 AmiBase::pole_array_t pole_list_7=ami.find_poles(7,R0);
-std::cout<<"Expect warning: { ";
 AmiBase::pole_array_t pole_list_12=ami.find_poles(12,R0);
-std::cout<<"} Warning caught"<<std::endl;
+std::cout<<"} Warnings caught"<<std::endl;
 	
 ASSERT_EQ(pole_list_0.size(),6);
 ASSERT_EQ(pole_list_1.size(),6);
