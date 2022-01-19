@@ -56,18 +56,18 @@ In short, use a standard `CMake`-based approach:
 
 4. Creating documentation:
 
-Libami is documented using doxygen and Sphinx.  Documentation can be built using 
-
-	
-	
-		$make DOCS
-		$make Sphinx 
+Libami is documented using doxygen and Sphinx.  Documentation is set off by default and must be enabled:
 
 
-The DOCS folder will then contain the output from doxygen, while the /docs/docs/sphinx directory will contain the sphinx html pages.  Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
+		$ mkdir build && cd build
+		$ cmake -DCMAKE_INSTALL_PREFIX=/path/to/install -DBUILD_DOC=ON ..
+		$ make
+		$ make install
 
-	
-		
+
+Documentation will then be built and installed in /path/to/install/share/doc .  Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via:
+
+			
 		$pip3 install sphinx
 		$pip3 install sphinx_rtd_theme
 		$pip3 install breathe

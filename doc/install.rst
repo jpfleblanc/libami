@@ -44,7 +44,7 @@ In short:
 
 4. Creating documentation:
 
-	Libami is documented using doxygen and Sphinx.  Documentation is set off by default and must be enabled
+	Libami is documented using doxygen and Sphinx.  Documentation is set off by default and must be enabled:
 
 		::
 
@@ -53,9 +53,9 @@ In short:
 		 $ make
 		 $ make install
 
-	Documentation will then be built and installed in /path/to/install/share/doc
+	Documentation will then be built and installed in /path/to/install/share/doc .
 
-	Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via
+	Note that cmake>=3.18 is required.  As well as sphinx, the sphinx_rtd_theme and breathe python modules.  These can be ontained via:
 
 	::
 		
@@ -65,7 +65,7 @@ In short:
 		
 5. Testing:
 
-	Enabled for 'Release' builds or manually with the TEST=ON flag, are a minimal set of tests.  Simply use
+	Enabled for 'Release' builds or manually with the TEST=ON flag, are a minimal set of tests.  Simply use:
 		
 		::
 
