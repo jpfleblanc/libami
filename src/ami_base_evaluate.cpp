@@ -429,7 +429,7 @@ std::complex<double> freq_shift(0,0);
 if(pole.x_alpha_.size()!=0){
 	for(int i=0; i< pole.x_alpha_.size(); i++){
 		
-		freq_shift-=external.frequency_[i]*(double)pole.x_alpha_[i];
+		freq_shift+=external.frequency_[i]*(double)pole.x_alpha_[i];
 		
 	}
 	
@@ -486,6 +486,7 @@ std::complex<double>  E= get_energy_from_pole(pole,external);
 // In the case of spectral poles the freq_shift might not be zero 
 E=E+freq_shift;
 
+// std::cout<<"Total: "<<E<<std::endl;
 
 double sigma= pow(-1.0, double(eta));
 
@@ -562,6 +563,7 @@ if(m==0){
 				
 		
 	}else{
+		
 output=1.0/(sigma*std::exp(beta*(E))+1.0);
 	}
 // return output;
