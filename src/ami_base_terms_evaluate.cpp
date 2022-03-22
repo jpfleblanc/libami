@@ -3,6 +3,7 @@
 
 
 std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
+	overflow_detected=false;
 	
 
 if(Rref.size()==0|| unique_g.size()==0||Eval_list.size()==0){
@@ -47,6 +48,13 @@ for(int i=0; i< Eval_list.size(); i++){
 		this_gprod=this_gprod*unique_vals[pair_vec[j].first];
 		}
 		
+		if((std::floor(std::abs(std::real(this_gprod)))==std::abs(std::real(this_gprod))) && std::abs(std::real(this_gprod)) !=0 ){
+	
+	overflow_detected=true;	
+	
+		}
+		
+		
 		term=ksum*this_gprod*external.prefactor; 
 		
 		// std::cout<<"In optimized star K[]*R"<<std::endl;
@@ -75,6 +83,8 @@ return output;
  * @return Result is returned as single value of type `std::complex<double>`.
  */
 std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms, ami_vars &external){
+overflow_detected=false;
+
 
 std::complex<double> output(0,0);
 
@@ -96,6 +106,13 @@ std::complex<double> AmiBase::evaluate_term(ami_parms &parms, term &ami_term, am
 std::complex<double> gprod;
 
 gprod=eval_gprod(parms, ami_term.g_list, external);
+
+// check for overflow 
+		if((std::floor(std::abs(std::real(gprod)))==std::abs(std::real(gprod))) && std::abs(std::real(gprod)) !=0 ){
+	
+	overflow_detected=true;	
+	
+		}
 
 std::complex<double> fprod;
 

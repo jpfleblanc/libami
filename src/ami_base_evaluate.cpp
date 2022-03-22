@@ -2,6 +2,7 @@
 
 // TODO: since there is some duplication of code in these two evaluate commands they should be separated
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external,g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list){
+	overflow_detected=false;
 
 	// std::cout<<"Evaluating with external"<<std::endl;
 
@@ -106,6 +107,11 @@ final_result=optimized_star(parms, SorF_result, unique_g, Rref,Eval_list, extern
 	// std::cout<<double_check<<" "<<final_result<<std::endl;
 
 // }
+
+// if(std::abs(final_result.real())>100){
+// std::cout<<"Returning value of "<< final_result <<std::endl;
+	// }
+
 
 return final_result;
 
@@ -213,7 +219,7 @@ return output;
  * @return Result is returned as single value of type `std::complex<double>`.
 */
 std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array, P_t &P_array, S_t &S_array, ami_vars &external){
-
+overflow_detected=false;
 
  // std::cout<<"Evaluating Result for construction: ";
 
@@ -303,15 +309,64 @@ bool print_output=false;
 for( int i=0; i< K[0].size(); i++)
 {
 
-
+print_output=false;
 
 gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
 
-output+= term;
+if((std::floor(std::abs(std::real(gprod)))==std::abs(std::real(gprod))) && std::abs(std::real(gprod)) !=0 ){
+	
+overflow_detected=true;	
+	
+}
+
 
 // std::cout<<"In star K[]*R"<<std::endl;
-// std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// if(std::abs( std::real(term))>1000){
+	// print_output=true;
+// std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<" CO="<<output <<std::endl;
+
+
+
+// if(std::fmod(std::real(gprod),1.0)==0 && std::real(gprod) !=0)
+// if(std::floor(std::abs(std::real(gprod)))==std::abs(std::real(gprod)))
+// {std::cout<<"Numerical overflow has occurred"<<std::endl;
+// overflow_detected=true;
+// print_output=true;
+
+// for(int m=0; m< external.frequency_.size();m++){
+// std::cout<<" Freq["<<m<<"] "<< external.frequency_[m]<<std::endl;
+// }
+
+// for(int m=0; m< external.energy_.size();m++){
+// std::cout<<" E["<<m<<"] "<< external.energy_[m]<<std::endl;
+// }
+
+// for(int m=0; m< R[i].size(); m++){
+// print_g_struct_info(R[i][m]);
+// }
+
+// std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<" CO="<<output <<std::endl;
+
+// }
+
+// }
+
+// if(std::abs( std::imag(term))>1000){
+	// print_output=true;
+// std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<" CO="<<output <<std::endl;
+
+
+// if(std::fmod(std::imag(gprod),1.0)==0 && std::abs(std::imag(gprod)) !=0 ){std::cout<<"Numerical overflow has occurred in imaginary part"<<std::endl;
+// overflow_detected=true;
+// print_output=true;
+// }
+
+// }
+
+
+output+= term;
+
 // print_output=true;
  // file <<i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 
@@ -321,8 +376,10 @@ output+= term;
 
 // std::cout<<"t0 plus t10 gives "<< t0<<" "<<t10<<" "<< t0+t10<<std::endl;
 
-// if(print_output){
+// if(print_output && overflow_detected){
+	// if(std::abs(output.real())>100){
 // std::cout<<"Returning value of "<< output <<std::endl;
+	// }
 // }
 
 return output;
@@ -429,7 +486,7 @@ std::complex<double> freq_shift(0,0);
 if(pole.x_alpha_.size()!=0){
 	for(int i=0; i< pole.x_alpha_.size(); i++){
 		
-		freq_shift+=external.frequency_[i]*(double)pole.x_alpha_[i];
+		freq_shift=external.frequency_[i]*(double)pole.x_alpha_[i];
 		
 	}
 	
@@ -461,6 +518,9 @@ if(pole.alpha_.back()!=0 && parms.TYPE_!=AmiBase::Pi_phuu && parms.TYPE_!=AmiBas
 
 
 eta++;
+// if(zero_external_w){
+	// eta--;
+// }
 
 // std::cout<<"External triggered"<<std::endl;
 }

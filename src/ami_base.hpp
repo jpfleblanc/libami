@@ -70,6 +70,8 @@ bool drop_bosonic_diverge=false; // if set to true, then E_REG not needed becaus
 bool drop_der=false; // if set to true, then E_REG not needed because bosonic divergences will simply be set to zero.  Rigorously this may not be correct.
 bool drop_matsubara_poles=false; // if set to true, ignores Matsubara poles with zero energy 
 // bool is_real_external=false;
+bool zero_external_w=false;
+bool overflow_detected=false;
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ ..etc  

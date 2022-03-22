@@ -325,13 +325,21 @@ bool result=true;
 if(pole1.eps_.size()!= pole2.eps_.size()){ return false;}
 if(pole1.alpha_.size()!= pole2.alpha_.size()){ return false;}
 
-for (int i=0; i< pole1.eps_.size(); i++)
+int top_eps=pole1.eps_.size();
+int top_alpha=pole1.alpha_.size();
+// if(zero_external_w){
+	// top_alpha--;
+// }
+	
+	
+	
+for (int i=0; i< top_eps; i++)
 {
 if (pole1.eps_[i] != pole2.eps_[i]){ return false; break;}
 
 }
 
-for (int i=0; i< pole1.alpha_.size(); i++)
+for (int i=0; i< top_alpha; i++)
 {
 if (pole1.alpha_[i] != pole2.alpha_[i]){ return false; break;}
 
