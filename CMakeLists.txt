@@ -11,6 +11,22 @@ if (NOT BUILD_DOC)
 	set(BUILD_DOC OFF)
 endif()
 
+find_package(Boost 1.71.0)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  IF(BOOST_MP)
+    ADD_DEFINITIONS(-DBOOST_MP)
+	message("Using boost::multiprecision.")
+  else()
+	message("Multiprecision is likely available but not enabled")
+  ENDIF(BOOST_MP)
+  
+else()
+
+message("Boost not found, so using standard precision. To enable multiprecision use -DBOOST_MP=ON. ")
+
+endif()
+
 
 # Add the cmake folder so the FindSphinx module is found
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -40,12 +56,18 @@ set(LIB_FILES
 ADD_LIBRARY(ami SHARED ${LIB_FILES})
 
 
-#target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} m)
-if(MACOSX)
-target_link_libraries(${PROJECT_NAME}  m)
+
+IF(BOOST_MP)
+target_link_libraries(${PROJECT_NAME} m quadmath  )
 else()
-target_link_libraries(${PROJECT_NAME}  m)
-endif()
+target_link_libraries(${PROJECT_NAME} m)
+ENDIF(BOOST_MP)
+
+# if(MACOSX)
+# target_link_libraries(${PROJECT_NAME}  m)
+# else()
+# target_link_libraries(${PROJECT_NAME}  m)
+# endif()
    
    INSTALL(TARGETS ami 
    ARCHIVE DESTINATION "lib/"

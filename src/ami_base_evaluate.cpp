@@ -122,10 +122,19 @@ return final_result;
 
 
 std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K, g_prod_t &unique_g, R_ref_t &Rref,ref_eval_t &Eval_list, ami_vars external){
+// std::cout<<precision_cutoff<<std::endl;
 
 
-std::complex<double> output=0;
+
+#ifdef BOOST_MP
+std::complex<boost::multiprecision::float128> term;
+std::complex<boost::multiprecision::float128> output(0,0);
+boost::multiprecision::float128 prefactor=external.prefactor;
+#else
 std::complex<double> term;
+std::complex<double> output=0;
+double prefactor=external.prefactor;
+#endif
 // std::complex<double> gprod;
 
 
@@ -136,9 +145,14 @@ for(int i=0; i< unique_g.size(); i++){
 g_prod_t this_term;
 this_term.push_back(unique_g[i]);
 
-unique_vals.push_back(eval_gprod(parms,this_term,external)*external.prefactor); // This removes the overall prefactor for each g. we then add that back later
+std::complex<double> gprod=eval_gprod(parms,this_term,external)*external.prefactor;
+
+
+unique_vals.push_back(gprod); // This removes the overall prefactor for each g. we then add that back later
 
 }
+
+
 
 
 // std::cout<<"Debugging Energy values "<<std::endl;
@@ -169,7 +183,11 @@ bool verbose=0;
 
 for(int i=0; i< Eval_list.size(); i++){
 
+	// #ifdef BOOST_MP
+	// std::complex<boost::multiprecision::float128> ksum(0,0);
+	// #else
 	std::complex<double> ksum(0,0);
+	// #endif
 	for(int j=0; j< Eval_list[i].size(); j++){
 		// std::cout<<j<<" "<<K[0][Eval_list[i][j].first]<<" "<<double(Eval_list[i][j].second)<<std::endl;
 		ksum+=K[0][Eval_list[i][j].first]*double(Eval_list[i][j].second);
@@ -177,6 +195,19 @@ for(int i=0; i< Eval_list.size(); i++){
 	}
 	// in principle, every entry in eval_list has the same Rref terms
 	ref_v_t pair_vec= Rref[i]; // just grab the first one
+	
+	#ifdef BOOST_MP
+	std::complex<boost::multiprecision::float128> this_gprod(1,0);
+	for(int j=0; j< pair_vec.size(); j++){
+	// std::cout<<pair_vec[j].first<<" ";
+	std::complex<boost::multiprecision::float128> this_val=unique_vals[pair_vec[j].first];
+	this_gprod=this_gprod*this_val;
+
+	}
+	std::complex<boost::multiprecision::float128> ksum_mp(ksum.real(), ksum.imag());
+	term=ksum_mp*this_gprod*prefactor;
+	#else
+	
 	std::complex<double> this_gprod(1,0);
 
 	// std::cout<<"Term comprised of unique G indexes ";
@@ -187,23 +218,40 @@ for(int i=0; i< Eval_list.size(); i++){
 	}
 
 	// std::cout<<std::endl;
+	term=ksum*this_gprod*prefactor; // add back the overall prefactor for this term
 
-	term=ksum*this_gprod*external.prefactor; // add back the overall prefactor for this term
+	
+if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))> precision_cutoff) ){
+	// std::cout<<"Overflow? "<<this_gprod<<std::endl;
+	// std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+		overflow_detected=true;	
+	}
+
+	#endif
 
 
+// if(std::abs(std::real(term))>100000){
 	// std::cout<<"In optimized star K[]*R"<<std::endl;
 // std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// }
+
 
 	output+=term;
 
 
 }
 
+// std::complex<double> final_output;
+
+#ifdef BOOST_MP
+std::complex<double> final_output(output.real().convert_to<double>(), output.imag().convert_to<double>());
+#else
+std::complex<double> final_output=output;
+#endif
 
 
 
-
-return output;
+return final_output;
 
 }
 
@@ -314,9 +362,16 @@ print_output=false;
 gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
 
+
+if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))> precision_cutoff) ){
+		overflow_detected=true;	
+	}else{
+
 if((std::floor(std::abs(std::real(gprod)))==std::abs(std::real(gprod))) && std::abs(std::real(gprod)) !=0 ){
 	
 overflow_detected=true;	
+	
+}
 	
 }
 
@@ -756,6 +811,81 @@ output=1.0/denom_prod*prefactor;
 
 return output;
 }
+
+
+#ifdef BOOST_MP
+
+std::complex<boost::multiprecision::float128> AmiBase::eval_gprod_mp(ami_parms &parms, g_prod_t g_prod, ami_vars external){
+std::complex<boost::multiprecision::float128> output(0,0);
+
+std::complex<boost::multiprecision::float128> denom_prod(1,0);
+boost::multiprecision::float128 prefactor=external.prefactor;
+// std::cout<<"Evaluating with prefactor "<< prefactor<<std::endl;
+
+double E_REG=parms.E_REG_;
+
+bool verbose=false;
+// int N_EXT=parms.N_EXT_;
+
+// std::cout<<"Eval Gprod"<<std::endl;
+
+for(int i=0; i< g_prod.size(); i++){
+std::complex<boost::multiprecision::float128> alphadenom(0,0);
+std::complex<boost::multiprecision::float128> epsdenom(0,0);
+
+
+ for(int a=0; a< g_prod[i].alpha_.size(); a++){
+alphadenom+=double(g_prod[i].alpha_[a])*external.frequency_[a];
+
+}
+// TODO: Right here, if the denom==0 still, then the R entry was empty, so regulate the next section, eps -> eps+i0+
+
+std::complex<double> zero(0,0);
+std::complex<double> im(0,1);
+
+
+// std::cout<<"Energies"<<std::endl;
+// Unsure. should this be -=? given that my epsilon is the positive quantity?
+for(int a=0; a< g_prod[i].eps_.size(); a++){
+epsdenom+=double(g_prod[i].eps_[a])*external.energy_[a];
+//denom-=double(g_prod[i].eps_[a])*external.energy_[a];
+// if(verbose){
+// std::cout<<a<<" "<<g_prod[i].eps_[a]<<" ext "<< external.energy_[a]<<" "<<std::endl;
+// }
+}
+
+// For safety this is disabled.  No regulator whatsoever.
+// if(alphadenom==zero){
+	// return zero;
+	// double val=E_REG*sgn(epsdenom.real());
+	// alphadenom+=val*im;
+// alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*sgn(epsdenom.imag())*im;
+// alphadenom+=E_REG*sgn(epsdenom.real())+E_REG*im;
+// std::cout<<"Added ereg in gprod_eval "<<alphadenom<<std::endl;
+// verbose=true;
+// alphadenom+=E_REG;
+// }
+
+std::complex<boost::multiprecision::float128> alphadenom_mp(alphadenom.real(), alphadenom.imag());
+std::complex<boost::multiprecision::float128> epsdenom_mp(epsdenom.real(), epsdenom.imag());
+
+
+denom_prod=denom_prod*(alphadenom_mp+epsdenom_mp);
+// std::cout<<"alphadenom:  "<<alphadenom<<"  epsdenom:  "<<epsdenom<<"  prefactor:  "<<prefactor<<std::endl;
+
+
+}
+
+std::complex<boost::multiprecision::float128> one(1,0);
+
+output=one/denom_prod*prefactor;
+
+
+
+return output;
+}
+
+#endif
 
 
 /// Using notation to match https://doi.org/10.1103/PhysRevB.99.035120.

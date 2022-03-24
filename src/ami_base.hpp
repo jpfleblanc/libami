@@ -22,6 +22,14 @@
 #include <functional> 
 
 
+#ifdef BOOST_MP
+
+#include <boost/multiprecision/complex128.hpp>
+#include <boost/multiprecision/float128.hpp>
+
+#endif
+
+
 
 
 
@@ -72,6 +80,8 @@ bool drop_matsubara_poles=false; // if set to true, ignores Matsubara poles with
 // bool is_real_external=false;
 bool zero_external_w=false;
 bool overflow_detected=false;
+
+double precision_cutoff=1e15; // By default this is set to roughly the precision of double.  If values exceed this then numerical overflow is guaranteed
 
 // External list of energies and frequencies 
 /// The energy of each denominator will always appear as a linear combination of these initial (pre integration) energies, \f$\epsilon_1, \epsilon_2\f$ ..etc  
@@ -427,7 +437,9 @@ std::complex<double>  get_energy_from_g(g_struct g, ami_vars external);
 /// Evaluates a product of Green's functions. 
 std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod, ami_vars external);
 
-
+#ifdef BOOST_MP
+std::complex<boost::multiprecision::float128> eval_gprod_mp(ami_parms &parms, g_prod_t g_prod, ami_vars external);
+#endif
 
 /**
  *
