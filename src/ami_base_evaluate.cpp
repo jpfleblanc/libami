@@ -183,14 +183,25 @@ bool verbose=0;
 
 for(int i=0; i< Eval_list.size(); i++){
 
-	// #ifdef BOOST_MP
-	// std::complex<boost::multiprecision::float128> ksum(0,0);
-	// #else
+	#ifdef BOOST_MP
+	std::complex<boost::multiprecision::float128> ksum(0,0);
+	#else
 	std::complex<double> ksum(0,0);
-	// #endif
+	#endif
 	for(int j=0; j< Eval_list[i].size(); j++){
 		// std::cout<<j<<" "<<K[0][Eval_list[i][j].first]<<" "<<double(Eval_list[i][j].second)<<std::endl;
-		ksum+=K[0][Eval_list[i][j].first]*double(Eval_list[i][j].second);
+		
+		#ifdef BOOST_MP
+		std::complex<boost::multiprecision::float128> this_k(K[0][Eval_list[i][j].first].real(),K[0][Eval_list[i][j].first].imag());
+		boost::multiprecision::float128 factor=double(Eval_list[i][j].second);
+		
+		#else 
+			std::complex<double> this_k=K[0][Eval_list[i][j].first];
+			double factor=double(Eval_list[i][j].second);
+		#endif
+		
+		
+		ksum+=this_k*factor;
 
 	}
 	// in principle, every entry in eval_list has the same Rref terms
@@ -230,9 +241,9 @@ if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))>
 	#endif
 
 
-// if(std::abs(std::real(term))>100000){
+// if(term.real()>100000){
 	// std::cout<<"In optimized star K[]*R"<<std::endl;
-// std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+// std::cout<< std::setprecision(std::numeric_limits<boost::multiprecision::float128>::max_digits10)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 // }
 
 
@@ -249,6 +260,11 @@ std::complex<double> final_output(output.real().convert_to<double>(), output.ima
 std::complex<double> final_output=output;
 #endif
 
+// if(final_output.real()>100){
+	
+	// std::cout<<"Final output was "<<final_output<<std::endl;
+// std::cout<<"------------"<<std::endl;	
+// }
 
 
 return final_output;
