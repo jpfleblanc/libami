@@ -241,7 +241,8 @@ if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))>
 	#endif
 
 
-// if(term.real()>100000){
+// if(boost::multiprecision::abs(std::real(term))>100000){
+	// verbose=true;
 	// std::cout<<"In optimized star K[]*R"<<std::endl;
 // std::cout<< std::setprecision(std::numeric_limits<boost::multiprecision::float128>::max_digits10)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
 // }
@@ -254,13 +255,22 @@ if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))>
 
 // std::complex<double> final_output;
 
-#ifdef BOOST_MP
-std::complex<double> final_output(output.real().convert_to<double>(), output.imag().convert_to<double>());
-#else
-std::complex<double> final_output=output;
-#endif
+	#ifdef BOOST_MP
+		std::complex<double> final_output(output.real().convert_to<double>(), output.imag().convert_to<double>());
 
-// if(final_output.real()>100){
+
+		// if(std::abs(std::real(final_output))>1){
+			// verbose=true;
+			// std::cout<<"In optimized star K[]*R"<<std::endl;
+		// std::cout<< std::setprecision(std::numeric_limits<boost::multiprecision::float128>::max_digits10)<< final_output <<std::endl;
+		// }
+
+
+	#else
+		std::complex<double> final_output=output;
+	#endif
+
+// if(verbose){
 	
 	// std::cout<<"Final output was "<<final_output<<std::endl;
 // std::cout<<"------------"<<std::endl;	
