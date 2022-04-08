@@ -179,7 +179,7 @@ unique_vals.push_back(gprod); // This removes the overall prefactor for each g. 
 
 // now I have the numerical values of our unique G's
 
-bool verbose=0;
+// bool verbose=0;
 
 for(int i=0; i< Eval_list.size(); i++){
 
@@ -388,6 +388,11 @@ print_output=false;
 gprod=eval_gprod(parms, R[i], external);
 term=K[0][i]*gprod;
 
+// if overflow flag not set then check for overflow 
+if(!overflow_detected){
+if(std::abs(std::real(K[0][i]))> precision_cutoff){
+overflow_detected=true;	
+}
 
 if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))> precision_cutoff) ){
 		overflow_detected=true;	
@@ -399,6 +404,7 @@ overflow_detected=true;
 	
 }
 	
+}
 }
 
 
@@ -552,8 +558,10 @@ return output;
 /// Evaluation of a single pole in Fermi/Bose functions for a given `ami_vars`.
 std::complex<double>  AmiBase::fermi_pole(ami_parms &parms, pole_struct pole, ami_vars external){
 
-// std::cout<<"Working on pole"<<std::endl;
-// print_pole_struct_info(pole);
+if(verbose){
+std::cout<<"Working on pole"<<std::endl;
+print_pole_struct_info(pole);
+}
 
 std::complex<double>  output,term;
 int eta=0;
@@ -664,8 +672,9 @@ int m=pole.der_;
 // std::cout<<m<<" "<<sigma<<" "<<beta<<" "<<E<<std::endl;
 output=fermi_bose(m,sigma,beta,E);
 
-// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
-
+if(verbose){
+std::cout<<"Fermi Pole Term evaluated to "<< output << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+}
 
 if(parms.TYPE_==AmiBase::doubleocc){
 output=-1.0*output;
@@ -678,6 +687,9 @@ output=-1.0*output;
 
 return output;
 }
+
+
+
 
 /// This computes the mth order derivative of the Fermi function or the negative of the Bose distribution functions given by \f$\frac{1}{\sigma \exp^{\beta E}+1} \f$ at \f$ \beta\f$, for energy \f$ E\f$. \f$ \sigma=1.0\f$ for Fermi and -1.0 for Bose.
 std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta, std::complex<double> E){
@@ -711,20 +723,31 @@ output=1.0/(sigma*std::exp(beta*(E))+1.0);
 }else{  // compute m'th derivative
 
 for( int k=0; k<m+1; k++){
-	// std::cout<<"On k'th derivative "<<k<<std::endl;
-	// depricated: Original format 
-	// term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
 	
-	term= frk(m,k)*std::pow(sigma,k) *std::pow(-1.0, k+1)*(1.0/(sigma*std::exp(beta*(E))+1.0)/std::pow(sigma +std::exp(-beta*(E)), k)) ;
+	// depricated: Original format 
+	term= frk(m,k)*std::exp(k*beta*(E))*std::pow(sigma,k) *std::pow(-1.0, k+1)/std::pow(sigma*std::exp(beta*(E))+1.0, k+1) ;
+	
+	// term= frk(m,k)*std::pow(sigma,k) *std::pow(-1.0, k+1)*(1.0/(sigma*std::exp(beta*(E))+1.0)/std::pow(sigma +std::exp(-beta*(E)), k)) ;
 	output+= term;
 	
-	// std::cout<<"Fermi Pole Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	if(verbose){
+	std::cout<<"On k'th derivative "<<k<<std::endl;
+	
+	std::cout<<"Fermi-bose Term evaluated to "<< term << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	}
 }
 
 output=output*std::pow(beta,m)*(-1.0);
+
+if( (std::abs(std::real(output))> precision_cutoff)  ){
+		overflow_detected=true;	
+	}
+
 }
 
 	// std::cout<<"Fermi Pole output evaluated to "<< output << " at energy "<< E<<" with sigma "<<sigma<< " betaE is "<< beta*E<<" in exponent "<< std::exp(beta*(E))<< std::endl;
+	
+	
 
 return output;
 

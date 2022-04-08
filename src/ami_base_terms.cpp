@@ -29,6 +29,10 @@ integrate_step(index, these_terms, next_terms);
 these_terms=next_terms;	
 	
 }
+
+// std::cout<<"Resulting terms are "<<std::endl;
+// std::cout<<"Term count is "<<these_terms.size()<<std::endl;
+// print_terms(these_terms);
 	
 // put new terms in the list 
 terms_out.insert(terms_out.end(), these_terms.begin(), these_terms.end());	

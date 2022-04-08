@@ -34,7 +34,9 @@ for(int i=0; i< Eval_list.size(); i++){
 	
 	std::complex<double> ksum(0,0);
 	for( int j=0; j< Eval_list[i].size(); j++){
-		// std::cout<<j<<" "<< eval_fprod(parms, ami_terms[Eval_list[i][j].first].p_list, external)*ami_terms[Eval_list[i][j].first].sign<<" "<<double(Eval_list[i][j].second)<<std::endl;
+			if(verbose){
+			std::cout<<j<<" "<< eval_fprod(parms, ami_terms[Eval_list[i][j].first].p_list, external)*ami_terms[Eval_list[i][j].first].sign<<" "<<double(Eval_list[i][j].second)<<std::endl;
+			}
 		std::complex<double> kterm= eval_fprod(parms, ami_terms[Eval_list[i][j].first].p_list, external);
 		
 		ksum+= kterm*ami_terms[Eval_list[i][j].first].sign * double(Eval_list[i][j].second);
@@ -57,9 +59,10 @@ for(int i=0; i< Eval_list.size(); i++){
 		
 		term=ksum*this_gprod*external.prefactor; 
 		
-		// std::cout<<"In optimized star K[]*R"<<std::endl;
-// std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
-		
+		if(verbose){
+		std::cout<<"In term evaluate K[]*R"<<std::endl;
+std::cout<< std::setprecision(20)<< i<<" "<< ksum <<" "<< std::real(this_gprod)<<" "<<std::imag(this_gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<std::endl;
+		}
 		
 		
 		output+= term;
@@ -90,8 +93,13 @@ std::complex<double> output(0,0);
 
 for(int i=0; i< ami_terms.size(); i++){
 	// std::cout<<"On term="<<i<<" ";
-	output+=evaluate_term(parms, ami_terms[i], external);
+	std::complex<double> this_term=evaluate_term(parms, ami_terms[i], external);
+	output+=this_term;
 	
+	// if(std::abs(this_term.real())> 1e8){ verbose=true;}
+	if(verbose){
+	std::cout<<"Term gave "<<i<<" "<< this_term<<" and current total is : "<<output<<std::endl;
+	}
 }
 
 
@@ -122,8 +130,9 @@ std::complex<double> output(0,0);
 
 output=ami_term.sign*gprod*fprod;
 
-// std::cout<<"Term gave "<< ami_term.sign*fprod<<" "<< gprod<<" "<<output<<std::endl;
-
+if(verbose){
+std::cout<<"Term gave "<< ami_term.sign*fprod<<" "<< gprod<<" "<<output<<std::endl;
+}
 return output;
 
 }
@@ -141,7 +150,13 @@ std::complex<double> output(1,0);
 
 for(int i=0; i< p_list.size(); i++){
 	
-	output=output*fermi_pole(parms, p_list[i], external);
+	std::complex<double> pole_val=fermi_pole(parms, p_list[i], external);
+	if(verbose){
+		
+		std::cout<<"On pole "<<i<<" returned value "<<pole_val<<std::endl;
+	}
+	
+	output=output*pole_val;//fermi_pole(parms, p_list[i], external);
 	
 }
 	
