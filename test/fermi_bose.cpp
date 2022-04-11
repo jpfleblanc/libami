@@ -93,7 +93,7 @@ from_analytic=( std::pow( beta, 2.0) * (std::exp(E*beta)-1.0)*std::exp(E*beta) /
 
 // ASSERT_DOUBLE_EQ(from_analytic.real(),from_analytic2.real());
 
-ASSERT_DOUBLE_EQ(from_func.real(),from_analytic.real());
+ASSERT_NEAR(from_func.real(),from_analytic.real(), 1e-13);
 
 }
 
