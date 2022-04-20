@@ -5,3 +5,4 @@ testing
 *.bak
 build
 install
+compile.sh

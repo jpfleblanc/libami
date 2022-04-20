@@ -398,8 +398,10 @@ if( (std::abs(std::real(term))> precision_cutoff) || (std::abs(std::imag(term))>
 		overflow_detected=true;	
 	}else{
 
-if((std::floor(std::abs(std::real(gprod)))==std::abs(std::real(gprod))) && std::abs(std::real(gprod)) !=0 ){
-	
+
+// edit = G can be exactly equal to 1 without indicating an overflow 
+if((std::floor(std::abs(std::real(gprod)))==std::abs(std::real(gprod))) && std::abs(std::real(gprod)) !=1 ){
+	// std::cout<< std::setprecision(20)<< i<<" "<< K[0][i] <<" "<< std::real(gprod)<<" "<<std::imag(gprod)<< " "<<std::real(term)<<" "<< std::imag(term) <<" CO="<<output <<std::endl;
 overflow_detected=true;	
 	
 }
@@ -740,6 +742,7 @@ for( int k=0; k<m+1; k++){
 output=output*std::pow(beta,m)*(-1.0);
 
 if( (std::abs(std::real(output))> precision_cutoff)  ){
+	// std::cout<<"Overflow in feri_bose with value "<<output<<std::endl;
 		overflow_detected=true;	
 	}
 

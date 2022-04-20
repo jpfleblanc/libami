@@ -9,10 +9,18 @@ add_executable(${PROJECT_NAME}
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -DUSE_MPI -lstdc++fs")# -msse4.2")# -ffast-math -funsafe-math-optimizations -msse4.2")# -ffast-math")
 
+if(LIBAMI_ROOT)
+link_directories(${LIBAMI_ROOT}/lib)
+include_directories(${LIBAMI_ROOT}/include)
+target_link_libraries(${PROJECT_NAME}  ${LIBAMI_ROOT}/lib/libami.so
+ m )
+else()
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/include)
-
-target_link_libraries(${PROJECT_NAME} ${ALPSCore_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib/libami.so
+target_link_libraries(${PROJECT_NAME}  ${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib/libami.so
  m )
+ENDIF(LIBAMI_ROOT)
+
+
 
 
