@@ -241,8 +241,8 @@ AmiBase::pole_array_t AmiBase::find_poles(int index, AmiBase::g_prod_t &R) {
         }
       }
 
-      // added may 26 2021
-      // extra check if the pole is only a fermionic frequency
+      
+      // Context: extra check if the pole is only a fermionic frequency
 
       bool non_zero = false;
       if (drop_matsubara_poles) {
@@ -284,10 +284,7 @@ bool AmiBase::pole_equiv(pole_struct pole1, pole_struct pole2) {
 
   int top_eps = pole1.eps_.size();
   int top_alpha = pole1.alpha_.size();
-  // if(zero_external_w){
-  // top_alpha--;
-  // }
-
+  
   for (int i = 0; i < top_eps; i++) {
     if (pole1.eps_[i] != pole2.eps_[i]) {
       return false;
@@ -375,7 +372,6 @@ void AmiBase::update_gprod_simple(int index, AmiBase::R_t &R_array,
     pole_array_t cor_poles;
 
     for (int i = 0; i < poles.size(); i++) {
-      // append to the next R_array
       for (int m = 0; m < poles[i].multiplicity_; m++) {
         temp_g_array.push_back(simple_residue(R_array[index][j], poles[i]));
         cor_poles.push_back(poles[i]);
@@ -408,8 +404,7 @@ void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in,
                                        AmiBase::Ri_t &Ri_out,
                                        AmiBase::pole_array_t &poles,
                                        AmiBase::sign_t &signs) {
-  // std::cout<<"------Starting a residue---------"<<std::endl;
-
+  
   double starting_sign;
   starting_sign = get_starting_sign(G_in, pole);
 
@@ -427,23 +422,14 @@ void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in,
   temp_pole_in.push_back(pole);
   // take derivatives
   for (int m = 0; m < pole.multiplicity_ - 1; m++) {
-    // std::cout<<"On derivative "<<m+1<<std::endl;
-    // std::cout<<"temp ri has size "<<temp_ri.size()<<std::endl;
+
     for (int i = 0; i < temp_ri.size(); i++) {
       // First store the fermi derivative part
-      // std::cout<<"On i="<<i<<std::endl;
+
 
       take_derivative_gprod(temp_ri[i], temp_pole_in[i], temp_signs[i],
                             temp_ri_out, temp_poles_out, temp_signs_out);
 
-      // std::cout<<"Temp ri out has size "<<temp_ri_out.size()<<std::endl;
-      // std::cout<<"Temp poles out has size
-      // "<<temp_poles_out.size()<<std::endl; std::cout<<"Temp signs out
-      // has size "<<temp_signs_out.size()<<std::endl; for(int k=0; k<
-      // temp_poles_out.size(); k++){ std::cout<<"Pole "<<k<<" with der="<<
-      // temp_poles_out[k].der_<<std::endl;
-
-      // }
 
       for (int add = 0; add < temp_ri_out.size(); add++) {
         collect_ri.push_back(temp_ri_out[add]);
@@ -451,9 +437,6 @@ void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in,
         collect_signs.push_back(temp_signs_out[add]);
       }
     }
-
-    // std::cout<<"Temp_ri_out has size "<<temp_ri_out.size()<<std::endl;
-    // std::cout<<"Collect ri has size "<<collect_ri.size()<<std::endl;
 
     temp_ri = collect_ri;         // temp_ri_out;
     temp_signs = collect_signs;   // temp_signs_out;
@@ -471,7 +454,6 @@ void AmiBase::evaluate_general_residue(AmiBase::g_prod_t G_in,
   // sub in pole at the end
   for (int i = 0; i < Ri_out.size(); i++) {
     for (int j = 0; j < Ri_out[i].size(); j++) {
-      // std::cout<<i<<" "<<j<<std::endl;
       Ri_out[i][j] = update_G_pole(Ri_out[i][j], pole);
     }
   }
@@ -540,8 +522,6 @@ double AmiBase::get_starting_sign(AmiBase::g_prod_t G_in,
   for (int i = 0; i < pole.which_g_.size(); i++) {
     result = result * (double)G_in[pole.which_g_[i]].alpha_[pole.index_];
   }
-
-  // std::cout<<"On pole with multiplicity "<<pole.multiplicity_<<std::endl;
 
   result = result / (double)factorial(pole.multiplicity_ - 1);
 

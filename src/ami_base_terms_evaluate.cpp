@@ -90,12 +90,11 @@ std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms,
   std::complex<double> output(0, 0);
 
   for (int i = 0; i < ami_terms.size(); i++) {
-    // std::cout<<"On term="<<i<<" ";
+   
     std::complex<double> this_term =
         evaluate_term(parms, ami_terms[i], external);
     output += this_term;
 
-    // if(std::abs(this_term.real())> 1e8){ verbose=true;}
     if (verbose) {
       std::cout << "Term gave " << i << " " << this_term
                 << " and current total is : " << output << std::endl;

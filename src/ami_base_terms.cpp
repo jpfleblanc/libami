@@ -20,17 +20,10 @@ void AmiBase::construct(int N_INT, g_prod_t R0, terms &terms_out) {
   terms next_terms;
 
   for (int index = 0; index < N_INT; index++) {
-    // std::cout<<"On step "<<index<<std::endl;
-    // std::cout<<"Term count is "<<these_terms.size()<<std::endl;
-    // print_terms(these_terms);
 
     integrate_step(index, these_terms, next_terms);
     these_terms = next_terms;
   }
-
-  // std::cout<<"Resulting terms are "<<std::endl;
-  // std::cout<<"Term count is "<<these_terms.size()<<std::endl;
-  // print_terms(these_terms);
 
   // put new terms in the list
   terms_out.insert(terms_out.end(), these_terms.begin(), these_terms.end());
@@ -143,19 +136,11 @@ void AmiBase::terms_general_residue(term &this_term, pole_struct this_pole,
 
 void AmiBase::take_term_derivative(term &in_term, pole_struct &pole,
                                    terms &out_terms) {
-  // out_terms.clear();
-
+  
   terms fd_terms;
   terms gd_terms;
 
-  // std::cout<<"Taking derivative of term "<<std::endl;
-  // std::cout<<"Current term is "<<std::endl;
-
-  // print_term(in_term);
-
-  // We don't have a list. we just have one always.
-  // first we take the derivative of the product of p_list f's
-
+ 
   // Deprecated
   /*  // This was a function to take derivatives of chains of f functions. we
   just have one always for( int one=0; one< in_term.p_list.size(); one++){ term
@@ -220,6 +205,7 @@ void AmiBase::take_term_derivative(term &in_term, pole_struct &pole,
   out_terms.insert(out_terms.end(), gd_terms.begin(), gd_terms.end());
 }
 
+// Deprecated
 /*
 void AmiBase::take_gprod_term_derivative(term &in_term, pole_struct &pole,
 terms &out_terms){

@@ -125,7 +125,7 @@ public:
   /// Current version presumes all integration frequencies are Fermionic.
   typedef enum { Bose, Fermi } stat_type;
 
-  // Ideally these types will not appear in the ami_base class
+  // Eventually these types will not appear in the ami_base class
   /// Graph types will likely be removed/replaced in a future release.  Current
   /// support is limited to Sigma and Pi_phuu graph types.  set graph_type=0 for
   /// Fermionic external line, and =1 for Bosonic.
@@ -427,17 +427,12 @@ public:
   double get_simple_sign(int index, g_prod_t &R, pole_struct pole);
 
   // Functions for R's P's and S's
-  // TODO: Of these three only 'update_gprod_general' is actually used. 'Simple'
-  // is the case with no multi-poles.
   void update_gprod_simple(int index, R_t &R_array, P_t &P_array, S_t &S_array);
 
   void update_gprod_general(int int_index, int array_index, R_t &R_array,
                             P_t &P_array, S_t &S_array);
 
   // Functions for Evaluation
-  // Testing Priority: 1 - these should all be testable - and form the backbone
-  // of the evaluation This is the star function from AMI paper below equation
-  // 20: Define the function here and reference the paper: prb 99 035120
   std::complex<double> star(ami_parms &parms, SorF_t H, Ri_t R,
                             ami_vars external);
 
@@ -451,7 +446,6 @@ public:
   // challenging function for numerical evaluation.  It is the most likely
   // source of issue or errors and some thought should go into testing this
   // carefully
-  // Testing Priority: 1
   std::complex<double> fermi_pole(ami_parms &parms, pole_struct pole,
                                   ami_vars external);
 
@@ -462,7 +456,6 @@ public:
   /// AMI paper  (https://doi.org/10.1103/PhysRevB.99.035120).
   SorF_t dot(Si_t Si, SorF_t fermi);
 
-  // Testing Priority: 2 should be easy to test
   /// Given a set of external energies, beta, and frequencies, will evaluate the
   /// energy of a pole_struct.
   std::complex<double> get_energy_from_pole(pole_struct pole,
@@ -519,8 +512,7 @@ public:
 
   // This is actually a pretty important function. probably needs a more clear
   // name and documentation as to what it does
-  // TODO:may be deprecated function.
-
+  
   /**
    * As part of the construction of the `Si_t` arrays, the initial sign is
    * extracted prior to taking derivatives.  Also is multiplied by
