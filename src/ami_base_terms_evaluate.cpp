@@ -43,6 +43,11 @@ std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms,
       std::complex<double> kterm =
           eval_fprod(parms, ami_terms[Eval_list[i][j].first].p_list, external);
 
+	if (verbose) {
+		std::cout<<"Kterm: "<<j<<": "<< kterm<<std::endl;
+	}
+
+
       ksum += kterm * ami_terms[Eval_list[i][j].first].sign *
               double(Eval_list[i][j].second);
     }

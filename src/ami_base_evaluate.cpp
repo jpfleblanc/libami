@@ -74,14 +74,17 @@ std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K,
   std::complex<boost::multiprecision::float128> term;
   std::complex<boost::multiprecision::float128> output(0, 0);
   boost::multiprecision::float128 prefactor = external.prefactor;
+  
+  std::vector<std::complex<boost::multiprecision::float128>> unique_vals;
 #else
   std::complex<double> term;
   std::complex<double> output = 0;
   double prefactor = external.prefactor;
+  std::vector<std::complex<double>> unique_vals;
 #endif
   
 
-  std::vector<std::complex<double>> unique_vals;
+  
 
   for (int i = 0; i < unique_g.size(); i++) {
     // Context: we pretend each G is a g_prod and use the same function as the normal
@@ -91,6 +94,11 @@ std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K,
 
     std::complex<double> gprod =
         eval_gprod(parms, this_term, external) * external.prefactor;
+		
+		if ((std::abs(std::real(gprod)) > precision_cutoff) ||
+        (std::abs(std::imag(gprod)) > precision_cutoff)) {
+      overflow_detected = true;
+    }
 
     unique_vals.push_back(gprod); // This removes the overall prefactor for
                                   // each g. we then add that back later
@@ -131,10 +139,21 @@ std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K,
       std::complex<boost::multiprecision::float128> this_val =
           unique_vals[pair_vec[j].first];
       this_gprod = this_gprod * this_val;
+	  
+	  if(verbose){
+		std::cout<<j<<" "<< this_val<<" "<< this_gprod<<std::endl;  
+		  }
+	  
     }
     std::complex<boost::multiprecision::float128> ksum_mp(ksum.real(),
                                                           ksum.imag());
     term = ksum_mp * this_gprod * prefactor;
+	
+	
+    if ((boost::multiprecision::abs(std::real(term)) > precision_cutoff) ||
+        (boost::multiprecision::abs(std::imag(term)) > precision_cutoff)) {
+      overflow_detected = true;
+    }
 #else
 
     std::complex<double> this_gprod(1, 0);
@@ -472,6 +491,12 @@ std::complex<double> AmiBase::fermi_pole(ami_parms &parms, pole_struct pole,
     std::cout << "Fermi Pole Term evaluated to " << output << " at energy " << E
               << " with sigma " << sigma << " betaE is " << beta * E
               << " in exponent " << std::exp(beta * (E)) << std::endl;
+			  
+	std::cout<<"Energy list is :(";
+		for(int ii=0; ii< external.energy_.size(); ii++){
+			std::cout<<" "<<external.energy_[ii]<<" ,";
+		}
+		std::cout<<")"<<std::endl;
   }
 
   if (parms.TYPE_ == AmiBase::doubleocc) {
