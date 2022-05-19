@@ -72,6 +72,7 @@ std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K,
 
 #ifdef BOOST_MP
   std::complex<boost::multiprecision::float128> term;
+  std::complex<boost::multiprecision::float128> gprod;
   std::complex<boost::multiprecision::float128> output(0, 0);
   boost::multiprecision::float128 prefactor = external.prefactor;
   
@@ -81,6 +82,7 @@ std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K,
   std::complex<double> output = 0;
   double prefactor = external.prefactor;
   std::vector<std::complex<double>> unique_vals;
+  std::complex<double> gprod;
 #endif
   
 
@@ -92,13 +94,25 @@ std::complex<double> AmiBase::optimized_star(ami_parms &parms, SorF_t K,
     g_prod_t this_term;
     this_term.push_back(unique_g[i]);
 
-    std::complex<double> gprod =
-        eval_gprod(parms, this_term, external) * external.prefactor;
-		
-		if ((std::abs(std::real(gprod)) > precision_cutoff) ||
+#ifdef BOOST_MP
+	gprod =
+        eval_gprod_mp(parms, this_term, external) * prefactor;
+
+
+	if ((boost::multiprecision::abs(std::real(gprod)) > precision_cutoff) ||
+        (boost::multiprecision::abs(std::imag(gprod)) > precision_cutoff)) {
+      overflow_detected = true;
+    }
+#else
+	gprod =
+			eval_gprod(parms, this_term, external) * prefactor;
+	
+
+    if ((std::abs(std::real(gprod)) > precision_cutoff) ||
         (std::abs(std::imag(gprod)) > precision_cutoff)) {
       overflow_detected = true;
     }
+#endif
 
     unique_vals.push_back(gprod); // This removes the overall prefactor for
                                   // each g. we then add that back later
@@ -494,7 +508,7 @@ std::complex<double> AmiBase::fermi_pole(ami_parms &parms, pole_struct pole,
 			  
 	std::cout<<"Energy list is :(";
 		for(int ii=0; ii< external.energy_.size(); ii++){
-			std::cout<<" "<<external.energy_[ii]<<" ,";
+			std::cout<<std::setprecision(20)<<" "<<external.energy_[ii]<<" ,";
 		}
 		std::cout<<")"<<std::endl;
   }
