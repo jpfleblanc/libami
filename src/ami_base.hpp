@@ -574,6 +574,13 @@ public:
   */
   std::complex<double> evaluate(ami_parms &parms, R_t &R_array, P_t &P_array,
                                 S_t &S_array, ami_vars &external);
+                                
+  std::complex<double> evaluate_otf(ami_parms &parms, R_t &R_array, P_t &P_array,
+                                S_t &S_array, ami_vars &external);
+                                
+  // OFT functions
+  std::complex<double> detect_otf_trigger(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external);  
+  void get_triggers(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external, std::vector< std::vector<int>> &triggers);
 
   // Optimization functions are not documented.  May be implemented
   // automatically at some stage.

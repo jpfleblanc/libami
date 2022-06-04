@@ -13,10 +13,75 @@ example4();
 example9();
 
 		
-	
+//safe_example();	
 	
 }
 
+void safe_example(){
+  
+  std::cout<<std::endl<<"-_-_-_ Example - Second Order _-_-_-"<<std::endl<<std::endl;	
+	
+//START example	
+std::cout<<"-----Constructing AMI SPR format -----"<<std::endl;
+// class instance
+AmiBase ami;
+
+// Problem setup (see ami_example.cpp)
+AmiBase::g_prod_t R0=construct_example2_safe(); // Sets initial integrand 
+AmiBase::ami_vars avars=construct_ext_example2_safe(); // Sets 'external' parameter values 
+
+	//timing info
+	auto t1=std::chrono::high_resolution_clock::now();
+
+// Storage objects for S,P,R 
+AmiBase::S_t S_array;
+AmiBase::P_t P_array;
+AmiBase::R_t R_array;
+
+// Integration/Evaluation parameters
+double E_REG=0; // Numerical regulator for small energies.  If inf/nan results try E_REG=1e-8 
+int N_INT=2;  // Number of Matsubara sums to perform
+AmiBase::ami_parms test_amiparms(N_INT, E_REG);
+
+//Construction Stage
+ami.construct(test_amiparms, R0, R_array, P_array, S_array);  // Populates S,P,R with solution 
+
+	//timing info 
+	auto t2=std::chrono::high_resolution_clock::now();
+
+// Evaluate the result
+std::complex<double> calc_result=ami.evaluate(test_amiparms,R_array, P_array, S_array,  avars);	// Evaluate integrand for parameters in 'avars'
+	
+	//timing info
+	auto t_end=std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff1=t2-t1;
+	std::chrono::duration<double> diff2=t_end-t2;
+
+	std::chrono::microseconds d=std::chrono::duration_cast<std::chrono::microseconds>(diff1);
+	std::chrono::microseconds d2=std::chrono::duration_cast<std::chrono::microseconds>(diff2);
+
+std::cout<<"Result was "<< calc_result<<std::endl;
+std::cout<<"Construction took "<<d.count()<<" microseconds"<<std::endl;
+std::cout<<"Evaluation took "<< d2.count()<<" microseconds"<<std::endl;	
+ 
+
+auto t_otf1=std::chrono::high_resolution_clock::now(); 
+ 
+for( double n=0.9; n<1.1; n+=0.001){ 
+avars.energy_[0]=n; 
+calc_result=ami.evaluate_otf(test_amiparms,R_array, P_array, S_array,  avars); 
+
+std::cout<<n<<" "<<calc_result.real()<<" "<< calc_result.imag()<<std::endl;
+
+}
+auto t_otf2=std::chrono::high_resolution_clock::now();
+std::chrono::duration<double> diffotf=t_otf2-t_otf1;
+std::chrono::microseconds dotf=std::chrono::duration_cast<std::chrono::microseconds>(diffotf);
+std::cout<<"Result for OTF evaluation was "<< calc_result<<std::endl;
+std::cout<<"Evaluation took "<< dotf.count() <<" microseconds"<<std::endl;	
+  
+}
 
 
 void example2(){

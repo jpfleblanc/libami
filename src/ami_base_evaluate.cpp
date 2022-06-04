@@ -568,7 +568,7 @@ std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta,
 
     output = output * std::pow(beta, m) * (-1.0);
 
-    if ((std::abs(std::real(output)) > precision_cutoff)) {
+    if ((std::abs(std::real(output)) > precision_cutoff)|| (std::abs(std::imag(output)) > precision_cutoff)) {
     
       overflow_detected = true;
     }
@@ -728,3 +728,186 @@ int AmiBase::binomialCoeff(int n, int k) {
 
   return res;
 }
+
+void AmiBase::get_triggers(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external, std::vector< std::vector<int>> &triggers){
+triggers.clear(); 
+
+
+
+// for(int i=0; i<R_array.size(); i++){
+  // for(int j=0; j<R_array[i].size(); j++){
+    // for(int m=0; m<R_array[i][j].size(); m++){
+      // std::cout<<"On: "<<i<<" "<<j<<" "<<m<<std::endl;
+      // print_g_struct_info(R_array[i][j][m]);
+      
+// }}}
+
+// for(int i=0; i<P_array.size(); i++){
+  // for(int j=0; j<P_array[i].size(); j++){
+    // for(int m=0; m<P_array[i][j].size(); m++){
+      // std::cout<<"On: "<<i<<" "<<j<<" "<<m<<std::endl;
+      // print_pole_struct_info(P_array[i][j][m]);
+      
+// }}}
+
+
+for(int i=0; i<R_array.size(); i++){
+  for(int j=0; j<R_array[i].size(); j++){
+    for(int m=0; m<R_array[i][j].size(); m++){
+  
+  std::complex<double> epsdenom(0, 0);
+   std::complex<double> zero(0, 0);
+   bool not_symbolic_zero=false;
+  for (int a = 0; a < R_array[i][j][m].eps_.size(); a++) {
+      epsdenom += double(R_array[i][j][m].eps_[a]) * external.energy_[a];
+
+    if(R_array[i][j][m].eps_[a]!=0){
+      not_symbolic_zero=true;
+    }
+
+    }
+    // std::cout<<"On i,j: "<<i<<" "<<j<<" "<<m<<" eps denom gave "<<epsdenom<<std::endl;
+  
+    if(epsdenom==zero && not_symbolic_zero){
+      std::vector<int> issue={i,j,m};
+      triggers.push_back(issue);
+      
+      
+      
+    }
+  
+    // std::cout<<"On i,j: "<<i<<" "<<j<<"Evaluation gave "<<eval_gprod(parms, R_array[i][j], external)<<std::endl;
+    }
+  }
+  
+  // if(triggers.size()!=0){
+    // break;
+  // }
+  
+}
+ 
+
+
+  
+  
+  
+}
+
+std::complex<double> AmiBase::detect_otf_trigger(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external){
+
+std::vector< std::vector<int>> triggers;
+
+
+// for(int i=0; i<R_array.size(); i++){
+  // for(int j=0; j<R_array[i].size(); j++){
+    // for(int m=0; m<R_array[i][j].size(); m++){
+      // std::cout<<"On: "<<i<<" "<<j<<" "<<m<<std::endl;
+      // print_g_struct_info(R_array[i][j][m]);
+      
+// }}}
+
+// for(int i=0; i<P_array.size(); i++){
+  // for(int j=0; j<P_array[i].size(); j++){
+    // for(int m=0; m<P_array[i][j].size(); m++){
+      // std::cout<<"On: "<<i<<" "<<j<<" "<<m<<std::endl;
+      // print_pole_struct_info(P_array[i][j][m]);
+      
+// }}}
+
+
+get_triggers(parms,R_array, P_array, S_array,external, triggers);
+
+if(triggers.size()==0){
+std::complex<double> calc_result=evaluate(parms,R_array, P_array, S_array,  external);
+
+// std::cout<<"Returning result for OTF evaluation was "<< calc_result<<std::endl;
+  return calc_result;
+}
+
+// std::cout<<"At end triggers contains "<<std::endl;
+// for(int i=0; i< triggers.size(); i++){
+  // std::cout<<triggers[i][0]<<" "<<triggers[i][1]<<" "<<triggers[i][2]<<std::endl;  
+// }
+R_t R_otf;
+P_t P_otf;
+S_t S_otf;
+//
+
+
+// std::cout<<"Trigger size is "<<triggers.size()<<std::endl;
+// std::cout<<"R_otf size is "<<R_otf.size()<<std::endl;
+for(int i=0; i<triggers.back()[0]+1; i++){
+R_otf.push_back(R_array[i]);
+if(i<triggers.back()[0]){
+P_otf.push_back(P_array[i]);
+S_otf.push_back(S_array[i]);
+}
+
+}
+
+for(int i=0; i<triggers.size(); i++){
+
+
+int a=triggers[i][0];
+int b=triggers[i][1];
+int c=triggers[i][2];  
+  // here I just zero the epsilon 
+      std::fill(R_otf[a][b][c].eps_.begin(), R_otf[a][b][c].eps_.end(),0.0);
+  
+  
+}
+
+
+// std::cout<<"R_otf size is "<<R_otf.size()<<std::endl;
+// Now have the original starting point. 
+int dim = parms.N_INT_;
+
+ for (int index = R_otf.size()-1; index < dim; index++) {
+   // std::cout<<"On index:"<< index<<std::endl;
+   // std::cout<<"Size of R before "<<R_otf.size()<<std::endl;
+    update_gprod_general(index, index, R_otf, P_otf, S_otf);
+    // std::cout<<"Size of R after "<<R_otf.size()<<std::endl;
+  }
+
+return detect_otf_trigger(parms, R_otf, P_otf, S_otf, external);
+
+
+// get_triggers(parms,R_otf, P_otf, S_otf,external, triggers);
+// std::cout<<"After OTF triggers contains "<<std::endl;
+// for(int i=0; i< triggers.size(); i++){
+  // std::cout<<triggers[i][0]<<" "<<triggers[i][1]<<" "<<triggers[i][2]<<std::endl;  
+// }
+
+// for(int i=0; i<R_otf.size(); i++){
+  // for(int j=0; j<R_otf[i].size(); j++){
+    // for(int m=0; m<R_otf[i][j].size(); m++){
+      // std::cout<<"On: "<<i<<" "<<j<<" "<<m<<std::endl;
+      // print_g_struct_info(R_otf[i][j][m]);
+      
+// }}}
+
+// for(int i=0; i<P_otf.size(); i++){
+  // for(int j=0; j<P_otf[i].size(); j++){
+    // for(int m=0; m<P_otf[i][j].size(); m++){
+      // std::cout<<"On: "<<i<<" "<<j<<" "<<m<<std::endl;
+      // print_pole_struct_info(P_otf[i][j][m]);
+      
+// }}}
+
+// std::cout<<"Evaluating"<<std::endl;
+// std::complex<double> calc_result=evaluate(parms,R_otf, P_otf, S_otf,  external);
+
+// std::cout<<"Result for OTF evaluation was "<< calc_result<<std::endl;
+  // return calc_result;
+}
+
+std::complex<double> AmiBase::evaluate_otf(ami_parms &parms, R_t &R_array,
+                                       P_t &P_array, S_t &S_array,
+                                       ami_vars &external) {
+  overflow_detected = false;
+  
+  bool otf=false;
+  return detect_otf_trigger(parms, R_array, P_array, S_array, external);
+  
+}
+
