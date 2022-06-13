@@ -663,3 +663,65 @@ AmiBase::ami_vars external(energy, frequency,BETA);
 return external;
 
 }
+
+AmiBase::g_prod_t construct_example3_safe(){
+
+AmiBase::g_prod_t g;
+
+// Setting up G array
+// defining alpha's /// std::vector<int>
+
+
+AmiBase::alpha_t alpha_1={1,-1,1,0};
+AmiBase::alpha_t alpha_2={1,-1,1,0};
+AmiBase::alpha_t alpha_3={1,0,0,0};
+AmiBase::alpha_t alpha_4={0,1,0,0};
+AmiBase::alpha_t alpha_5={0,0,1,0};
+
+//defining epsilon's
+AmiBase::epsilon_t epsilon_1={1,0,0,0,0};
+AmiBase::epsilon_t epsilon_2={0,1,0,0,0};
+AmiBase::epsilon_t epsilon_3={0,0,1,0,0};
+AmiBase::epsilon_t epsilon_4={0,0,0,1,0};
+AmiBase::epsilon_t epsilon_5={0,0,0,0,1};
+
+AmiBase::g_struct g1(epsilon_1,alpha_1);
+AmiBase::g_struct g2(epsilon_2,alpha_2);
+AmiBase::g_struct g3(epsilon_3,alpha_3);
+AmiBase::g_struct g4(epsilon_4,alpha_4);
+AmiBase::g_struct g5(epsilon_5,alpha_5);
+
+// AmiBase::g_prod_t R0={g1,g2,g3};
+
+// OR
+AmiBase::g_prod_t R0;
+R0.push_back(g1);
+R0.push_back(g2);
+R0.push_back(g3);
+R0.push_back(g4);
+R0.push_back(g5);
+
+
+
+
+return R0;
+
+}
+
+AmiBase::ami_vars construct_ext_example3_safe(){
+
+
+AmiBase::energy_t energy={-2,-2,-3.41421,-2.82843,-1.41421};
+
+AmiBase::frequency_t frequency;
+
+for(int i=0;i<3;i++){ frequency.push_back(std::complex<double>(0,0));}
+
+frequency.push_back(std::complex<double>(0,M_PI));
+
+double BETA=1.0;
+AmiBase::ami_vars external(energy, frequency,BETA);
+
+return external;
+
+}

@@ -33,6 +33,7 @@ AmiBase::g_prod_t construct_multipole_example();
 AmiBase::g_prod_t construct_hm_multipole_example();
 AmiBase::g_prod_t construct_example2();
 AmiBase::g_prod_t construct_example2_safe();
+AmiBase::g_prod_t construct_example3_safe();
 AmiBase::g_prod_t construct_example1_bose();
 
 AmiBase::g_prod_t construct_example_Y();
@@ -44,6 +45,7 @@ AmiBase::ami_vars construct_ext_example_Y();
 AmiBase::ami_vars construct_ext_example_J();
 AmiBase::ami_vars construct_ext_example2();
 AmiBase::ami_vars construct_ext_example2_safe();
+AmiBase::ami_vars construct_ext_example3_safe();
 AmiBase::ami_vars construct_ext_example1_bose();
 AmiBase::ami_vars construct_ext_multipole_example();
 AmiBase::ami_vars construct_6ord_ext_multipole_example();

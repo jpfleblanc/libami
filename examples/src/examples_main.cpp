@@ -7,13 +7,13 @@ int main(int argc, char** argv)
 {
 	
 
-example2();
-example1_bose();
-example4();
-example9();
+// example2();
+// example1_bose();
+// example4();
+// example9();
 
 		
-//safe_example();	
+safe_example();	
 	
 }
 
@@ -27,8 +27,8 @@ std::cout<<"-----Constructing AMI SPR format -----"<<std::endl;
 AmiBase ami;
 
 // Problem setup (see ami_example.cpp)
-AmiBase::g_prod_t R0=construct_example2_safe(); // Sets initial integrand 
-AmiBase::ami_vars avars=construct_ext_example2_safe(); // Sets 'external' parameter values 
+AmiBase::g_prod_t R0=construct_example3_safe(); // Sets initial integrand 
+AmiBase::ami_vars avars=construct_ext_example3_safe(); // Sets 'external' parameter values 
 
 	//timing info
 	auto t1=std::chrono::high_resolution_clock::now();
@@ -68,13 +68,15 @@ std::cout<<"Evaluation took "<< d2.count()<<" microseconds"<<std::endl;
 
 auto t_otf1=std::chrono::high_resolution_clock::now(); 
  
-for( double n=0.9; n<1.1; n+=0.001){ 
+for( double n=-2.04; n<-1.96; n+=0.001){ 
 avars.energy_[0]=n; 
+if(std::abs(n+2)< 1e-5){avars.energy_[0]=-2;}
 calc_result=ami.evaluate_otf(test_amiparms,R_array, P_array, S_array,  avars); 
-
-std::cout<<n<<" "<<calc_result.real()<<" "<< calc_result.imag()<<std::endl;
+std::complex<double> normal=ami.evaluate(test_amiparms,R_array, P_array, S_array,  avars);
+std::cout<<n<<" "<<calc_result.real()<<" "<< calc_result.imag()<<" "<< normal.real()<<" "<<normal.imag()<<std::endl;
 
 }
+
 auto t_otf2=std::chrono::high_resolution_clock::now();
 std::chrono::duration<double> diffotf=t_otf2-t_otf1;
 std::chrono::microseconds dotf=std::chrono::duration_cast<std::chrono::microseconds>(diffotf);

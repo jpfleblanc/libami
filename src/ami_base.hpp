@@ -52,6 +52,14 @@ class AmiBase {
 public:
   /// Returns the sign of a value - or zero if it is uniquely zero.
   template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
+  
+  // template for checking equality of vectors
+  template<typename T>
+  bool isEqual(std::vector<T> const &v1, std::vector<T> const &v2)
+  {
+      return (v1.size() == v2.size() &&
+              std::equal(v1.begin(), v1.end(), v2.begin()));
+  }
 
   // Maximum argument allowed for fermi and bose functions - to prevent inf due
   // to double precision numbers
@@ -205,6 +213,9 @@ public:
     /// control divergences.  Should be zero by default and switched on if
     /// needed.
     double E_REG_ = 0;
+    
+    /// Tolerence to determine equality
+    double tol_ = 1e-12;
 
     ami_parms(int N_INT, double E_REG) {
       N_INT_ = N_INT;
@@ -581,6 +592,7 @@ public:
   // OFT functions
   std::complex<double> detect_otf_trigger(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external);  
   void get_triggers(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external, std::vector< std::vector<int>> &triggers);
+  void find_equal_values(ami_parms &parms, R_t &R_array, ami_vars &external, std::vector<std::vector<int>> &equal_pairs);
 
   // Optimization functions are not documented.  May be implemented
   // automatically at some stage.
