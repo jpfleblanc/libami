@@ -7,19 +7,19 @@ int main(int argc, char** argv)
 {
 	
 
-// example2();
-// example1_bose();
-// example4();
-// example9();
+example2();
+example1_bose();
+example4();
+example9();
 
 		
-safe_example();	
+// safe_example();	
 	
 }
 
 void safe_example(){
   
-  std::cout<<std::endl<<"-_-_-_ Example - Second Order _-_-_-"<<std::endl<<std::endl;	
+  std::cout<<std::endl<<"-_-_-_ Example - Safe Evaluation - Experimental _-_-_-"<<std::endl<<std::endl;	
 	
 //START example	
 std::cout<<"-----Constructing AMI SPR format -----"<<std::endl;
@@ -40,7 +40,7 @@ AmiBase::R_t R_array;
 
 // Integration/Evaluation parameters
 double E_REG=0; // Numerical regulator for small energies.  If inf/nan results try E_REG=1e-8 
-int N_INT=2;  // Number of Matsubara sums to perform
+int N_INT=3;  // Number of Matsubara sums to perform
 AmiBase::ami_parms test_amiparms(N_INT, E_REG);
 
 //Construction Stage
@@ -67,15 +67,15 @@ std::cout<<"Evaluation took "<< d2.count()<<" microseconds"<<std::endl;
  
 
 auto t_otf1=std::chrono::high_resolution_clock::now(); 
- 
-for( double n=-2.04; n<-1.96; n+=0.001){ 
-avars.energy_[0]=n; 
-if(std::abs(n+2)< 1e-5){avars.energy_[0]=-2;}
+double n; 
+// for( double n=-2.04; n<-1.96; n+=0.001){ 
+// avars.energy_[0]=n; 
+// if(std::abs(n+2)< 1e-5){avars.energy_[0]=-2;}
 calc_result=ami.evaluate_otf(test_amiparms,R_array, P_array, S_array,  avars); 
 std::complex<double> normal=ami.evaluate(test_amiparms,R_array, P_array, S_array,  avars);
 std::cout<<n<<" "<<calc_result.real()<<" "<< calc_result.imag()<<" "<< normal.real()<<" "<<normal.imag()<<std::endl;
 
-}
+// }
 
 auto t_otf2=std::chrono::high_resolution_clock::now();
 std::chrono::duration<double> diffotf=t_otf2-t_otf1;

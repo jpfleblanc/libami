@@ -624,6 +624,14 @@ public:
   void print_epsilon_info(epsilon_t eps);
   void print_alpha_info(alpha_t alpha);
   void print_pole_struct_info(pole_struct g);
+  void print_final( int dim, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array);
+  void print_S( int dim, AmiBase::S_t &S_array);
+  void print_P( int dim, AmiBase::P_t &P_array);
+  void print_Pi( int dim, AmiBase::Pi_t &Pi_array);
+  void print_R( int dim, AmiBase::R_t &R_array);
+  void print_g_prod_array(AmiBase::g_prod_array_t g_array);
+  void print_pole_array(AmiBase::pole_array_t g);
+  void print_g_prod_info(AmiBase::g_prod_t g);
   ////
 
   // experimental

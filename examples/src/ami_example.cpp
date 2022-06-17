@@ -711,7 +711,7 @@ return R0;
 AmiBase::ami_vars construct_ext_example3_safe(){
 
 
-AmiBase::energy_t energy={-2,-2,-3.41421,-2.82843,-1.41421};
+AmiBase::energy_t energy={-4,-4,-4,-0,-0};//{-0.585786,-0.585786,-4,-0.585786,2.82843};//{-2,-2,-4,-4,-2};//{-2,-2,-3.41421,-2.82843,-1.41421};
 
 AmiBase::frequency_t frequency;
 

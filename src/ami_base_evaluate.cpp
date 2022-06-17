@@ -245,6 +245,7 @@ std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array,
   }
 
   for (int i = 0; i < dim - 1; i++) {
+    // std::cout<<"i is "<<i<<" of dim:"<<dim<<std::endl;
     SorF_t SF_left, SF_right;
     SorF_t S_double_left, S_double_right;
 
@@ -348,6 +349,8 @@ AmiBase::SorF_t AmiBase::dot(Si_t Si, SorF_t fermi) {
 
     output.push_back(line);
   }
+  
+  // std::cout<<"Returning dot output of size "<<output.size()<<std::endl;
 
   return output;
 }
@@ -357,19 +360,18 @@ AmiBase::SorF_t AmiBase::cross(SorF_t left, SorF_t right) {
   SorF_t output;
 
   std::vector<std::complex<double>> line;
+  
   line.reserve(left[0].size() *
                right.back().size()); // just guess that the last one is
                                      // the biggest for reservation
 
   for (int i = 0; i < left[0].size(); i++) {
     for (int rj = 0; rj < right[i].size(); rj++) {
-      // std::cout<<"i and rj are "<<i<<" "<<rj<<std::endl ;
       line.push_back(left[0][i] * right[i][rj]);
     }
   }
 
   output.push_back(line);
-
   return output;
 }
 
@@ -827,7 +829,111 @@ if(equal_pairs.size()!=0){
   
 }
 
+void AmiBase::print_final( int dim, AmiBase::R_t &R_array, AmiBase::P_t &P_array, AmiBase::S_t &S_array){
 
+print_S(dim, S_array);
+print_P( dim, P_array);
+print_R( dim, R_array);
+
+
+}
+
+
+void AmiBase::print_S( int dim, AmiBase::S_t &S_array){
+
+std::cout<<"Printing S"<<std::endl;
+ for (int i=0; i< S_array.size();i++){
+std::cout<<"S["<<i<<"]=(";
+  for (int j=0; j< S_array[i].size(); j++){
+    std::cout<<"{";
+    for (int k=0; k< S_array[i][j].size(); k++){
+
+    std::cout<<S_array[i][j][k]<<" ";
+    }
+    std::cout<<"}";
+  }
+std::cout<<")";
+std::cout<<std::endl;
+ }
+std::cout<<std::endl;
+
+
+
+}
+
+void AmiBase::print_P( int dim, AmiBase::P_t &P_array){
+
+for (int i=0; i< P_array.size(); i++){
+std::cout<< "P["<< i<<"]=";
+
+print_Pi(dim, P_array[i]);
+
+}
+
+
+}
+
+
+void AmiBase::print_Pi( int dim, AmiBase::Pi_t &Pi_array){
+
+for (int i=0; i< Pi_array.size(); i++){
+std::cout<<"[";
+print_pole_array(Pi_array[i]);
+std::cout<<"]";
+std::cout<<std::endl;
+}
+std::cout<<std::endl;
+
+}
+
+void AmiBase::print_g_prod_array(AmiBase::g_prod_array_t g_array){
+
+for (int i=0; i< g_array.size(); i++){
+print_g_prod_info(g_array[i]);
+}
+
+
+}
+
+
+
+void AmiBase::print_pole_array(AmiBase::pole_array_t g){
+
+for (int i=0; i< g.size(); i++){
+print_pole_struct_info(g[i]);
+
+}
+
+
+}
+
+
+
+
+void AmiBase::print_g_prod_info(AmiBase::g_prod_t g){
+
+std::cout<<"----------Printing G_product---------- " <<std::endl;
+for (std::vector<AmiBase::g_struct>::iterator it= g.begin(); it != g.end(); ++it){
+
+std::cout<<"----------Printing next---------- " <<std::endl;
+print_g_struct_info(it[0]);
+
+}
+
+
+}
+
+
+void AmiBase::print_R( int dim, AmiBase::R_t &R_array){
+
+for (int i=0; i< R_array.size(); i++){
+std::cout<< "R["<< i<<"]=";
+
+print_g_prod_array(R_array[i]);
+
+}
+
+}
 
 std::complex<double> AmiBase::detect_otf_trigger(ami_parms &parms, R_t &R_array,P_t &P_array, S_t &S_array,ami_vars &external){
 
@@ -844,6 +950,11 @@ find_equal_values(parms,R_array,external,pairs);
 // std::cout<<"Pairs size is "<<pairs.size()<<std::endl;
 
 if(triggers.size()==0 && pairs.size()==0){
+  // std::cout<<"Evaluating"<<std::endl;
+  // std::cout<<"Sizes "<<R_array.size()<<" "<<P_array.size()<<" "<<S_array.size()<<std::endl;
+ 
+print_final(parms.N_INT_, R_array, P_array, S_array); 
+  
 std::complex<double> calc_result=evaluate(parms,R_array, P_array, S_array,  external);
 
 // std::cout<<"Returning result for OTF evaluation was "<< calc_result<<std::endl;
@@ -888,7 +999,7 @@ P_t P_otf;
 S_t S_otf;
 //
 
-
+// std::cout<<"Problem start is "<<problem_start<<std::endl;
 
 // std::cout<<"R_otf size is "<<R_otf.size()<<std::endl;
 for(int i=0; i<problem_start+1; i++){
@@ -940,6 +1051,8 @@ int dim = parms.N_INT_;
    // std::cout<<"Size of R before "<<R_otf.size()<<std::endl;
     update_gprod_general(index, index, R_otf, P_otf, S_otf);
     // std::cout<<"Size of R after "<<R_otf.size()<<std::endl;
+    // if the last entry of R has size==0 then there were no suitable poles and the result is just zero 
+    if(R_otf.back().size()==0){ return 0.0;}
   }
 
 return detect_otf_trigger(parms, R_otf, P_otf, S_otf, external);
