@@ -260,7 +260,10 @@ std::complex<double> AmiBase::evaluate(ami_parms &parms, R_t &R_array,
     // do dot
 
     SF_right = dot(S_array[i + 1], fermi(parms, P_array[i + 1], external));
-
+    //If the dot product is empty it means that the result is zero. 
+    if(SF_right.size()==0){
+      return 0;
+    }
 
 
     SorF_result = cross(SF_left, SF_right);
@@ -953,7 +956,7 @@ if(triggers.size()==0 && pairs.size()==0){
   // std::cout<<"Evaluating"<<std::endl;
   // std::cout<<"Sizes "<<R_array.size()<<" "<<P_array.size()<<" "<<S_array.size()<<std::endl;
  
-print_final(parms.N_INT_, R_array, P_array, S_array); 
+// print_final(parms.N_INT_, R_array, P_array, S_array); 
   
 std::complex<double> calc_result=evaluate(parms,R_array, P_array, S_array,  external);
 
@@ -1052,7 +1055,9 @@ int dim = parms.N_INT_;
     update_gprod_general(index, index, R_otf, P_otf, S_otf);
     // std::cout<<"Size of R after "<<R_otf.size()<<std::endl;
     // if the last entry of R has size==0 then there were no suitable poles and the result is just zero 
-    if(R_otf.back().size()==0){ return 0.0;}
+    // debugging: if there are no poles then R will be empty. how is this separate from when R is empty when there are poles but no remaining Green's functions?
+    // if R_otf is zero  then the final step has to handle the empty pole array. 
+    // if(R_otf.back().size()==0){ return 0.0;}
   }
 
 return detect_otf_trigger(parms, R_otf, P_otf, S_otf, external);
