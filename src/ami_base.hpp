@@ -78,7 +78,7 @@ public:
   bool drop_der = false; // if set to true, then E_REG not needed because
                          // bosonic divergences will simply be set to zero.
                          // Rigorously this may not be correct.
-  bool drop_matsubara_poles = true; // if set to true, ignores Matsubara poles with zero energy
+  bool drop_matsubara_poles = false; // if set to true, ignores Matsubara poles with zero energy
   // bool is_real_external=false;
   bool zero_external_w = false;
   bool overflow_detected = false;
