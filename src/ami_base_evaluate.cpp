@@ -334,6 +334,7 @@ std::complex<double> AmiBase::star(ami_parms &parms, SorF_t K, Ri_t R,
 
   // file.close();
 
+  // std::cout<<"Final output is "<<output<<std::endl;
 
   return output;
 }
@@ -754,13 +755,10 @@ for(int i=0; i<R_array.size(); i++){
 
     }
     // std::cout<<"On i,j: "<<i<<" "<<j<<" "<<m<<" eps denom gave "<<epsdenom<<std::endl;
-  
-    if(epsdenom==zero && not_symbolic_zero){
+    bool is_zero= std::abs(epsdenom)<1e-15;
+    if((epsdenom==zero || epsdenom==-zero) && not_symbolic_zero){
       std::vector<int> issue={i,j,m};
       triggers.push_back(issue);
-      
-      
-      
     }
   
     // std::cout<<"On i,j: "<<i<<" "<<j<<"Evaluation gave "<<eval_gprod(parms, R_array[i][j], external)<<std::endl;
@@ -788,7 +786,8 @@ for(int i=0; i<R_array.size(); i++){
 void AmiBase::find_equal_values(ami_parms &parms, R_t &R_array, ami_vars &external, std::vector<std::vector<int>> &equal_pairs){
 equal_pairs.clear(); 
 
-double tol=parms.tol_;
+// double tol=parms.tol_;
+// replaced tol with explicit equality
 
 for (int ord=0; ord<R_array.size(); ord++){
   for(int num=0; num<R_array[ord].size(); num++){
@@ -807,7 +806,7 @@ for (int ord=0; ord<R_array.size(); ord++){
       eps_n += double(R_array[ord][num][n].eps_[a]) * external.energy_[a];
         }
         
-        if(std::abs(eps_m-eps_n)<tol){
+        if(eps_m==eps_n){
         
         std::vector<int> this_pair{ord,num,m,n};
         equal_pairs.push_back(this_pair);
@@ -956,6 +955,7 @@ if(triggers.size()==0 && pairs.size()==0){
   // std::cout<<"Evaluating"<<std::endl;
   // std::cout<<"Sizes "<<R_array.size()<<" "<<P_array.size()<<" "<<S_array.size()<<std::endl;
  
+// std::cout<<"Final expression is "<<std::endl; 
 // print_final(parms.N_INT_, R_array, P_array, S_array); 
   
 std::complex<double> calc_result=evaluate(parms,R_array, P_array, S_array,  external);
@@ -1071,6 +1071,11 @@ std::complex<double> AmiBase::evaluate_otf(ami_parms &parms, R_t &R_array,
   overflow_detected = false;
   
   bool otf=false;
+  
+  // std::cout<<"Starting expression is "<<std::endl;
+  // print_final(parms.N_INT_, R_array, P_array, S_array);
+  
+  
   return detect_otf_trigger(parms, R_array, P_array, S_array, external);
   
 }
