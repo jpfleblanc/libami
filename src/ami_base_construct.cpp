@@ -247,9 +247,17 @@ AmiBase::pole_array_t AmiBase::find_poles(int index, AmiBase::g_prod_t &R) {
       bool non_zero = false;
       if (drop_matsubara_poles) {
         int zcount = std::count(pole.eps_.begin(), pole.eps_.end(), 0);
+        
         if (zcount < pole.eps_.size()) {
           non_zero = true;
         }
+        
+        // At this point if the energy is all zeros then if the nucount is even, then it should be ok
+        if(!non_zero){
+          int nucount = std::count(pole.alpha_.begin(), pole.alpha_.end(), 0);
+          if(nucount%2==0){ non_zero=true;}
+        }
+        
       } else {
         non_zero = true;
       }
