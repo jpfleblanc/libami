@@ -458,9 +458,11 @@ std::complex<double> AmiBase::fermi_pole(ami_parms &parms, pole_struct pole,
   // if this is a double occupancy graph then the external line is bosonic. so
   // it is a bosonic matsubara integral. so eta needs to be incremented IF the
   // pole is for the last integration index
-  if (parms.TYPE_ == AmiBase::doubleocc) {
+  double docc_sign=1;
+  if (parms.TYPE_ == AmiBase::doubleocc || bosonic_external) {
     if (pole.index_ == pole.alpha_.size() - 1) {
       eta++;
+      docc_sign=-1;
     
     }
   }
@@ -519,8 +521,9 @@ std::complex<double> AmiBase::fermi_pole(ami_parms &parms, pole_struct pole,
 		std::cout<<")"<<std::endl;
   }
 
-  if (parms.TYPE_ == AmiBase::doubleocc) {
-    output = -1.0 * output;
+// TODO: Unclear if this is correct 
+  if (parms.TYPE_ == AmiBase::doubleocc || bosonic_external) {
+    output = docc_sign * output;
   }
 
   return output;
@@ -806,7 +809,7 @@ for (int ord=0; ord<R_array.size(); ord++){
       eps_n += double(R_array[ord][num][n].eps_[a]) * external.energy_[a];
         }
         
-        if(eps_m==eps_n){
+        if(eps_m==eps_n){ // || std::abs(eps_m-eps_n)<1e-15){
         
         std::vector<int> this_pair{ord,num,m,n};
         equal_pairs.push_back(this_pair);

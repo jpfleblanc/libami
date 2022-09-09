@@ -75,9 +75,7 @@ public:
       false; // if set to true, then E_REG not needed because bosonic
              // divergences will simply be set to zero.  Rigorously this may
              // not be correct.
-  bool drop_der = false; // if set to true, then E_REG not needed because
-                         // bosonic divergences will simply be set to zero.
-                         // Rigorously this may not be correct.
+  bool drop_der = false; // if set to true, then all fermi/bose derivative terms will be dropped
   bool drop_matsubara_poles = true; // if set to true, ignores Matsubara poles with zero energy
   // bool is_real_external=false;
   bool zero_external_w = false;
@@ -88,6 +86,8 @@ public:
       1e15; // By default this is set to roughly the precision of double.  If
             // values exceed this then numerical overflow is virtually
             // guaranteed
+            
+  bool bosonic_external=0;
 
   // External list of energies and frequencies
   /// The energy of each denominator will always appear as a linear combination
@@ -264,6 +264,7 @@ public:
       alpha_ = alpha;
       stat_ = stat;
       species_ = 0;
+      eff_stat_=stat_;
     }
 
     /// Constructor assumes fermi statistics if not specified for partially
@@ -273,12 +274,14 @@ public:
       alpha_ = alpha;
       stat_ = Fermi;
       species_ = 0;
+      eff_stat_=stat_;
     }
 
     /// Uninitialized variant.
     g_struct() {
       stat_ = Fermi;
       species_ = 0;
+      eff_stat_=stat_;
     }
 
     /// Symbolic coefficients for a linear combination of epsilons.
@@ -289,7 +292,8 @@ public:
     /// Mark Fermi/Bose stats - Fermi is required in current version.
     stat_type stat_;
     species_t species_;
-
+    
+    stat_type eff_stat_;
     // Experimental Spectral representation.  Implementation incomplete.
     int pp = -1; // pp=0 means this G represents a principle part integral.
                  // pp=1 it is a delta function. else it is inert
