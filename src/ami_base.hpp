@@ -63,6 +63,7 @@ public:
 
   // Maximum argument allowed for fermi and bose functions - to prevent inf due
   // to double precision numbers
+  // Note: Possible that this prevents catching overflow issues 
   double exp_max_arg = 500.0;
 
   /// Simple factorial function. It is rarely called except for multipole

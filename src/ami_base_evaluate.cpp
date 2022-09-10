@@ -539,19 +539,20 @@ std::complex<double> AmiBase::fermi_bose(int m, double sigma, double beta,
   output = 0.0;
 
   if (m == 0) {
-    double arg = std::real(beta * E);
-    double arg_amp = std::abs(arg);
+              // Note: Disabled on 09/09/2022 for overflow testing 
+              // double arg = std::real(beta * E);
+              // double arg_amp = std::abs(arg);
 
-    if (arg > exp_max_arg) {
-      double arg_sign = (double)sgn(arg);
-      if (arg_sign > 0) {
-        output = 0;
-      } else {
-        output = 1;
-      }
-    } else {
+              // if (arg > exp_max_arg) {
+                // double arg_sign = (double)sgn(arg);
+                // if (arg_sign > 0) {
+                  // output = 0;
+                // } else {
+                  // output = 1;
+                // }
+              // } else {
       output = 1.0 / (sigma * std::exp(beta * (E)) + 1.0);
-    }
+                // }
     // return output;
   } else { // compute m'th derivative
 
