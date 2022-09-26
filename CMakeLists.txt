@@ -130,6 +130,47 @@ add_subdirectory("doc")
 
 endif(BUILD_DOC)
 
+#########################################################
+# Pyami - requiring pybind11
+
+# See if user has pybind11 installed
+find_package(pybind11)
+if(pybind11_FOUND)
+  
+  if(MAKE_PYAMI)
+    # put pyami stuff here (note I might have extra definitions)
+    project(pyami)
+
+    set(CMAKE_CXX_RELEASE "-O3") # not sure if needed. It was in the example
+
+    include_directories("${CMAKE_SOURCE_DIR}/src")
+    include_directories("${CMAKE_SOURCE_DIR}/pyami_src")
+
+    file (GLOB SOURCE_FILES "src/*.cpp")
+    file (GLOB HEADER_FILES "src/*.hpp")
+    file (GLOB PYTHON_FILES "pyami_src/*.cpp" "pyami_src/*.hpp")
+
+    pybind11_add_module(pyami
+      ${SOURCE_FILES}
+      ${HEADER_FILES}
+      ${PYTHON_FILES}
+    )
+
+    target_link_libraries(pyami PUBLIC)
+
+
+    install(TARGETS pyami
+      COMPONENT python
+      LIBRARY DESTINATION "${PYTHON_LIBRARY_DIR}"
+    )
+
+  else()
+    message("PYAMI is available.")
+  ENDIF(MAKE_PYAMI)
+
+else()
+  message("pybind11 was not found.")
+endif()
 
 
 
