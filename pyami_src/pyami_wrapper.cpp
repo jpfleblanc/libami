@@ -62,10 +62,10 @@ void init_pyami_wrapper(py::module &m) {
     .def_readwrite("which_g_", &AmiBase::pole_struct::which_g_)
     .def_readwrite("x_alpha_", &AmiBase::pole_struct::x_alpha_);
 
-
-  m.def("construct", py::overload_cast<AmiBase::ami_parms, AmiBase::g_prod_t, AmiBase::terms>(&AmiBase::construct), "Construction function for term-by-term construction.");
+  //using test = void construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array)
+  m.def("construct", py::overload_cast<AmiBase::ami_parms &, AmiBase::g_prod_t, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &>(&AmiBase::construct), "Construction function for term-by-term construction.");
   //m.def("construct", &AmiBase::construct, "Construction function for term-by-term construction.");
 
   //py::overload_cast<AmiBase::ami_parms, AmiBase::R_t, AmiBase::P_t, AmiBase::S_t, AmiBase::ami_vars>(&AmiBase::evaluate)
-  m.def("evaluate", &AmiBase::evaluate, "This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression");
+  m.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &, AmiBase::ami_vars &>(&AmiBase::evaluate), "This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression");
 }
