@@ -1,10 +1,11 @@
 import pyami
+import math
 
 ami = pyami.AmiBase()
 
 # external variables
 energy = pyami.VectorDouble([-4, 0.1, -1])
-freq = [3.14j, 3.14j, 3.14j]
+freq = [math.pi*1j, math.pi*1j, math.pi*1j]
 beta = 1.00
 avars = pyami.AmiBase.ami_vars(energy, freq, beta)
 
@@ -38,4 +39,11 @@ ami.construct(test_amiparms, R0, R_array, P_array, S_array)
 # Get integrand for these specific external params
 ans = ami.evaluate(test_amiparms, R_array, P_array, S_array, avars)
 
-print(ans)
+
+print(f"Beta = {avars.BETA_}")
+print(f"frequencies = {avars.frequency_[0]}, {avars.frequency_[1]}, {avars.frequency_[2]}")
+print(f"energies = {avars.energy_[0]}, {avars.energy_[1]}, {avars.energy_[2]}")
+print(f"integrand: {ans}\n")
+
+
+print("AMI integrand: (0.0538982,0.0332012)")
