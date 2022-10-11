@@ -1,7 +1,14 @@
 #include "../src/ami_base.hpp"
 #include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
 #include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
+
+PYBIND11_MAKE_OPAQUE(std::vector<int>);
+PYBIND11_MAKE_OPAQUE(std::vector<double>);
+PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::vector<AmiBase::pole_struct>>>); // for mutability of P_t
+PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::vector<double>>>); // for mutability of S_t
+PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::vector<AmiBase::g_struct>>>); // for mutability of R_t
 
 namespace py = pybind11;
 
@@ -11,6 +18,12 @@ namespace py = pybind11;
 //};
 
 void init_pyami_wrapper(py::module &m) {
+	
+  py::bind_vector<std::vector<int>>(m, "VectorInt");
+  py::bind_vector<std::vector<double>>(m, "VectorDouble");
+  py::bind_vector<std::vector<std::vector<std::vector<AmiBase::pole_struct>>>>(m, "P_t");
+  py::bind_vector<std::vector<std::vector<std::vector<double>>>>(m, "S_t");
+  py::bind_vector<std::vector<std::vector<std::vector<AmiBase::g_struct>>>>(m, "R_t");
 
   py::class_<AmiBase> AmiBase(m, "AmiBase");
   AmiBase.def(py::init<>());
@@ -62,10 +75,9 @@ void init_pyami_wrapper(py::module &m) {
     .def_readwrite("which_g_", &AmiBase::pole_struct::which_g_)
     .def_readwrite("x_alpha_", &AmiBase::pole_struct::x_alpha_);
 
-  //using test = void construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array, S_t &S_array)
-  m.def("construct", py::overload_cast<AmiBase::ami_parms &, AmiBase::g_prod_t, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &>(&AmiBase::construct), "Construction function for term-by-term construction.");
-  //m.def("construct", &AmiBase::construct, "Construction function for term-by-term construction.");
+// Having issues with passing empty S_t, P_t, R_t and filling them, ie push_back is not working
 
-  //py::overload_cast<AmiBase::ami_parms, AmiBase::R_t, AmiBase::P_t, AmiBase::S_t, AmiBase::ami_vars>(&AmiBase::evaluate)
-  m.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &, AmiBase::ami_vars &>(&AmiBase::evaluate), "This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression");
+  AmiBase.def("construct", py::overload_cast<AmiBase::ami_parms &, AmiBase::g_prod_t, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &>(&AmiBase::construct), "Construction function for term-by-term construction.");
+
+  AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &, AmiBase::ami_vars &>(&AmiBase::evaluate), "This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression");
 }
