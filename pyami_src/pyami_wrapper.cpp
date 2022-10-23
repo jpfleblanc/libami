@@ -9,6 +9,11 @@ PYBIND11_MAKE_OPAQUE(std::vector<double>);
 PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::vector<AmiBase::pole_struct>>>); // for mutability of P_t
 PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::vector<double>>>); // for mutability of S_t
 PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::vector<AmiBase::g_struct>>>); // for mutability of R_t
+PYBIND11_MAKE_OPAQUE(std::vector<std::complex<double>>);
+PYBIND11_MAKE_OPAQUE(std::vector<AmiBase::g_struct>);
+PYBIND11_MAKE_OPAQUE(std::vector<std::vector<AmiBase::ref_t>>);
+PYBIND11_MAKE_OPAQUE(std::vector<AmiBase::pole_struct>);
+PYBIND11_MAKE_OPAQUE(std::vector<AmiBase::term>);
 
 namespace py = pybind11;
 
@@ -24,6 +29,11 @@ void init_pyami_wrapper(py::module &m) {
   py::bind_vector<std::vector<std::vector<std::vector<AmiBase::pole_struct>>>>(m, "P_t");
   py::bind_vector<std::vector<std::vector<std::vector<double>>>>(m, "S_t");
   py::bind_vector<std::vector<std::vector<std::vector<AmiBase::g_struct>>>>(m, "R_t");
+  py::bind_vector<std::vector<std::complex<double>>>(m, "VectorComplex");
+  py::bind_vector<std::vector<AmiBase::g_struct>>(m, "g_prod_t");
+  py::bind_vector<std::vector<std::vector<AmiBase::ref_t>>>(m, "R_ref_t");
+  py::bind_vector<std::vector<AmiBase::pole_struct>>(m, "pole_array_t");
+  py::bind_vector<std::vector<AmiBase::term>>(m, "terms");
 
   py::class_<AmiBase> AmiBase(m, "AmiBase");
   AmiBase.def(py::init<>());
@@ -75,9 +85,28 @@ void init_pyami_wrapper(py::module &m) {
     .def_readwrite("which_g_", &AmiBase::pole_struct::which_g_)
     .def_readwrite("x_alpha_", &AmiBase::pole_struct::x_alpha_);
 
-// Having issues with passing empty S_t, P_t, R_t and filling them, ie push_back is not working
+
+  py::class_<AmiBase::term> (AmiBase, "term")
+    .def(py::init<>())
+    .def(py::init<double, AmiBase::pole_array_t, AmiBase::g_prod_t>())
+    .def_readwrite("sign", &AmiBase::term::sign)
+    .def_readwrite("p_list", &AmiBase::term::p_list)
+    .def_readwrite("g_list", &AmiBase::term::g_list);
 
   AmiBase.def("construct", py::overload_cast<AmiBase::ami_parms &, AmiBase::g_prod_t, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &>(&AmiBase::construct), "Construction function for term-by-term construction.");
 
   AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &, AmiBase::ami_vars &>(&AmiBase::evaluate), "This is the primary evaluation which takes again `ami_parms`, the outputs from `construct` as well as the `ami_vars` external values that enter into the expression");
+
+
+  AmiBase.def("factorize_Rn", &AmiBase::factorize_Rn, "Optimize function for SPR notation.");
+
+  AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::R_t &, AmiBase::P_t &, AmiBase::S_t &, AmiBase::ami_vars &, AmiBase::g_prod_t &, AmiBase::R_ref_t &, AmiBase::ref_eval_t &>(&AmiBase::evaluate), "This is an optimized version of the evaluate function. For simplicity if the additional arguments are empty the evaluate function is called directly.");
+
+  AmiBase.def("construct", py::overload_cast<int, AmiBase::g_prod_t, AmiBase::terms &>(&AmiBase::construct), "Construction function for term-by-term construction.");
+
+  AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::terms &, AmiBase::ami_vars &>(&AmiBase::evaluate), "Evaluate Terms.");
+
+  AmiBase.def("factorize_terms", &AmiBase::factorize_terms, "Optimize factorize function for terms notation.");
+
+  AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::terms &, AmiBase::ami_vars &, AmiBase::g_prod_t &, AmiBase::R_ref_t &, AmiBase::ref_eval_t &>(&AmiBase::evaluate), "Optimized evaluate function for terms notation.");
 }
