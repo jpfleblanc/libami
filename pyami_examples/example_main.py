@@ -46,9 +46,9 @@ def example_2():
     # time the end of eval
     t_end = time.time()
 
-    # millisecond result
-    diff1 = (t2 - t1) * 1000
-    diff2 = (t_end - t2) * 1000
+    # microsecond result
+    diff1 = (t2 - t1) * 1000000
+    diff2 = (t_end - t2) * 1000000
 
     # print results
     print(f"Result was {calc_result}")
@@ -77,9 +77,9 @@ def example_2():
     # end eval time
     t5 = time.time()
 
-    #timing stuff in milliseconds
-    diff3 = (t4 - t3) * 1000
-    diff4 = (t5 - t4) * 1000
+    #timing stuff in microseconds
+    diff3 = (t4 - t3) * 1000000
+    diff4 = (t5 - t4) * 1000000
 
     print(f"Optimized result was {opt_calc_result}")
     print(f"Factorization returned {len(unique)} unique Green's functions and took {diff3} microseconds")
@@ -104,8 +104,8 @@ def example_2():
 
     t8 = time.time()
 
-    diff5 = (t7 - t6) * 1000
-    diff6 = (t8 - t7) * 1000
+    diff5 = (t7 - t6) * 1000000
+    diff6 = (t8 - t7) * 1000000
     print(f"Construction took {diff5} microseconds")
     print(f"Result has num_terms={len(amiterms)} compared to standard {len(R_array[N_INT])}")
     print(f"Term result was {term_val}")
@@ -125,8 +125,8 @@ def example_2():
     opt_term_val = ami.evaluate(test_amiparms, amiterms, avars, unique, rref, eval_list)
 
     t11 = time.time()
-    diff7 = (t9 - t8) * 1000
-    diff8 = (t10 - t9) * 1000
+    diff7 = (t9 - t8) * 1000000
+    diff8 = (t10 - t9) * 1000000
 
     print(f"OPT term val= {opt_term_val}")
     print(f"Factorization returned {len(unique)} unique Green's functions and took {diff7} microseconds")
