@@ -165,11 +165,11 @@ if(pybind11_FOUND)
     )
 
   else()
-    message("PYAMI is available.")
+    message("PYAMI is available. But is not being compiled.  To Enable set MAKE_PYAMI=ON and set PYTHON_LIBRARY_DIR path for installation.")
   ENDIF(MAKE_PYAMI)
 
 else()
-  message("pybind11 was not found.")
+  message("pybind11 was not found.  Python library will not be compiled. Continuing without.")
 endif()
 
 
