@@ -17,16 +17,34 @@ endif()
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -DUSE_MPI -lstdc++fs")# -msse4.2")# -ffast-math -funsafe-math-optimizations -msse4.2")# -ffast-math")
 
+
+
 if(LIBAMI_ROOT)
 link_directories(${LIBAMI_ROOT}/lib)
 include_directories(${LIBAMI_ROOT}/include)
+
+
+IF(MACOSX)
+set(CMAKE_MACOSX_RPATH=OFF)
+target_link_libraries(${PROJECT_NAME}  ${LIBAMI_ROOT}/lib/libami.dylib
+ m )
+ else()
 target_link_libraries(${PROJECT_NAME}  ${LIBAMI_ROOT}/lib/libami.so
  m )
+ ENDIF(MACOSX)
+ 
 else()
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/include)
+
+IF(MACOSX)
+set(CMAKE_MACOSX_RPATH=OFF)
+target_link_libraries(${PROJECT_NAME}  ${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib/libami.dylib
+ m )
+ else()
 target_link_libraries(${PROJECT_NAME}  ${CMAKE_CURRENT_SOURCE_DIR}/../../libami/install/lib/libami.so
  m )
+ ENDIF(MACOSX)
 ENDIF(LIBAMI_ROOT)
 
 
