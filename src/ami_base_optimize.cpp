@@ -176,6 +176,11 @@ this_ref=std::make_pair(j,sign2);
 
 } */
 
+
+
+// This function needs update.  It does not catch when the order of the R's is different.
+// APR 2023 Update
+
 bool AmiBase::pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign) {
   r1sign = 0;
   r2sign = 0;
@@ -183,21 +188,79 @@ bool AmiBase::pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign) {
   if (r1.size() != r2.size()) {
     return false;
   }
+  
+  std::vector<int> v2;
+  // v1.resize(r1.size(),1);
+  v2.resize(r2.size(),1);
+  
 
   int this_sign = 1;
   int this_sign2 = 1;
-  for (int i = 0; i < r1.size(); i++) {
-    if (r1[i].first != r2[i].first) {
-      return false;
+  for(int i=0; i<r1.size(); i++){
+    bool found=false;
+    for(int j=0; j< r2.size(); j++){
+    
+    if ( (r1[i].first == r2[j].first) && v2[j]==1){
+      found=true;
+      v2[j]=0;
+      continue; //
+      
     }
+    
+    
+    }
+    
+    if(!found){return false;}
+    
     this_sign = this_sign * r1[i].second;
     this_sign2 = this_sign2 * r2[i].second;
   }
-
+  
+  // if it gets here then the two list are equivalent within the relative signs 
   r1sign = this_sign;
   r2sign = this_sign2;
   return true;
+  
+  
+
+  // int this_sign = 1;
+  // int this_sign2 = 1;
+  // for (int i = 0; i < r1.size(); i++) {
+    // if (r1[i].first != r2[i].first) {
+      // return false;
+    // }
+    // this_sign = this_sign * r1[i].second;
+    // this_sign2 = this_sign2 * r2[i].second;
+  // }
+
+  // r1sign = this_sign;
+  // r2sign = this_sign2;
+  // return true;
 }
+
+
+// bool AmiBase::pair_v_equiv(ref_v_t &r1, ref_v_t &r2, int &r1sign, int &r2sign) {
+  // r1sign = 0;
+  // r2sign = 0;
+
+  // if (r1.size() != r2.size()) {
+    // return false;
+  // }
+
+  // int this_sign = 1;
+  // int this_sign2 = 1;
+  // for (int i = 0; i < r1.size(); i++) {
+    // if (r1[i].first != r2[i].first) {
+      // return false;
+    // }
+    // this_sign = this_sign * r1[i].second;
+    // this_sign2 = this_sign2 * r2[i].second;
+  // }
+
+  // r1sign = this_sign;
+  // r2sign = this_sign2;
+  // return true;
+// }
 
 void AmiBase::factorize_Rn(Ri_t &Rn, g_prod_t &unique_g, R_ref_t &Rref,
                            ref_eval_t &Eval_list) {

@@ -1,5 +1,6 @@
 #include "ami_base.hpp"
 
+// This is a false factorization of the terms construction. Each term remains a product of Green's functions.
 void AmiBase::factorize_terms(terms &ami_terms, g_prod_t &unique_g,
                               R_ref_t &Rref, ref_eval_t &Eval_list) {
   Ri_t Ri;
