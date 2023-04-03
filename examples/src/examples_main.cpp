@@ -30,6 +30,9 @@ AmiBase ami;
 AmiBase::g_prod_t R0=construct_example3_safe(); // Sets initial integrand 
 AmiBase::ami_vars avars=construct_ext_example3_safe(); // Sets 'external' parameter values 
 
+
+
+
 	//timing info
 	auto t1=std::chrono::high_resolution_clock::now();
 
@@ -39,12 +42,20 @@ AmiBase::P_t P_array;
 AmiBase::R_t R_array;
 
 // Integration/Evaluation parameters
-double E_REG=0; // Numerical regulator for small energies.  If inf/nan results try E_REG=1e-8 
+double E_REG=0;//1e-8;//0; // Numerical regulator for small energies.  If inf/nan results try E_REG=1e-8 
 int N_INT=3;  // Number of Matsubara sums to perform
 AmiBase::ami_parms test_amiparms(N_INT, E_REG);
 
+ami.drop_matsubara_poles=1;
+ami.verbose=0;
+// ami.drop_bosonic_diverge=1;
+// ami.E_REG=1e-8;
+std::cout<<"Drop matsubara is set to "<<ami.drop_matsubara_poles<<std::endl;
+
 //Construction Stage
 ami.construct(test_amiparms, R0, R_array, P_array, S_array);  // Populates S,P,R with solution 
+
+// ami.print_final(2, R_array, P_array, S_array);
 
 	//timing info 
 	auto t2=std::chrono::high_resolution_clock::now();
