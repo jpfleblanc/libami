@@ -15,9 +15,5 @@ https://doi.org/10.1103/PhysRevB.99.035120 |br|
 
 2) Hossam Elazab, B. D. E. McNiven, and J. P. F. LeBlanc |br|
 LIBAMI: Implementation of Algorithmic Matsubaram Integration |br|
-arXiv: () |br|
-(Submitted to Comp. Phys. Comm.) |br|
-
-
-
-
+Computer Physics Communications 280, 108469 (2022) |br|
+https://doi.org/10.1016/j.cpc.2022.108469 |br|
