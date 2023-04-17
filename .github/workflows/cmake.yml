@@ -19,7 +19,7 @@ jobs:
           - name: "Ubuntu 20.04"
             runner: ubuntu-20.04
           - name: "Ubuntu 22.04"
-            runner: ubuntu-18.04
+            runner: ubuntu-22.04
           - name: "macOS latest"
             runner: macos-latest
     runs-on: ${{ matrix.runner }}
@@ -44,6 +44,5 @@ jobs:
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-     
       run: ctest -C ${{env.BUILD_TYPE}} --rerun-failed --output-on-failure
       
