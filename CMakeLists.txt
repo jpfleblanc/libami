@@ -35,12 +35,12 @@ link_directories("/usr/lib")
 find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-# Changed to compile with c++14 compiler - Maybe can stay as c++11 since these are compiled separately
+# Changed to compile with c++14 compiler - Needed for pytorch c++ API
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOSX TRUE)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -O3 -std=c++17 -stdlib=libc++")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -O3 -std=c++14 -stdlib=libc++")
 else()
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -O3 -std=c++17 -lstdc++fs") 
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -O3 -std=c++14 -lstdc++fs") 
 endif()
 
 set(LIB_FILES 
