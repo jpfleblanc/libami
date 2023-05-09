@@ -27,21 +27,21 @@ message("Boost not found, so using standard precision. To enable multiprecision 
 
 endif()
 
-
 # Add the cmake folder so the FindSphinx module is found
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 link_directories("/usr/lib")
 
+find_package(Torch REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+
 # Changed to compile with c++14 compiler - Maybe can stay as c++11 since these are compiled separately
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOSX TRUE)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -stdlib=libc++")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -O3 -std=c++17 -stdlib=libc++")
 else()
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -lstdc++fs ") 
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -O3 -std=c++17 -lstdc++fs") 
 endif()
-
-
 
 set(LIB_FILES 
    ./src/ami_base.cpp
@@ -55,6 +55,11 @@ set(LIB_FILES
 
 ADD_LIBRARY(ami SHARED ${LIB_FILES})
 
+target_link_libraries(${PROJECT_NAME} m ${TORCH_LIBRARIES})
+
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} m ${PYTHON_LIBRARIES})
 
 
 IF(BOOST_MP)
@@ -146,6 +151,9 @@ if(pybind11_FOUND)
     include_directories("${CMAKE_SOURCE_DIR}/src")
     include_directories("${CMAKE_SOURCE_DIR}/pyami_src")
 
+    find_package(Torch REQUIRED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+
     file (GLOB SOURCE_FILES "src/*.cpp")
     file (GLOB HEADER_FILES "src/*.hpp")
     file (GLOB PYTHON_FILES "pyami_src/*.cpp" "pyami_src/*.hpp")
@@ -157,7 +165,7 @@ if(pybind11_FOUND)
     )
 
     target_link_libraries(pyami PUBLIC)
-
+    target_link_libraries(pyami PRIVATE ${TORCH_LIBRARIES})
 
     install(TARGETS pyami
       COMPONENT python

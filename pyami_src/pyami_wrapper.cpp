@@ -109,4 +109,6 @@ void init_pyami_wrapper(py::module &m) {
   AmiBase.def("factorize_terms", &AmiBase::factorize_terms, "Optimize factorize function for terms notation.");
 
   AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::terms &, AmiBase::ami_vars &, AmiBase::g_prod_t &, AmiBase::R_ref_t &, AmiBase::ref_eval_t &>(&AmiBase::evaluate), "Optimized evaluate function for terms notation.");
+
+  AmiBase.def("evaluate_tensor", &AmiBase::evaluate_tensor, "Pytorch test function embeded into the amibase structure.");
 }

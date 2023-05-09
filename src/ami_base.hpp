@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <torch/torch.h>
+#include <torch/extension.h> // for pybinds I think
 
 #ifdef BOOST_MP
 
@@ -385,6 +387,8 @@ public:
   /// Evaluate Terms.
   std::complex<double> evaluate(ami_parms &parms, terms &ami_terms,
                                 ami_vars &external);
+  torch::Tensor evaluate_tensor(ami_parms &parms, terms &ami_terms,
+                                       ami_vars &external, torch::Tensor x);
   /// Evaluate a single Term.  Usage is identical to `evaluate` function.
   std::complex<double> evaluate_term(ami_parms &parms, term &ami_term,
                                      ami_vars &external);
@@ -652,3 +656,13 @@ public:
 
 private:
 };
+
+inline std::ostream& operator<< (std::ostream &os, const AmiBase::pole_struct& p){
+    os << "test pole_struct" << std::endl;
+    return os;
+}
+
+inline std::ostream& operator<< (std::ostream &os, const AmiBase::g_struct& g){
+    os << "test g_struct\n" << std::endl;
+    return os;
+}

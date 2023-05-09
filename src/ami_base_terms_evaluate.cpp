@@ -210,6 +210,61 @@ std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms,
   return final_output;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Torch test function - see if library has linked and use tensors of ami_vars
+ */
+torch::Tensor AmiBase::evaluate_tensor(ami_parms &parms, terms &ami_terms,
+                                       ami_vars &external, torch::Tensor x) {
+  /*                                 
+  overflow_detected = false;
+  
+#ifdef BOOST_MP
+  std::complex<boost::multiprecision::float128> term;
+ 
+  std::complex<boost::multiprecision::float128> output(0, 0);
+ #else
+  std::complex<double> term;
+  std::complex<double> output(0,0);
+  
+#endif
+  
+
+  for (int i = 0; i < ami_terms.size(); i++) {
+   
+    #ifdef BOOST_MP
+	
+	term =
+        evaluate_term_mp(parms, ami_terms[i], external);
+	
+	#else
+    term =
+        evaluate_term(parms, ami_terms[i], external);
+	#endif
+    output += term;
+
+    if (verbose) {
+		print_term(ami_terms[i]);
+      std::cout <<std::setprecision(32)<< "Term gave " << i << " " << term
+                << " and current total is : " << output << std::endl;
+    }
+  }
+
+#ifdef BOOST_MP
+  std::complex<double> final_output(output.real().convert_to<double>(),
+                                    output.imag().convert_to<double>());
+#else
+  std::complex<double> final_output = output;
+#endif
+
+ 
+  return final_output;
+  */  
+  torch::Tensor y = torch::multiply(x, torch::sin(x));
+	return y;
+}
+/////////////////////////////////////////////////////////////////////////////////////
+
 std::complex<double> AmiBase::evaluate_term(ami_parms &parms, term &ami_term,
                                             ami_vars &external) {
   std::complex<double> gprod;
