@@ -49,6 +49,17 @@ void init_pyami_wrapper(py::module &m) {
     .def_readwrite("prefactor", &AmiBase::ami_vars::prefactor)
     .def_readwrite("BETA_", &AmiBase::ami_vars::BETA_)
     .def_readwrite("gamma_", &AmiBase::ami_vars::gamma_);
+
+  py::class_<AmiBase::ami_vars_tensor> (AmiBase, "ami_vars_tensor")
+    .def(py::init<>())
+    .def(py::init<AmiBase::energy_tens, AmiBase::frequency_t>())
+    .def(py::init<AmiBase::energy_tens, AmiBase::frequency_t, double>())
+    .def(py::init<AmiBase::energy_tens, AmiBase::frequency_t, double, double>())
+    .def_readwrite("energy_", &AmiBase::ami_vars_tensor::energy_)
+    .def_readwrite("frequency_", &AmiBase::ami_vars_tensor::frequency_)
+    .def_readwrite("prefactor", &AmiBase::ami_vars_tensor::prefactor)
+    .def_readwrite("BETA_", &AmiBase::ami_vars_tensor::BETA_)
+    .def_readwrite("gamma_", &AmiBase::ami_vars_tensor::gamma_);  
   
   py::class_<AmiBase::ami_parms> (AmiBase, "ami_parms")
     .def(py::init<>())
@@ -111,4 +122,8 @@ void init_pyami_wrapper(py::module &m) {
   AmiBase.def("evaluate", py::overload_cast<AmiBase::ami_parms &, AmiBase::terms &, AmiBase::ami_vars &, AmiBase::g_prod_t &, AmiBase::R_ref_t &, AmiBase::ref_eval_t &>(&AmiBase::evaluate), "Optimized evaluate function for terms notation.");
 
   AmiBase.def("evaluate_tensor", &AmiBase::evaluate_tensor, "Pytorch test function embeded into the amibase structure.");
+
+  AmiBase.def("eval_gprod_tens", &AmiBase::eval_gprod_tens, "Pytorch evaluate g_prod - Pytorch test.");
+
+  AmiBase.def("eval_gprod", &AmiBase::eval_gprod, "evaluate g_prod - Pytorch test.");
 }

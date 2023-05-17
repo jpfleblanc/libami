@@ -214,8 +214,8 @@ std::complex<double> AmiBase::evaluate(ami_parms &parms, terms &ami_terms,
 /**
  * Torch test function - see if library has linked and use tensors of ami_vars
  */
-torch::Tensor AmiBase::evaluate_tensor(ami_parms &parms, terms &ami_terms,
-                                       ami_vars &external, torch::Tensor x) {
+at::Tensor AmiBase::evaluate_tensor(ami_parms &parms, terms &ami_terms,
+                                       ami_vars &external, at::Tensor x) {
   /*                                 
   overflow_detected = false;
   

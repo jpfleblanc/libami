@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 #include <torch/torch.h>
-#include <torch/extension.h> // for pybinds I think
+#include <torch/extension.h> // for pybinds
 
 #ifdef BOOST_MP
 
@@ -205,6 +205,43 @@ public:
     ami_vars() { prefactor = 1.0; }
   };
 
+  typedef at::Tensor energy_tens;
+
+  struct ami_vars_tensor {
+    /// Numerical values of energies - each column is a energy label e = [e_1, e_2, ...]
+    energy_tens energy_;
+    /// Numerical Values of frequencies.
+    frequency_t frequency_;
+    /// Overall prefactor - default(1).
+    double prefactor = 1.0;
+    /// Required value of inverse temperature, \f$\beta\f$.
+    double BETA_ = 0.0;
+
+    /// Experimental parameter for spectral representation.
+    double gamma_ = 0;
+
+    ami_vars_tensor(energy_tens eps, frequency_t freq) {
+      energy_ = eps;
+      frequency_ = freq;
+      prefactor = 1.0;
+    }
+
+    ami_vars_tensor(energy_tens eps, frequency_t freq, double Bta) {
+      energy_ = eps;
+      frequency_ = freq;
+      BETA_ = Bta;
+    }
+
+    ami_vars_tensor(energy_tens eps, frequency_t freq, double Bta, double pf) {
+      energy_ = eps;
+      frequency_ = freq;
+      prefactor = pf;
+      BETA_ = Bta;
+    }
+
+    ami_vars_tensor() { prefactor = 1.0; }
+  };
+
   /// Parameters for AMI construction/evaluation.
   struct ami_parms {
     /// Number of integrations to perform.
@@ -387,8 +424,8 @@ public:
   /// Evaluate Terms.
   std::complex<double> evaluate(ami_parms &parms, terms &ami_terms,
                                 ami_vars &external);
-  torch::Tensor evaluate_tensor(ami_parms &parms, terms &ami_terms,
-                                       ami_vars &external, torch::Tensor x);
+  at::Tensor evaluate_tensor(ami_parms &parms, terms &ami_terms,
+                                       ami_vars &external, at::Tensor x);
   /// Evaluate a single Term.  Usage is identical to `evaluate` function.
   std::complex<double> evaluate_term(ami_parms &parms, term &ami_term,
                                      ami_vars &external);
@@ -487,6 +524,10 @@ public:
   /// Evaluates a product of Green's functions.
   std::complex<double> eval_gprod(ami_parms &parms, g_prod_t g_prod,
                                   ami_vars external);
+
+  /// Evaluates a product of Green's functions.
+  at::Tensor eval_gprod_tens(ami_parms &parms, g_prod_t g_prod,
+                                  ami_vars_tensor external);     
 
 #ifdef BOOST_MP
   std::complex<boost::multiprecision::float128>
