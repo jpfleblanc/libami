@@ -63,6 +63,11 @@ public:
               std::equal(v1.begin(), v1.end(), v2.begin()));
   }
 
+  // Device class variable so that a Amibase instance is initiated with a gpu or cpu 
+  // and this is the correct device that all subsequent calculations are performed on
+  // Not sure how this works with multiple gpus --- TODO!!!
+  at::Device dev = at::kCPU; // default behaviour is to set to a at::kCPU - new c'tor to init to other types
+
   // Maximum argument allowed for fermi and bose functions - to prevent inf due
   // to double precision numbers
   // Note: Possible that this prevents catching overflow issues 
@@ -527,7 +532,13 @@ public:
 
   /// Evaluates a product of Green's functions.
   at::Tensor eval_gprod_tens(ami_parms &parms, g_prod_t g_prod,
-                                  ami_vars_tensor external);     
+                                  ami_vars_tensor external);  
+
+  at::Tensor eval_gprod_tens_dev(ami_parms &parms, g_prod_t g_prod,
+                                         ami_vars_tensor external);
+
+  at::Tensor eval_gprod_tens_dev_macfriendly(ami_parms &parms, g_prod_t g_prod,
+                                         ami_vars_tensor external);
 
 #ifdef BOOST_MP
   std::complex<boost::multiprecision::float128>
@@ -623,6 +634,10 @@ public:
   // Possibly deprecated constructor.
   /// Constructor with ami_parms.
   AmiBase(ami_parms &parms);
+  // torch device c'tor otherwise it intializes to at::kCPU
+  AmiBase(at::Device device){
+    dev = device;
+  }
 
   // The construction
   void construct(ami_parms &parms, g_prod_t R0, R_t &R_array, P_t &P_array,

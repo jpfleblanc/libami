@@ -664,6 +664,42 @@ at::Tensor AmiBase::eval_gprod_tens(ami_parms &parms, g_prod_t g_prod,
 
   // TODO: add catch for a tensor of batch size 1, that is, it must be a matrix and not just a vector.
 
+  at::Tensor output = at::zeros(external.energy_.size(0), at::kComplexDouble); // get len(energies) answers
+
+  at::Tensor denom_prod = at::ones(external.energy_.size(0), at::kComplexDouble); //std::complex<double> denom_prod(1, 0);
+  double prefactor = external.prefactor;
+
+  double E_REG = parms.E_REG_;
+  bool verbose = false;
+
+  for (int i = 0; i < g_prod.size(); i++) {
+    std::complex<double> alphadenom(0, 0);
+    at::Tensor epsdenom = at::zeros(external.energy_.size(0), at::kComplexDouble);
+    for (int a = 0; a < g_prod[i].alpha_.size(); a++) {
+      alphadenom += double(g_prod[i].alpha_[a]) * external.frequency_[a];
+    }
+
+    std::complex<double> zero(0, 0);
+    std::complex<double> im(0, 1);
+
+    for (int a = 0; a < g_prod[i].eps_.size(); a++) {
+      epsdenom += double(g_prod[i].eps_[a]) * external.energy_.index({torch::indexing::Slice(),a});
+    }
+
+    at::Tensor alphadenom_tens = at::full(epsdenom.size(0), c10::Scalar(c10::complex<double>(alphadenom.real(), alphadenom.imag())), at::kComplexDouble);
+    denom_prod = torch::multiply(denom_prod, (alphadenom_tens + epsdenom));
+  }
+
+  output = 1.0 / denom_prod * prefactor;
+
+  return output;
+}
+
+at::Tensor AmiBase::eval_gprod_tens_dev(ami_parms &parms, g_prod_t g_prod,
+                                         ami_vars_tensor external) {
+
+  // TODO: add catch for a tensor of batch size 1, that is, it must be a matrix and not just a vector.
+
   //torch::tensor output = torch::zeros(external.size(0)).to(torch::kMPS);
   at::Tensor output = at::zeros(external.energy_.size(0), at::kComplexDouble); // get len(energies) answers
 
@@ -695,6 +731,44 @@ at::Tensor AmiBase::eval_gprod_tens(ami_parms &parms, g_prod_t g_prod,
 
   return output;
 }
+
+at::Tensor AmiBase::eval_gprod_tens_dev_macfriendly(ami_parms &parms, g_prod_t g_prod,
+                                         ami_vars_tensor external) {
+
+  // TODO: add catch for a tensor of batch size 1, that is, it must be a matrix and not just a vector.
+
+  //torch::tensor output = torch::zeros(external.size(0)).to(torch::kMPS);
+  at::Tensor output = at::zeros(external.energy_.size(0), at::kFloat).to(dev); // get len(energies) answers
+
+  at::Tensor denom_prod = at::ones(external.energy_.size(0), at::kFloat).to(dev); //std::complex<double> denom_prod(1, 0);
+  double prefactor = external.prefactor;
+
+  double E_REG = parms.E_REG_;
+  bool verbose = false;
+
+  for (int i = 0; i < g_prod.size(); i++) {
+    std::complex<double> alphadenom(0, 0);
+    at::Tensor epsdenom = at::zeros(external.energy_.size(0), at::kFloat).to(dev);
+    for (int a = 0; a < g_prod[i].alpha_.size(); a++) {
+      alphadenom += double(g_prod[i].alpha_[a]) * external.frequency_[a];
+    }
+
+    std::complex<double> zero(0, 0);
+    std::complex<double> im(0, 1);
+
+    for (int a = 0; a < g_prod[i].eps_.size(); a++) {
+      epsdenom += double(g_prod[i].eps_[a]) * at::real(external.energy_.index({torch::indexing::Slice(),a}));
+    }
+
+    at::Tensor alphadenom_tens = at::full(epsdenom.size(0), c10::Scalar(alphadenom.real()), at::kFloat).to(dev);
+    denom_prod = torch::multiply(denom_prod, (alphadenom_tens + epsdenom));
+  }
+
+  output = 1.0 / denom_prod * prefactor;
+
+  return output;
+}
+
 
 #ifdef BOOST_MP
 
