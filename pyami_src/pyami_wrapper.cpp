@@ -38,6 +38,8 @@ void init_pyami_wrapper(py::module &m) {
   py::class_<AmiBase> AmiBase(m, "AmiBase");
   AmiBase.def(py::init<>());
   AmiBase.def(py::init<AmiBase::ami_parms &>());
+  AmiBase.def(py::init<at::Device>());
+  AmiBase.def_readwrite("dev", &AmiBase::dev);
     
   py::class_<AmiBase::ami_vars> (AmiBase, "ami_vars")
     .def(py::init<>())
