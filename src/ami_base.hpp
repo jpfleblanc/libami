@@ -534,9 +534,6 @@ public:
   at::Tensor eval_gprod_tens(ami_parms &parms, g_prod_t g_prod,
                                   ami_vars_tensor external);  
 
-  at::Tensor eval_gprod_tens_dev(ami_parms &parms, g_prod_t g_prod,
-                                         ami_vars_tensor external);
-
   at::Tensor eval_gprod_tens_dev_macfriendly(ami_parms &parms, g_prod_t g_prod,
                                          ami_vars_tensor external);
 
